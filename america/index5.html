@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Página de Captura</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			background-color: #000000;
+			background-image: #000000;
+			background-repeat: repeat;
+			font-family: "Poppins", sans-serif;
+			font-size: 20px;
+    		font-weight: 800;
+    		font-style: italic;
+			color: #000000;
+			margin: 0;
+			padding: 0;
+		}
+        .container {
+		max-width: 600px;
+		margin: 0 auto;
+		padding: 20px;
+		text-align: center;
+	}
+
+	h1 {
+    font-family: "Poppins", sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    font-style: italic;
+    line-height: 1.2em;
+    margin-bottom: 20px;
+    color: #fff;
+    background-color: #000000;
+	}
+
+	form {
+		display: inline-block;
+		background-color: #ffffff;
+		padding: 60px;
+		border-radius: 20px;
+		box-shadow: 0 0 30px #0fba00;
+		text-align: left;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 10px;
+		font-weight: bold;
+	}
+
+	input[type="text"] {
+		padding: 10px;
+		border-radius: 3px;
+		border: none;
+		box-shadow: 0 0 5px #000000;
+		width: 100%;
+		margin-bottom: 20px;
+		font-size: 1.2em;
+	}
+
+	input[type="submit"] {
+
+	font-family: "Poppins", sans-serif;
+    font-style: italic;
+	font-family: "Poppins", sans-serif;
+    font-weight: 800;
+
+    background-color: #0fba00;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    font-size: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+input[type="submit"]:hover {
+    background-color: #0fba00;
+}
+
+	@media screen and (max-width: 480px) {
+		.container {
+			padding: 10px;
+		}
+		h1 {
+			font-family: "Poppins", sans-serif;
+    		font-size: 20px;
+    		font-weight: 800;
+    		font-style: italic;
+    		line-height: 1.2em;
+    		margin-bottom: 20px;
+    		color: #fff;
+    		background-color: #0fba00;
+    		border: none; /* Removendo as bordas */
+		}
+		form {
+			padding: 10px;
+		}
+		input[type="text"] {
+			font-size: 1em;
+		}
+		input[type="submit"] {
+			font-size: 1em;
+			padding: 5px 10px;
+		}
+	}
+</style>
+
+</head>
+<body>
+	<div class="container">
+		<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhqZy35FVFN6ZgpJc9WLjA3Agm-l1nvU5wFhIiXN9bps79qjwsSNOe8ZbVs_Py4_EwozZVhwI8G0odJf3XMQjPmB5A1U-962wxZ_jeQhUK9SsAYHtOWXi08fpxF7y5mBDxzXCKNNP41DM1yxBSw1xI0s1JWbJmTgeH9XbLsgoL7mPWqEjXsVyXblqQZbw/s200/Design_sem_nome__1_-removebg-preview.png" width="150" height="200" alt="Imagem de exemplo">
+		<h1>Preencha o formulário abaixo para prosseguir com a sua compra e descubra os segredos para se tornar um Trader Milionário:!</h1>
+		<form>
+			<label for="name">Digite seu Nome:</label>
+			<input type="name" name="NAME" id="name" required placeholder="Digite seu nome">
+
+			<label for="email">Digite sem melhor E-mail:</label>
+			<input type="email" name="EMAIL" id="email" required placeholder="Digite seu e-mail">
+
+
+			<label for="whatsapp">Digite o seu número de WhatsApp:</label>
+            <input type="tel" id="whatsapp" name="MMERGE3" pattern="[0-9]{2}[0-9]{5}[0-9]{4}" required placeholder="Digite seu número de WhatsApp">
+
+			<input type="submit" value="Enviar">
+		</form>
+	</div>
+</body>
+</html>

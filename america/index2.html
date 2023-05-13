@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Página de Captura</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			background-color: black;
+			color: white;
+			font-family: Arial, sans-serif;
+		}
+		form {
+			max-width: 600px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: #333;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.5);
+		}
+		label {
+			display: block;
+			margin-bottom: 10px;
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+		input[type="email"], input[type="tel"] {
+			display: block;
+			width: 100%;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			margin-bottom: 20px;
+			background-color: #eee;
+			color: black;
+			font-size: 1.2em;
+		}
+		input[type="email"]:focus, input[type="tel"]:focus {
+			outline: none;
+			box-shadow: 0 0 5px white;
+		}
+
+
+        #email {
+	        width: 90%;
+	        display: block;
+        }
+        #whatsapp {
+	        width: 90%;
+	        display: block;
+        }
+
+		#whatsapp + small {
+			display: block;
+			margin-top: 5px;
+			font-size: 0.8em;
+			color: #aaa;
+		}
+		button[type="submit"] {
+			background-color: white;
+			color: black;
+			font-size: 1.2em;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: all 0.3s ease-in-out;
+			margin-top: 20px;
+		}
+		button[type="submit"]:hover {
+			background-color: black;
+			color: white;
+		}
+		.image {
+			display: block;
+			margin: 0 auto;
+			max-width: 100%;
+			height: auto;
+			margin-top: 30px;
+		}
+	</style>
+</head>
+<body>
+	<img src="https://images.vexels.com/media/users/3/149510/isolated/preview/2585bf984d29347ef9acb44e2964c36d-livro-pilha-icone-3d.png" alt="E-book" class="image">
+
+	<form action="https://gmail.us21.list-manage.com/subscribe/post?u=cc2442e6410e39834cf82aa3c&amp;id=e2a6de49db&amp;f_id=0098a4e1f0" method="post">
+        <small>Informe</small>
+		<label for="email">E-mail:</label>
+		<input type="email" id="email" name="EMAIL" required>
+		<label for="whatsapp">WhatsApp:</label>
+		<input type="tel" id="whatsapp" name="MMERGE3" pattern="[0-9]{2}[0-9]{5}[0-9]{4}" required>
+		<small>Informe</small>
+		<button type="submit">Enviar</button>
+	</form>
+</body>
+</html>
