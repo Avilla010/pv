@@ -78,162 +78,107 @@
 <audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
 
 <script>
+// 1. Dados extraídos do seu arquivo txt
 const questions = [
-        {
-                "q": "A licença de Aprendizagem para prática de direção veicular em via pública, ou em locais autorizados para este fim, será expedida pelo DETRAN ao candidato que:",
-                "options": [
-                        "Tenha completado 16 anos de idade.",
-                        "Tenha completado 18 anos de idade.",
-                        "Tenha prestado exame em veículo particular.",
-                        "Tenha sido aprovado nos exames de aptidão física e mental, avaliação psicológica e de legislação de trânsito."
-                ],
-                "correct": 3
-        },
-        {
-                "q": "A não obtenção da Carteira Nacional de Habilitação pelo permissionário, implica em reiniciar todo o processo de habilitação, no prazo de:",
-                "options": [
-                        "15 (quinze) dias.",
-                        "30 (trinta) dias.",
-                        "360 (trezentos e sessenta) dias.",
-                        "A qualquer tempo."
-                ],
-                "correct": 3
-        },
-        {
-                "q": "O candidato para se habilitar na categoria A, poderá realizar o exame de prática de direção veicular em veículo de 2 rodas com cilindrada:",
-                "options": [
-                        "De 50 cm3,",
-                        "De 100 cm3.",
-                        "De 120 cm3.",
-                        "Acima de 120 cm3."
-                ],
-                "correct": 3
-        },
-        {
-                "q": "O processo do candidato à habilitação ficará ativado no Órgão ou Entidade Executivo de Trânsito pelo prazo de:",
-                "options": [
-                        "06 meses.",
-                        "24 meses.",
-                        "12 meses.",
-                        "Durante a validade do exame de sanidade física e mental."
-                ],
-                "correct": 2
-        },
-        {
-                "q": "A Carteira Nacional de Habilitação, não será conferida ao condutor portador da Permissão para Dirigir no término de um ano, se o mesmo cometer:",
-                "options": [
-                        "Uma infração de natureza média.",
-                        "Uma infração de natureza grave.",
-                        "Ser reincidente na infração de natureza leve.",
-                        "Uma infração de natureza leve."
-                ],
-                "correct": 1
-        },
-        {
-                "q": "O condutor que tiver a sua Permissão para Dirigir cassada, poderá reiniciar o processo de habilitação, que consiste em prestar exames de:",
-                "options": [
-                        "Aptidão fisica e mental, avaliação psicológica, legislação de trânsito e prática de direção veicular.",
-                        "Aptidão fisica e mental, avaliação psicológica e legislação de trânsito.",
-                        "Prática de direção veicular.",
-                        "Legislação de trânsito e prática de direção veicular."
-                ],
-                "correct": 0
-        },
-        {
-                "q": "Do condutor de veículo destinado à condução escolares, exige-se:",
-                "options": [
-                        "Não ter cometido nenhuma infração de trânsito.",
-                        "Idade superior a 18 anos.",
-                        "Apresentação do Registro Nacional de Transportadores Urbanos.",
-                        "Apresentação de certificado em curso especializado."
-                ],
-                "correct": 3
-        },
-        {
-                "q": "Qual é o órgão responsável por expedir o Certificado de Registro e Licenciamento de Veículo (CRLV)?",
-                "options": [
-                        "Polícia Rodoviária Federal (PRF)",
-                        "Departamento Nacional de Trânsito (DENATRAN)",
-                        "Departamento Estadual de Trânsito (DETRAN)",
-                        "Conselho Nacional de Trânsito (CONTRAN)"
-                ],
-                "correct": 2
-        },
-        {
-                "q": "O condutor já habilitado na categoria B deseja, posteriormente, habilitar-se também na categoria A. Quantos registros terá no RENACH (Registro Nacional de Condutores Habilitados)?",
-                "options": [
-                        "Dois registros, um para cada categoria de habilitação.",
-                        "Apenas um registro, que será atualizado com a nova categoria.",
-                        "Três registros, pois cada processo de habilitação gera um novo.",
-                        "Nenhum registro novo, permanecendo somente o inicial, sem atualização."
-                ],
-                "correct": 1
-        },
-        {
-                "q": "Qual órgão é responsável pela organização e manutenção do RENACH (Registro Nacional de Condutores Habilitados)?",
-                "options": [
-                        "CONTRAN",
-                        "SENATRAN (antigo DENATRAN)",
-                        "DETRAN",
-                        "Polícia Rodoviária Federal"
-                ],
-                "correct": 3
-        },
-        {
-                "q": "Do total arrecadado com multas de trânsito, qual percentual deve ser repassado ao FUNSET (Fundo Nacional de Segurança e Educação de Trânsito)?",
-                "options": [
-                        "1%",
-                        "2%",
-                        "5%",
-                        "10%"
-                ],
-                "correct": 0
-        },
-        {
-                "q": "Para condutores com 70 anos ou mais, o exame de aptidão física e mental tem validade de:",
-                "options": [
-                        "10 anos",
-                        "5 anos",
-                        "3 anos",
-                        "1 ano"
-                ],
-                "correct": 2
-        },
-        {
-                "q": "O condutor que teve sua CNH cassada e deseja voltar a dirigir deverá:",
-                "options": [
-                        "Apenas pagar as multas e taxas pendentes.",
-                        "Refazer todo o processo de habilitação, incluindo exames teóricos e práticos.",
-                        "Solicitar nova PPD após 6 meses.",
-                        "Fazer apenas curso de reciclagem."
-                ],
-                "correct": 1
-        },
-        {
-                "q": "A suspensão do direito de dirigir pode ocorrer, entre outros casos, quando o condutor:",
-                "options": [
-                        "Ficar 2 anos sem renovar a CNH.",
-                        "Cometer infrações que somem 20, 30 ou 40 pontos, conforme previsto no CTB.",
-                        "Se envolver em acidente de trânsito com vítima.",
-                        "For flagrado com veículo não licenciado."
-                ],
-                "correct": 3
-        },
-        {
-                "q": "De acordo com o CTB, os veículos automotores podem ser classificados quanto à:",
-                "options": [
-                        "Tração, espécie e categoria",
-                        "Potência, peso bruto total e combustível",
-                        "Espécie, cor e categoria",
-                        "Finalidade, cor e capacidade"
-                ],
-                "correct": 1
-        }
+    {
+        "q": "A licença de Aprendizagem para prática de direção veicular em via pública, ou em locais autorizados para este fim, será expedida pelo DETRAN ao candidato que:",
+        "options": ["Tenha completado 16 anos de idade.", "Tenha completado 18 anos de idade.", "Tenha prestado exame em veículo particular.", "Tenha sido aprovado nos exames de aptidão física e mental, avaliação psicológica e de legislação de trânsito."],
+        "correct": 3
+    },
+    {
+        "q": "A não obtenção da Carteira Nacional de Habilitação pelo permissionário, implica em reiniciar todo o processo de habilitação, no prazo de:",
+        "options": ["15 (quinze) dias.", "30 (trinta) dias.", "360 (trezentos e sessenta) dias.", "A qualquer tempo."],
+        "correct": 3
+    },
+    {
+        "q": "O candidato para se habilitar na categoria A, poderá realizar o exame de prática de direção veicular em veículo de 2 rodas com cilindrada:",
+        "options": ["De 50 cm3,", "De 100 cm3.", "De 120 cm3.", "Acima de 120 cm3."],
+        "correct": 3
+    },
+    {
+        "q": "O processo do candidato à habilitação ficará ativado no Órgão ou Entidade Executivo de Trânsito pelo prazo de:",
+        "options": ["06 meses.", "24 meses.", "12 meses.", "Durante a validade do exame de sanidade física e mental."],
+        "correct": 2
+    },
+    {
+        "q": "A Carteira Nacional de Habilitação, não será conferida ao condutor portador da Permissão para Dirigir no término de um ano, se o mesmo cometer:",
+        "options": ["Uma infração de natureza média.", "Uma infração de natureza grave.", "Ser reincidente na infração de natureza leve.", "Uma infração de natureza leve."],
+        "correct": 1
+    },
+    {
+        "q": "O condutor que tiver a sua Permissão para Dirigir cassada, poderá reiniciar o processo de habilitação, que consiste em prestar exames de:",
+        "options": ["Aptidão fisica e mental, avaliação psicológica, legislação de trânsito e prática de direção veicular.", "Aptidão fisica e mental, avaliação psicológica e legislação de trânsito.", "Prática de direção veicular.", "Legislação de trânsito e prática de direção veicular."],
+        "correct": 0
+    },
+    {
+        "q": "Do condutor de veículo destinado à condução escolares, exige-se:",
+        "options": ["Não ter cometido nenhuma infração de trânsito.", "Idade superior a 18 anos.", "Apresentação do Registro Nacional de Transportadores Urbanos.", "Apresentação de certificado em curso especializado."],
+        "correct": 3
+    },
+    {
+        "q": "Qual é o órgão responsável por expedir o Certificado de Registro e Licenciamento de Veículo (CRLV)?",
+        "options": ["Polícia Rodoviária Federal (PRF)", "Departamento Nacional de Trânsito (DENATRAN)", "Departamento Estadual de Trânsito (DETRAN)", "Conselho Nacional de Trânsito (CONTRAN)"],
+        "correct": 2
+    },
+    {
+        "q": "O condutor já habilitado na categoria B deseja, posteriormente, habilitar-se também na categoria A. Quantos registros terá no RENACH (Registro Nacional de Condutores Habilitados)?",
+        "options": ["Dois registros, um para cada categoria de habilitação.", "Apenas um registro, que será atualizado com a nova categoria.", "Três registros, pois cada processo de habilitação gera um novo.", "Nenhum registro novo, permanecendo somente o inicial, sem atualização."],
+        "correct": 1
+    },
+    {
+        "q": "Qual órgão é responsável pela organização e manutenção do RENACH (Registro Nacional de Condutores Habilitados)?",
+        "options": ["CONTRAN", "SENATRAN (antigo DENATRAN)", "DETRAN", "Polícia Rodoviária Federal"],
+        "correct": 3
+    },
+    {
+        "q": "Do total arrecadado com multas de trânsito, qual percentual deve ser repassado ao FUNSET (Fundo Nacional de Segurança e Educação de Trânsito)?",
+        "options": ["1%*", "2%", "5%", "10%"],
+        "correct": 0
+    },
+    {
+        "q": "Para condutores com 70 anos ou mais, o exame de aptidão física e mental tem validade de:",
+        "options": ["10 anos", "5 anos", "3 anos", "1 ano"],
+        "correct": 2
+    },
+    {
+        "q": "O condutor que teve sua CNH cassada e deseja voltar a dirigir deverá:",
+        "options": ["Apenas pagar as multas e taxas pendentes.", "Refazer todo o processo de habilitação, incluindo exames teóricos e práticos.", "Solicitar nova PPD após 6 meses.", "Fazer apenas curso de reciclagem."],
+        "correct": 1
+    },
+    {
+        "q": "A suspensão do direito de dirigir pode ocorrer, entre outros casos, quando o condutor:",
+        "options": ["Ficar 2 anos sem renovar a CNH.", "Cometer infrações que somem 20, 30 ou 40 pontos, conforme previsto no CTB.", "Se envolver em acidente de trânsito com vítima.", "For flagrado com veículo não licenciado."],
+        "correct": 3
+    },
+    {
+        "q": "De acordo com o CTB, os veículos automotores podem ser classificados quanto à:",
+        "options": ["Tração, espécie e categoria", "Potência, peso bruto total e combustível", "Espécie, cor e categoria", "Finalidade, cor e capacidade"],
+        "correct": 1
+    }
 ];
 
+// 2. Lógica do Simulado com Cronômetro e Placar
 let currentQ = 0;
 let score = 0;
+let errors = 0;
 let answered = false;
+let timeLeft = 120; // 2 minutos
+let timerInterval;
+
+function initQuiz() {
+    const area = document.getElementById('quiz-area');
+    area.innerHTML = `
+        <div style="text-align:center; padding: 50px 0;">
+            <h2 style="margin-bottom:20px;">Simulado Autoescola - 15 Questões</h2>
+            <p style="margin-bottom:30px;">Tempo por questão: 2 minutos</p>
+            <button class="btn-action" onclick="startQuiz()">Iniciar Teste</button>
+        </div>
+    `;
+}
+
+function startQuiz() {
+    renderQuestion();
+}
 
 function renderQuestion() {
     answered = false;
@@ -242,6 +187,10 @@ function renderQuestion() {
     const q = questions[currentQ];
     
     area.innerHTML = `
+        <div id="quiz-header" style="display:flex; justify-content:space-between; margin-bottom:15px; background:#f4f4f4; padding:10px; border-radius:8px;">
+            <span id="timer-display" style="font-weight:bold;">⏱️ Carregando...</span>
+            <span>✅ Acertos: ${score} | ❌ Erros: ${errors}</span>
+        </div>
         <span class="question-text">${currentQ + 1}. ${q.q}</span>
         <div id="options-container">
             ${q.options.map((opt, i) => `
@@ -252,21 +201,47 @@ function renderQuestion() {
         </div>
         <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
     `;
+    
     document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+    startTimer();
+}
+
+function startTimer() {
+    timeLeft = 120;
+    updateTimerDisplay();
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Tempo esgotado nesta questão!");
+            errors++;
+            nextQuestion();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const min = Math.floor(timeLeft / 60);
+    const sec = timeLeft % 60;
+    const display = document.getElementById('timer-display');
+    if (display) {
+        display.innerHTML = `⏱️ Tempo: ${min}:${sec < 10 ? '0' : ''}${sec}`;
+        display.style.color = timeLeft < 20 ? "red" : "black";
+    }
 }
 
 function handleButtonClick() {
-    if (!answered) {
-        checkAnswer();
-    } else {
-        nextQuestion();
-    }
+    if (!answered) checkAnswer();
+    else nextQuestion();
 }
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
-    if (!selected) return alert("Escolha uma opção!");
+    if (!selected) return alert("Por favor, selecione uma opção!");
 
+    clearInterval(timerInterval);
     answered = true;
     const userChoice = parseInt(selected.value);
     const correctChoice = questions[currentQ].correct;
@@ -277,15 +252,15 @@ function checkAnswer() {
     if (userChoice === correctChoice) {
         score++;
         document.getElementById(`opt-${userChoice}`).classList.add('correct');
-        document.getElementById('snd-correct').play();
+        if(window.sndCorrect) sndCorrect.play();
     } else {
+        errors++;
         document.getElementById(`opt-${userChoice}`).classList.add('wrong');
         document.getElementById(`opt-${correctChoice}`).classList.add('correct');
-        document.getElementById('snd-wrong').play();
+        if(window.sndWrong) sndWrong.play();
     }
 
     btn.innerHTML = "Próxima Questão";
-    btn.classList.add('btn-next-step');
 }
 
 function nextQuestion() {
@@ -298,16 +273,17 @@ function nextQuestion() {
 }
 
 function showFinalResult() {
+    clearInterval(timerInterval);
     document.getElementById('quiz-area').style.display = "none";
     document.getElementById('progress').parentElement.style.display = "none";
     const resArea = document.getElementById('result-area');
     resArea.style.display = "block";
-    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 12 ? "🏆 Excelente!" : "⚠️ Continue praticando.";
+    document.getElementById('score-text').innerHTML = `Resultado: ${score} Acertos e ${errors} Erros`;
+    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 Parabéns! Você seria aprovado!" : "⚠️ Quase lá! Estude um pouco mais.";
 }
 
-renderQuestion();
-
+// Inicia na tela de boas-vindas
+initQuiz();
 </script>
 </body>
 </html>
