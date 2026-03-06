@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Estudos - Detran MG</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2555/2555013.png" type="image/png">
+    
+    <style>
+        :root { 
+            --primary: #0056b3; --success: #28a745; --danger: #dc3545; --bg: #f8f9fa; --text: #333; 
+        }
+        
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        h1 { color: var(--primary); text-align: center; font-size: 26px; }
+        .alert { background: #e1f5fe; border-left: 5px solid #0288d1; padding: 15px; margin: 20px 0; border-radius: 8px; font-size: 14px; color: #01579b; }
+        
+        /* Player de Vídeo */
+        .video-box { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000; margin: 20px 0; }
+        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* Área do Simulado */
+        .quiz-section { background: #fff; border: 2px solid #eee; padding: 20px; border-radius: 12px; margin-top: 30px; }
+        .progress-container { height: 10px; background: #eee; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
+        .question-text { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: block; }
+        
+        .option { 
+            display: block; padding: 12px; margin: 10px 0; border: 2px solid #f0f0f0; 
+            border-radius: 8px; cursor: pointer; transition: 0.2s; position: relative;
+        }
+        .option input { margin-right: 10px; }
+
+        /* Cores de Feedback */
+        .option.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: bold; }
+        .option.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24; }
+        .option.disabled { pointer-events: none; opacity: 0.8; }
+
+        .btn-action { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-next-step { background: #ff9800; } /* Cor laranja para destacar o botão de 'Próxima' */
+
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 40px; font-weight: bold; margin: 15px 0; }
+        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📘 Processo de Habilitação</h1>
+    
+    <div class="alert">
+        <strong>🚀 TESTE RÁPIDO:</strong> Simulado de <b>aquecimento e fixação</b>. Use o Livro Azul para provas completas.
+    </div>
+
+    <div class="video-box">
+        <iframe src="https://www.youtube-nocookie.com/embed/oe0ZXYg63uE?start=21" allowfullscreen></iframe>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container"><div class="progress-fill" id="progress"></div></div>
+        <div id="quiz-area"></div>
+        <div id="result-area">
+            <h3>Resultado Final</h3>
+            <div id="score-text" class="score-box">0/15</div>
+            <p id="feedback-msg"></p>
+            <button class="btn-action" style="background: #6c757d;" onclick="location.reload()">Refazer Tudo</button>
+        </div>
+    </div>
+
+    <div class="footer">Confia no processo e executa! 🚦✅</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+const questions = [
+        {
+                "q": "A licença de Aprendizagem para prática de direção veicular em via pública, ou em locais autorizados para este fim, será expedida pelo DETRAN ao candidato que:",
+                "options": [
+                        "Tenha completado 16 anos de idade.",
+                        "Tenha completado 18 anos de idade.",
+                        "Tenha prestado exame em veículo particular.",
+                        "Tenha sido aprovado nos exames de aptidão física e mental, avaliação psicológica e de legislação de trânsito."
+                ],
+                "correct": 3
+        },
+        {
+                "q": "A não obtenção da Carteira Nacional de Habilitação pelo permissionário, implica em reiniciar todo o processo de habilitação, no prazo de:",
+                "options": [
+                        "15 (quinze) dias.",
+                        "30 (trinta) dias.",
+                        "360 (trezentos e sessenta) dias.",
+                        "A qualquer tempo."
+                ],
+                "correct": 3
+        },
+        {
+                "q": "O candidato para se habilitar na categoria A, poderá realizar o exame de prática de direção veicular em veículo de 2 rodas com cilindrada:",
+                "options": [
+                        "De 50 cm3,",
+                        "De 100 cm3.",
+                        "De 120 cm3.",
+                        "Acima de 120 cm3."
+                ],
+                "correct": 3
+        },
+        {
+                "q": "O processo do candidato à habilitação ficará ativado no Órgão ou Entidade Executivo de Trânsito pelo prazo de:",
+                "options": [
+                        "06 meses.",
+                        "24 meses.",
+                        "12 meses.",
+                        "Durante a validade do exame de sanidade física e mental."
+                ],
+                "correct": 2
+        },
+        {
+                "q": "A Carteira Nacional de Habilitação, não será conferida ao condutor portador da Permissão para Dirigir no término de um ano, se o mesmo cometer:",
+                "options": [
+                        "Uma infração de natureza média.",
+                        "Uma infração de natureza grave.",
+                        "Ser reincidente na infração de natureza leve.",
+                        "Uma infração de natureza leve."
+                ],
+                "correct": 1
+        },
+        {
+                "q": "O condutor que tiver a sua Permissão para Dirigir cassada, poderá reiniciar o processo de habilitação, que consiste em prestar exames de:",
+                "options": [
+                        "Aptidão fisica e mental, avaliação psicológica, legislação de trânsito e prática de direção veicular.",
+                        "Aptidão fisica e mental, avaliação psicológica e legislação de trânsito.",
+                        "Prática de direção veicular.",
+                        "Legislação de trânsito e prática de direção veicular."
+                ],
+                "correct": 0
+        },
+        {
+                "q": "Do condutor de veículo destinado à condução escolares, exige-se:",
+                "options": [
+                        "Não ter cometido nenhuma infração de trânsito.",
+                        "Idade superior a 18 anos.",
+                        "Apresentação do Registro Nacional de Transportadores Urbanos.",
+                        "Apresentação de certificado em curso especializado."
+                ],
+                "correct": 3
+        },
+        {
+                "q": "Qual é o órgão responsável por expedir o Certificado de Registro e Licenciamento de Veículo (CRLV)?",
+                "options": [
+                        "Polícia Rodoviária Federal (PRF)",
+                        "Departamento Nacional de Trânsito (DENATRAN)",
+                        "Departamento Estadual de Trânsito (DETRAN)",
+                        "Conselho Nacional de Trânsito (CONTRAN)"
+                ],
+                "correct": 2
+        },
+        {
+                "q": "O condutor já habilitado na categoria B deseja, posteriormente, habilitar-se também na categoria A. Quantos registros terá no RENACH (Registro Nacional de Condutores Habilitados)?",
+                "options": [
+                        "Dois registros, um para cada categoria de habilitação.",
+                        "Apenas um registro, que será atualizado com a nova categoria.",
+                        "Três registros, pois cada processo de habilitação gera um novo.",
+                        "Nenhum registro novo, permanecendo somente o inicial, sem atualização."
+                ],
+                "correct": 1
+        },
+        {
+                "q": "Qual órgão é responsável pela organização e manutenção do RENACH (Registro Nacional de Condutores Habilitados)?",
+                "options": [
+                        "CONTRAN",
+                        "SENATRAN (antigo DENATRAN)",
+                        "DETRAN",
+                        "Polícia Rodoviária Federal"
+                ],
+                "correct": 3
+        },
+        {
+                "q": "Do total arrecadado com multas de trânsito, qual percentual deve ser repassado ao FUNSET (Fundo Nacional de Segurança e Educação de Trânsito)?",
+                "options": [
+                        "1%",
+                        "2%",
+                        "5%",
+                        "10%"
+                ],
+                "correct": 0
+        },
+        {
+                "q": "Para condutores com 70 anos ou mais, o exame de aptidão física e mental tem validade de:",
+                "options": [
+                        "10 anos",
+                        "5 anos",
+                        "3 anos",
+                        "1 ano"
+                ],
+                "correct": 2
+        },
+        {
+                "q": "O condutor que teve sua CNH cassada e deseja voltar a dirigir deverá:",
+                "options": [
+                        "Apenas pagar as multas e taxas pendentes.",
+                        "Refazer todo o processo de habilitação, incluindo exames teóricos e práticos.",
+                        "Solicitar nova PPD após 6 meses.",
+                        "Fazer apenas curso de reciclagem."
+                ],
+                "correct": 1
+        },
+        {
+                "q": "A suspensão do direito de dirigir pode ocorrer, entre outros casos, quando o condutor:",
+                "options": [
+                        "Ficar 2 anos sem renovar a CNH.",
+                        "Cometer infrações que somem 20, 30 ou 40 pontos, conforme previsto no CTB.",
+                        "Se envolver em acidente de trânsito com vítima.",
+                        "For flagrado com veículo não licenciado."
+                ],
+                "correct": 3
+        },
+        {
+                "q": "De acordo com o CTB, os veículos automotores podem ser classificados quanto à:",
+                "options": [
+                        "Tração, espécie e categoria",
+                        "Potência, peso bruto total e combustível",
+                        "Espécie, cor e categoria",
+                        "Finalidade, cor e capacidade"
+                ],
+                "correct": 1
+        }
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = false;
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    if (!area) return;
+    const q = questions[currentQ];
+    
+    area.innerHTML = `
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) {
+        checkAnswer();
+    } else {
+        nextQuestion();
+    }
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) return alert("Escolha uma opção!");
+
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const correctChoice = questions[currentQ].correct;
+    const btn = document.getElementById('btn-quiz');
+    
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+
+    if (userChoice === correctChoice) {
+        score++;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play();
+    } else {
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play();
+    }
+
+    btn.innerHTML = "Próxima Questão";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) {
+        renderQuestion();
+    } else {
+        showFinalResult();
+    }
+}
+
+function showFinalResult() {
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('progress').parentElement.style.display = "none";
+    const resArea = document.getElementById('result-area');
+    resArea.style.display = "block";
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
+    document.getElementById('feedback-msg').innerHTML = score >= 12 ? "🏆 Excelente!" : "⚠️ Continue praticando.";
+}
+
+renderQuestion();
+
+</script>
+</body>
+</html>
