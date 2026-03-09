@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plano de Estudos - Detran MG</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2555/2555013.png" type="image/png">
+    
+    <style>
+        :root { 
+            --primary: #0056b3; --success: #28a745; --danger: #dc3545; --bg: #f4f7f9; --text: #222; 
+        }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.5; background: var(--bg); color: var(--text); margin: 0; padding: 15px; 
+        }
+
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        h1 { color: var(--primary); text-align: center; font-size: 26px; margin-top: 0; }
+        
+        .alert { background: #e1f5fe; border-left: 5px solid #0288d1; padding: 15px; margin: 20px 0; border-radius: 8px; font-size: 14px; color: #01579b; }
+
+        .video-box { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; margin: 20px 0; }
+        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .quiz-section { background: #fff; border: 2px solid #eee; padding: 15px; border-radius: 12px; margin-top: 20px; }
+        .progress-container { height: 8px; background: #eee; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
+        /* Estilo da Imagem da Placa */
+        .quiz-img { display: block; margin: 15px auto; max-width: 200px; height: auto; border-radius: 8px; }
+
+        .question-text { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: block; line-height: 1.3; }
+        
+        .option { 
+            display: flex; align-items: center; padding: 15px; margin: 10px 0; border: 2px solid #f0f0f0; 
+            border-radius: 10px; cursor: pointer; transition: 0.2s; background: #fff; font-size: 15px;
+        }
+        .option input { margin-right: 12px; min-width: 20px; min-height: 20px; }
+
+        .option.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: bold; }
+        .option.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24; }
+        .option.disabled { pointer-events: none; opacity: 0.8; }
+
+        .btn-action { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-next-step { background: #ff9800; }
+
+        #quiz-header { display: flex; justify-content: space-between; margin-bottom: 15px; background: #f4f4f4; padding: 10px; border-radius: 8px; font-size: 13px; }
+
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 48px; font-weight: bold; margin: 15px 0; color: var(--primary); }
+        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📘 Sinalização</h1>
+    
+    <div class="alert">
+        <strong>🚀 TESTE RÁPIDO:</strong> Simulado de <b>Sinalização</b>. Foco em placas e gestos.
+    </div>
+
+    <div class="video-box">
+        <iframe src="https://www.youtube-nocookie.com/embed/bNnr291TaIA" allowfullscreen></iframe>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container"><div class="progress-fill" id="progress"></div></div>
+        <div id="quiz-area"></div>
+        <div id="result-area">
+            <h3>Resultado Final</h3>
+            <div id="score-text" class="score-box">0/15</div>
+            <p id="feedback-msg"></p>
+            <button class="btn-action" style="background: #6c757d;" onclick="location.reload()">Refazer Tudo</button>
+        </div>
+    </div>
+
+    <div class="footer">Confia no processo e executa! 🚦✅</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
+
+<script>
+const questions = [
+    {
+        "q": "A placa SS-07 destina-se à sinalização :",
+        "img": "Mao.png",
+        "options": ["Ordem de parada para todos os veículos.", "Ordem de parada apenas para veículos pesados.", "De pedestres, indicando quando atravessar ou aguardar.", "Diminuir a marcha."],
+        "correct": 2
+    },
+    {
+        "q": "Esta marcação de sinalização horizontal indica:",
+        "img": "Mudanca.png",
+        "options": ["Siga em frente.", "Mudança obrigatória de faixa.", "Passagem permitida.", "Curva acentuada."],
+        "correct": 1
+    },
+    {
+        "q": "A placa de regulamentação abaixo ordena:",
+        "img": "Passagem.png",
+        "options": ["Sentido proibido.", "Siga em frente ou à direita.", "Passagem obrigatória.", "Vire à direita."],
+        "correct": 2
+    },
+    {
+        "q": "A placa de sinalização abaixo indica:",
+        "img": "Sentido.png",
+        "options": ["Sentido único de circulação.", "Siga em frente.", "Vire à esquerda.", "Sentido duplo."],
+        "correct": 0
+    },
+    {
+        "q": "A placa de advertência abaixo alerta para:",
+        "img": "Sinuosa.png",
+        "options": ["Curva à esquerda.", "Pista escorregadia.", "Sucessão de curvas, sendo a primeira à esquerda.", "Pista sinuosa, sendo a primeira curva à esquerda."],
+        "correct": 3
+    },
+    {
+        "q": "A placa de advertência A-20A corresponde a:",
+        "img": "Declive.png",
+        "options": ["Rampa com descida.", "Pista escorregadia.", "Declive acentuado.", "Aclive acentuado."],
+        "correct": 2
+    },
+
+    {
+        "q": "O gesto do agente de trânsito identificado como GA-01, caracterizado pela palma da mão voltada para frente, indica:",
+        "img": "Guarda.png",
+        "options": ["Atenção.", "Diminua a velocidade.", "Siga.", "Parada obrigatória para todos sentidos."],
+        "correct": 3
+    },
+    // Questões adicionais de sinalização (para sua edição manual posterior)
+    //{"q":"As placas de advertência têm por finalidade:","options":["Punir infrações.","Alertar sobre perigos na via.","Indicar destinos.","Educar o condutor."],"correct":1},
+    {"q":"A placa R-1 indica parada obrigatória. O desrespeito a ela gera:","options":["Infração grave.","Infração média.","Infração gravíssima.","Infração leve."],"correct":2},
+    {"q":"Qual a cor predominante nas placas de indicação de serviços auxiliares?","options":["Amarela.","Azul.","Verde.","Branca."],"correct":1},
+    {"q":"Linhas amarelas contínuas dividindo o fluxo indicam:","options":["Permitido ultrapassar.","Fluxo de sentido único.","Proibido ultrapassar para ambos os sentidos.","Pista exclusiva de ônibus."],"correct":2},
+    {"q":"Qual a única placa de advertência que tem a cor laranja:","options":["Sinalização de obras.","Sinalização turística.","Educação.","Advertência comum."],"correct":0},
+    {"q":"A sinalização vertical é composta por:","options":["Pinturas no chão.","Placas.","Gestos.","Luzes do semáforo."],"correct":1},
+    {"q":"O sinal luminoso vermelho intermitente significa:","options":["Atenção.","Pare.","Siga.","Passagem permitida com cuidado."],"correct":1},
+    //{"q":"A marca de delimitação 'zigue-zague' amarela indica:","options":["Área de estacionamento.","Área onde é proibido estacionar e parar.","Cruzamento ferroviário.","Pista sinuosa."],"correct":1},
+    {"q":" O sinal sonoro de 1 silvo breve, emitido pelo apito do agente de trânsito, indica:","options":["Atenção.","Diminua a velocidade.","Siga.","Pare."],"correct":2},
+    {"q":"A ordem do Agente de Trânsito prevalece sobre:","options":["As normas de circulação apenas.","O semáforo apenas.","Todas as demais sinalizações e normas.","Apenas sobre as placas."],"correct":2}
+];
+
+let currentQ = 0, score = 0, errors = 0, answered = false, timeLeft = 120, timerInterval;
+
+function playSound(id) {
+    const s = document.getElementById(id);
+    if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
+}
+
+function initQuiz() {
+    document.getElementById('quiz-area').innerHTML = `
+        <div style="text-align:center; padding: 40px 10px;">
+            <h2 style="margin-bottom:15px; font-size:20px;">Simulado de Sinalização</h2>
+            <p style="color:#666;">Foco em placas, gestos e marcas viárias.<br>Limite: 2 min por questão</p>
+            <button class="btn-action" onclick="startQuiz()">INICIAR TESTE</button>
+        </div>`;
+}
+
+function startQuiz() { renderQuestion(); }
+
+function renderQuestion() {
+    answered = false;
+    const q = questions[currentQ];
+    
+    // Lógica para incluir imagem se houver
+    const imageTag = q.img ? `<img src="${q.img}" class="quiz-img" alt="Sinalização">` : '';
+
+    document.getElementById('quiz-area').innerHTML = `
+        <div id="quiz-header">
+            <span id="timer-display" style="font-weight:bold; font-variant-numeric: tabular-nums;">⏱️ 2:00</span>
+            <span>✅ ${score} | ❌ ${errors}</span>
+        </div>
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        ${imageTag}
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">VERIFICAR</button>
+    `;
+    
+    window.scrollTo({top: document.getElementById('quiz-area').offsetTop - 30, behavior: 'smooth'});
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+    startTimer();
+}
+
+function startTimer() {
+    timeLeft = 120;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        const m = Math.floor(timeLeft/60), s = timeLeft%60;
+        const d = document.getElementById('timer-display');
+        if(d) {
+            d.innerHTML = `⏱️ ${m}:${s<10?'0':''}${s}`;
+            d.style.color = timeLeft < 20 ? 'red' : 'inherit';
+        }
+        if(timeLeft <= 0) { clearInterval(timerInterval); errors++; nextQuestion(); }
+    }, 1000);
+}
+
+function handleButtonClick() {
+    if (!answered) {
+        const sel = document.querySelector('input[name="quiz_opt"]:checked');
+        if (!sel) return alert("Selecione uma opção!");
+        clearInterval(timerInterval);
+        answered = true;
+        const userChoice = parseInt(sel.value), correct = questions[currentQ].correct;
+        document.querySelectorAll('.option').forEach(o => o.classList.add('disabled'));
+        if (userChoice === correct) {
+            score++;
+            document.getElementById(`opt-${userChoice}`).classList.add('correct');
+            playSound('snd-correct');
+        } else {
+            errors++;
+            document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+            document.getElementById(`opt-${correct}`).classList.add('correct');
+            playSound('snd-wrong');
+        }
+        document.getElementById('btn-quiz').innerHTML = "PRÓXIMA QUESTÃO";
+        document.getElementById('btn-quiz').classList.add('btn-next-step');
+    } else {
+        nextQuestion();
+    }
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) renderQuestion();
+    else showFinal();
+}
+
+function showFinal() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('progress').parentElement.style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    document.getElementById('score-text').innerHTML = `${score}/15`;
+    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 APROVADO! Parabéns!" : "⚠️ REPROVADO. Estude as placas do vídeo e tente novamente.";
+}
+
+initQuiz();
+</script>
+</body>
+</html>
