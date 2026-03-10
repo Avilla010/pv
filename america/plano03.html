@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plano de Estudos - Detran MG</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2555/2555013.png" type="image/png">
+    
+    <style>
+        :root { 
+            --primary: #0056b3; --success: #28a745; --danger: #dc3545; --bg: #f4f7f9; --text: #222; 
+        }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.5; background: var(--bg); color: var(--text); margin: 0; padding: 15px; 
+        }
+
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        h1 { color: var(--primary); text-align: center; font-size: 26px; margin-top: 0; }
+        
+        .alert { background: #e1f5fe; border-left: 5px solid #0288d1; padding: 15px; margin: 20px 0; border-radius: 8px; font-size: 14px; color: #01579b; }
+
+        .video-box { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; margin: 20px 0; }
+        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .quiz-section { background: #fff; border: 2px solid #eee; padding: 15px; border-radius: 12px; margin-top: 20px; }
+        .progress-container { height: 8px; background: #eee; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
+        /* Estilo da Imagem da Placa */
+        .quiz-img { display: block; margin: 15px auto; max-width: 200px; height: auto; border-radius: 8px; }
+
+        .question-text { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: block; line-height: 1.3; }
+        
+        .option { 
+            display: flex; align-items: center; padding: 15px; margin: 10px 0; border: 2px solid #f0f0f0; 
+            border-radius: 10px; cursor: pointer; transition: 0.2s; background: #fff; font-size: 15px;
+        }
+        .option input { margin-right: 12px; min-width: 20px; min-height: 20px; }
+
+        .option.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: bold; }
+        .option.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24; }
+        .option.disabled { pointer-events: none; opacity: 0.8; }
+
+        .btn-action { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-next-step { background: #ff9800; }
+
+        #quiz-header { display: flex; justify-content: space-between; margin-bottom: 15px; background: #f4f4f4; padding: 10px; border-radius: 8px; font-size: 13px; }
+
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 48px; font-weight: bold; margin: 15px 0; color: var(--primary); }
+        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📘 Normas de circulação</h1>
+    
+    <div class="alert">
+        <strong>🚀 TESTE RÁPIDO:</strong> Simulado de <b>Normas de circulação</b>. Foco em regras de preferência e prioridade.
+    </div>
+
+    <div class="video-box">
+        <iframe src="https://www.youtube-nocookie.com/embed/veoWUKYvGYs" allowfullscreen></iframe>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container"><div class="progress-fill" id="progress"></div></div>
+        <div id="quiz-area"></div>
+        <div id="result-area">
+            <h3>Resultado Final</h3>
+            <div id="score-text" class="score-box">0/15</div>
+            <p id="feedback-msg"></p>
+            <button class="btn-action" style="background: #6c757d;" onclick="location.reload()">Refazer Tudo</button>
+        </div>
+    </div>
+
+    <div class="footer">Confia no processo e executa! 🚦✅</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
+
+<script>
+const questions = [
+    {
+        "q": "Considerando a imagem ilustrada, onde uma ambulância se aproxima de um cruzamento não sinalizado, qual deve ser a conduta do condutor do veículo amarelo? :",
+        "img": "amb.png",
+        "options": ["Ambulância terá prioridade de passagem.", "O veículo amarelo deve acelerar para liberar o cruzamento o mais rápido possível.", "O veículo amarelo deve deixar livre a passagem, parando ou deslocando-se para a direita da via.", "O veículo amarelo tem a preferência por vir à direita da ambulância."],
+        "correct": 3
+    },
+    {
+        "q": "Em um cruzamento não sinalizado, a preferência de passagem será:",
+        "options": ["Sempre do veículo que estiver em maior velocidade.", "Do veículo que vier pela direita do condutor.", "Do veículo que vier pela esquerda do condutor.", "Sempre do veículo de carga."],
+        "correct": 1
+    },
+    {
+        "q": "Qual a velocidade máxima que pode ser atingida por um veiculo de passeio ou motocicleta nas rodovias brasileiras:",
+        "options": ["120 kmh.", "90 kmh.", "110 kmh.", "80 kmh."],
+        "correct": 2
+    },
+    {
+        "q": "Com relação ao movimento efetuado pelo veículo 2 é correto dizer que:",
+        "img": "carro.png",
+        "options": ["É uma manobra permitida.", "É uma manobra perigosa.", "Permitida pois o veículo volta com segurança para sua faixa.", "É uma ultrapassagem proibida."],
+        "correct": 3
+    },
+    {
+        "q": "Os veículos que se deslocam sobre trilhos terão preferência de passagem sobre os demais:",
+        "options": ["Apenas se houver sinalização.", "Respeitadas as normas de circulação.", "Apenas nos cruzamentos com cancelas.", "Sempre, devido à sua natureza."],
+        "correct": 3
+    },
+    {
+        "q": "As luzes de posição (lanternas) devem ser utilizadas obrigatoriamente:",
+        "options": ["Somente durante o dia.", "Sob chuva forte, neblina ou cerração.", "Apenas ao estacionar.", "Em vias iluminadas durante a noite."],
+        "correct": 1
+    },
+    {
+        "q": "O uso da buzina deve ser feito mediante toques breves e somente para:",
+        "options": ["Apressar o pedestre.", "Cumprimentar conhecidos.", "Advertência a fim de evitar acidentes.", "Chamar alguém na calçada."],
+        "correct": 2
+    },
+    {
+        "q": "Nas vias sem sinalização, o condutor deve manter a distância de segurança:",
+        "options": ["Lateral e frontal entre o seu e os demais veículos.", "Apenas frontal.", "Apenas lateral.", "Somente se estiver em alta velocidade."],
+        "correct": 0
+    },
+    {
+        "q": "Ao transitar em uma rotatória, a preferência de passagem é do veículo que:",
+        "options": ["Vier pela direita.", "Estiver circulando por ela.", "Estiver entrando nela.", "For de maior porte."],
+        "correct": 1
+    },
+    {
+        "q": "O condutor de veículo só poderá realizar a ultrapassagem pela direita quando:",
+        "options": ["O veículo à frente for muito lento.", "Houver três faixas de rolamento.", "O veículo à frente sinalizar que vai entrar à esquerda.", "Nunca é permitido ultrapassar pela direita."],
+        "correct": 2
+    },
+    {
+        "q": "Em vias de pista dupla com várias faixas no mesmo sentido, as da esquerda são destinadas à:",
+        "options": ["Veículos lentos e pesados.", "Ultrapassagem e veículos de maior velocidade.", "Circulação de motocicletas apenas.", "Estacionamento de emergência."],
+        "correct": 1
+    },
+    {
+        "q": "Para virar à esquerda em uma via urbana de sentido duplo, o condutor deve:",
+        "options": ["Aproximar-se o máximo possível do bordo direito.", "Aproximar-se o máximo possível do eixo central da via.", "Parar no acostamento e aguardar.", "Cruzar a via direto, sem parar."],
+        "correct": 1
+    },
+    {
+        "q": "Todo condutor deve, antes de entrar em outra via, certificar-se de que pode fazê-lo sem perigo para:",
+        "options": ["Os passageiros do seu carro apenas.", "Os demais usuários da via que a cruzam.", "Apenas para os pedestres na calçada.", "Os veículos que vêm atrás dele."],
+        "correct": 1
+    },
+    {
+        "q": "É dever do condutor, ao ser ultrapassado:",
+        "options": ["Aumentar a velocidade para dificultar.", "Manter-se à esquerda da via.", "Facilitar a ultrapassagem, não acelerando a marcha.", "Ligar o farol alto."],
+        "correct": 2
+    },
+    {
+        "q": "Os pedestres, ao cruzar a pista de rolamento onde não houver faixa, devem fazê-lo:",
+        "options": ["Em sentido diagonal ao eixo da via.", "Em sentido perpendicular ao eixo da via.", "Correndo para atravessar logo.", "Em qualquer sentido."],
+        "correct": 1
+    }
+];
+
+let currentQ = 0, score = 0, errors = 0, answered = false, timeLeft = 120, timerInterval;
+
+function playSound(id) {
+    const s = document.getElementById(id);
+    if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
+}
+
+function initQuiz() {
+    document.getElementById('quiz-area').innerHTML = `
+        <div style="text-align:center; padding: 40px 10px;">
+            <h2 style="margin-bottom:15px; font-size:20px;">Simulado de Normas de circulação</h2>
+            <p style="color:#666;">Foco em regras de preferência e prioridade.<br>Limite: 2 min por questão</p>
+            <button class="btn-action" onclick="startQuiz()">INICIAR TESTE</button>
+        </div>`;
+}
+
+function startQuiz() { renderQuestion(); }
+
+function renderQuestion() {
+    answered = false;
+    const q = questions[currentQ];
+    const imageTag = q.img ? `<img src="${q.img}" class="quiz-img" alt="Normas de circulação">` : '';
+
+    document.getElementById('quiz-area').innerHTML = `
+        <div id="quiz-header">
+            <span id="timer-display" style="font-weight:bold; font-variant-numeric: tabular-nums;">⏱️ 2:00</span>
+            <span>✅ ${score} | ❌ ${errors}</span>
+        </div>
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        ${imageTag}
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">VERIFICAR</button>
+    `;
+    
+    window.scrollTo({top: document.getElementById('quiz-area').offsetTop - 30, behavior: 'smooth'});
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+    startTimer();
+}
+
+function startTimer() {
+    timeLeft = 120;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        const m = Math.floor(timeLeft/60), s = timeLeft%60;
+        const d = document.getElementById('timer-display');
+        if(d) {
+            d.innerHTML = `⏱️ ${m}:${s<10?'0':''}${s}`;
+            d.style.color = timeLeft < 20 ? 'red' : 'inherit';
+        }
+        if(timeLeft <= 0) { clearInterval(timerInterval); errors++; nextQuestion(); }
+    }, 1000);
+}
+
+function handleButtonClick() {
+    if (!answered) {
+        const sel = document.querySelector('input[name="quiz_opt"]:checked');
+        if (!sel) return alert("Selecione uma opção!");
+        clearInterval(timerInterval);
+        answered = true;
+        const userChoice = parseInt(sel.value), correct = questions[currentQ].correct;
+        document.querySelectorAll('.option').forEach(o => o.classList.add('disabled'));
+        if (userChoice === correct) {
+            score++;
+            document.getElementById(`opt-${userChoice}`).classList.add('correct');
+            playSound('snd-correct');
+        } else {
+            errors++;
+            document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+            document.getElementById(`opt-${correct}`).classList.add('correct');
+            playSound('snd-wrong');
+        }
+        document.getElementById('btn-quiz').innerHTML = "PRÓXIMA QUESTÃO";
+        document.getElementById('btn-quiz').classList.add('btn-next-step');
+    } else {
+        nextQuestion();
+    }
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) renderQuestion();
+    else showFinal();
+}
+
+function showFinal() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('progress').parentElement.style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    document.getElementById('score-text').innerHTML = `${score}/15`;
+    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 APROVADO! Parabéns!" : "⚠️ REPROVADO. Estude as regras do vídeo e tente novamente.";
+}
+
+initQuiz();
+</script>
+</body>
+</html>
