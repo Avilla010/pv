@@ -38,27 +38,41 @@
     </footer>
 
     <script>
+        // Captura os parâmetros da URL
         const params = new URLSearchParams(window.location.search);
         const videoId = params.get('id');
         const aulaId = params.get('aula');
         const titulo = params.get('title');
         const simuladoUrl = params.get('simulado');
 
+        // Atualiza o título da aula na tela
         document.getElementById('aula-nome').innerText = titulo;
+
+        // Renderiza o iframe SEM o autoplay para evitar bloqueios em redes móveis
         document.getElementById('player').innerHTML = `
-            <iframe src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&autoplay=1" allowfullscreen allow="autoplay"></iframe>
+            <iframe 
+                src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0" 
+                allowfullscreen 
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+            </iframe>
         `;
 
+        // Verifica se existe link de simulado e exibe o botão se necessário
         if (simuladoUrl && simuladoUrl !== "" && simuladoUrl !== "null") {
             const btnSimulado = document.getElementById('link-simulado');
             btnSimulado.href = simuladoUrl;
             btnSimulado.style.display = "inline-block";
         }
 
+        // Função para salvar o progresso no localStorage
         function marcarConcluida() {
-            localStorage.setItem(aulaId, 'sim');
-            alert("Aula marcada como concluída!");
-            window.location.href = 'listas_gravadas.html';
+            if (aulaId) {
+                localStorage.setItem(aulaId, 'sim');
+                alert("Aula marcada como concluída!");
+                window.location.href = 'listas_gravadas.html';
+            } else {
+                alert("Erro ao identificar a aula.");
+            }
         }
     </script>
 </body>
