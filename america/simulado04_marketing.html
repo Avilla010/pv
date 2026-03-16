@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado 02 - Penalidades</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --primary: #0056b3; --success: #28a745; --danger: #dc3545; --bg: #f8f9fa; --text: #333; 
+        }
+        
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        h1 { color: var(--primary); text-align: center; font-size: 26px; margin-top: 10px; }
+        .header-nav { display: flex; justify-content: flex-start; margin-bottom: 10px; }
+        .btn-voltar { text-decoration: none; color: #667; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+
+        .stats-bar { display: none; justify-content: space-around; background: #f1f3f5; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; font-size: 14px; border: 1px solid #ddd; }
+        .timer-box { color: #555; }
+        .score-correct { color: var(--success); }
+        .score-wrong { color: var(--danger); }
+
+        .alert { background: #e1f5fe; border-left: 5px solid #0288d1; padding: 15px; margin: 20px 0; border-radius: 8px; font-size: 14px; color: #01579b; }
+        
+        .quiz-section { background: #fff; border: 2px solid #eee; padding: 20px; border-radius: 12px; margin-top: 10px; }
+        .progress-container { height: 10px; background: #eee; border-radius: 5px; margin-bottom: 20px; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
+        #quiz-area { display: none; }
+        #start-screen { text-align: center; padding: 20px; }
+
+        .question-text { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: block; }
+        
+        .option { display: block; padding: 12px; margin: 10px 0; border: 2px solid #f0f0f0; border-radius: 8px; cursor: pointer; transition: 0.2s; position: relative; }
+        .option:hover { border-color: #ddd; background: #fdfdfd; }
+        .option input { margin-right: 10px; }
+
+        .option.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: bold; }
+        .option.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24; }
+        .option.disabled { pointer-events: none; opacity: 0.8; }
+
+        .btn-action { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block; box-sizing: border-box; }
+        .btn-next-step { background: #ff9800; }
+
+        /* Estilo da oferta final */
+        .premium-box { background: #fff9c4; border: 2px dashed #fbc02d; padding: 20px; border-radius: 12px; margin-top: 25px; }
+        .btn-premium { background: #28a745; color: white; animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 40px; font-weight: bold; margin: 15px 0; color: var(--primary); }
+        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+    </div>
+
+    <h1>📘 Simulado: Penalidades e Infrações</h1>
+
+    <div id="live-stats" class="stats-bar">
+        <span class="timer-box"><i class="fas fa-clock"></i> <span id="timer">15:00</span></span>
+        <span class="score-correct"><i class="fas fa-check-circle"></i> Acertos: <span id="count-correct">0</span></span>
+        <span class="score-wrong"><i class="fas fa-times-circle"></i> Erros: <span id="count-wrong">0</span></span>
+    </div>
+
+    <div id="start-screen">
+        <div class="alert">
+            <strong>📋 INFORMAÇÕES:</strong><br><br>
+            • 15 Questões (Penalidades e Infrações).<br>
+            • Tempo limite total: 15 minutos.<br>
+            • Necessário 11 acertos para aprovação.<br>
+        </div>
+        <button class="btn-action" onclick="startQuiz()">INICIAR SIMULADO</button>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
+        
+        <div id="quiz-area"></div>
+
+        <div id="result-area">
+            <h3>Resultado Final</h3>
+            <div id="score-text" class="score-box">0/15</div>
+            <p id="feedback-msg"></p>
+            
+            <div class="premium-box">
+                <p style="margin-top:0; font-weight:bold; color: #5d4037;">🚀 Quer passar de primeira na prova do DETRAN?</p>
+                <p style="font-size: 14px;">Acesse nossa plataforma completa com centenas de questões e videoaulas!</p>
+                <a href="SEU_LINK_AQUI" class="btn-action btn-premium">
+                    <i class="fas fa-lock-open"></i> ACESSAR PLATAFORMA COMPLETA POR APENAS R$ 29,90
+                </a>
+            </div>
+
+            <button class="btn-action" style="background: #6c757d; margin-top: 20px;" onclick="location.reload()">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <div class="footer">Confia no processo e executa! 🚦✅</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+const questions = [
+    {
+        "q": "O condutor infrator será submetido a curso de reciclagem quando:",
+        "options": ["Cassada a sua Carteira Nacional de Habilitação.", "Suspenso o direito de dirigir.", "Cometer duas infrações de natureza média.", "Cometer qualquer infração de natureza grave."],
+        "correct": 1
+    },
+    {
+        "q": "Um condutor força ultrapassagem em pista simples, com linha contínua amarela, obrigando veículos do sentido contrário a desviar para o acostamento. De acordo com o CTB, essa conduta:",
+        "options": ["É uma manobra permitida.", "É uma ultrapassagem sempre perigosa.", "É uma ultrapassagem perfeita, pois o veiculo 2 retorna a sua faixa com segurança.", "É uma ultrapassagem proibida."],
+        "correct": 3
+    },
+    {
+        "q": "A penalidade de advertência por escrito poderá ser aplicada pela autoridade, quando entender esta providência como mais educativa, a infração de:",
+        "options": ["Natureza leve ou média.", "Natureza grave.", "Natureza gravíssima.", "Em nenhuma hipótese."],
+        "correct": 0
+    },
+    {
+        "q": "São penalidades previstas no CTB, exceto:",
+        "options": ["Multa", "Advertência por escrito", "Apreensão do veículo", "Cassação da CNH"],
+        "correct": 2
+    },
+    {
+        "q": "A suspensão do direito de dirigir ocorrerá em todas as situações abaixo, exceto:",
+        "options": ["Estourar o limite de pontos em 12 meses", "Disputar corrida por espírito de emulação", "Ser multado por infração leve", "Dirigir sob influência de álcool"],
+        "correct": 2
+    },
+    {
+        "q": "Sobre a cassação da CNH, marque a alternativa incorreta:",
+        "options": ["Pode ocorrer por reincidência em infração que gera suspensão", "Ocorre se o condutor for condenado judicialmente por crime de trânsito", "Pode ocorrer se o condutor for flagrado dirigindo com a CNH suspensa", "O simples atraso na renovação da CNH gera cassação automática"],
+        "correct": 3
+    },
+    {
+        "q": "A PPD será cassada se o condutor cometer:",
+        "options": ["Uma infração leve", "Uma infração média", "Duas infrações médias", "Uma infração leve e uma média"],
+        "correct": 2
+    },
+    {
+        "q": "Condutor estacionou o veiculo a mais de 50 centrimetros da guia da calçada, qual infração ele cometeu:",
+        "options": ["Média", "Grave", "Leve", "Advertência por escrito"],
+        "correct": 2
+    },
+    {
+        "q": "Não se enquadra como infração que gera suspensão direta, sem somar pontos:",
+        "options": ["Dirigir sob efeito de álcool", "Fugir do local do acidente", "Estacionar em local proibido", "Realizar manobra perigosa"],
+        "correct": 2
+    },
+    {
+        "q": "Sobre o curso de reciclagem, marque a alternativa incorreta:",
+        "options": ["É obrigatório em caso de suspensão do direito de dirigir", "Pode ser exigido após acidente grave com culpa", "É obrigatório em caso de cassação da CNH", "Pode ser exigido por decisão judicial"],
+        "correct": 2
+    },
+    {
+        "q": "Entre as alternativas abaixo, não representa medida administrativa:",
+        "options": ["Remoção do veículo", "Recolhimento do CRLV", "Aplicação de multa", "Retenção do veículo"],
+        "correct": 2
+    },
+    {
+        "q": "O condutor poderá solicitar a conversão da multa em advertência quando:",
+        "options": ["A infração for gravíssima", "A infração for média e não houver reincidência nos últimos 12 meses", "A infração for reincidente, mas for leve", "A infração for grave e ele tiver cometido outras no ano"],
+        "correct": 1
+    },
+    {
+        "q": "Uma das infrações que resulta diretamente em suspensão do direito de dirigir é:",
+        "options": ["Conduzir com farol queimado", "Estacionar sobre a calçada", "Transpor bloqueio policial", "Usar som automotivo em excesso"],
+        "correct": 2
+    },
+    {
+        "q": "O auto de infração será arquivado automaticamente, exceto:",
+        "options": ["Se for inconsistente ou irregular", "Se não for expedido em até 30 dias", "Se o condutor não tiver sido abordado", "Se houver erro na identificação do veículo"],
+        "correct": 2
+    },
+    {
+        "q": "Qual o prazo máximo para a expedição da notificação da autuação por infração de trânsito?",
+        "options": ["15 dias", "30 dias", "60 dias", "90 dias"],
+        "correct": 1
+    }
+];
+
+let currentQ = 0;
+let score = 0;
+let errors = 0;
+let answered = false;
+let timeLeft = 900; 
+let timerInterval;
+
+function startQuiz() {
+    document.getElementById('start-screen').style.display = "none";
+    document.getElementById('quiz-area').style.display = "block";
+    document.getElementById('live-stats').style.display = "flex";
+    document.getElementById('p-cont').style.display = "block";
+    renderQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showFinalResult();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    const q = questions[currentQ];
+    
+    area.innerHTML = `
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) checkAnswer();
+    else nextQuestion();
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) return alert("Escolha uma opção!");
+    
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const correctChoice = questions[currentQ].correct;
+    
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+    
+    if (userChoice === correctChoice) {
+        score++;
+        document.getElementById('count-correct').innerHTML = score;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play().catch(()=>{});
+    } else {
+        errors++;
+        document.getElementById('count-wrong').innerHTML = errors;
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play().catch(()=>{});
+    }
+    
+    const btn = document.getElementById('btn-quiz');
+    btn.innerHTML = "Próxima Questão";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) {
+        renderQuestion();
+    } else {
+        showFinalResult();
+    }
+}
+
+function showFinalResult() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('live-stats').style.display = "none";
+    document.getElementById('p-cont').style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
+    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 Aprovado! Você domina as normas." : "⚠️ Quase lá! Estude um pouco mais e tente novamente.";
+}
+</script>
+</body>
+</html>

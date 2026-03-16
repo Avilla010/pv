@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Estudo - CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success-green: #46d369;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--netflix-black);
+            margin: 0;
+            padding: 40px 20px;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: transparent;
+        }
+
+        .header {
+            text-align: left;
+            border-left: 5px solid var(--netflix-red);
+            padding-left: 20px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #fff;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .intro-box {
+            background: rgba(229, 9, 20, 0.1);
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            margin-bottom: 35px;
+            font-size: 1.1rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            background: var(--netflix-card);
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 2px solid #333;
+            transition: 0.3s;
+        }
+
+        .stat-item i {
+            color: var(--netflix-red);
+            margin-bottom: 10px;
+            display: block;
+            font-size: 1.5rem;
+        }
+
+        .stat-item:hover {
+            background: #222;
+            border-color: var(--netflix-red);
+        }
+
+        h3 {
+            color: #e5e5e5;
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .step-card {
+            background: var(--netflix-card);
+            border: 1px solid #333;
+            padding: 25px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .step-card:hover {
+            transform: translateX(10px);
+            border-color: var(--netflix-red);
+            background: #222;
+        }
+
+        .step-number {
+            background: var(--netflix-red);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+        }
+
+        .step-content strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .step-content p {
+            color: #a3a3a3;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .btn-action {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-action:hover {
+            background: var(--netflix-red);
+            color: #fff;
+        }
+
+        .detran-badge {
+            background: var(--netflix-red);
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 800;
+            margin-top: 40px;
+            letter-spacing: 1px;
+        }
+
+        .strategy-list {
+            margin-top: 25px;
+            padding: 0;
+            list-style: none;
+            background: var(--netflix-card);
+            border-radius: 4px;
+            padding: 10px 20px;
+        }
+
+        .strategy-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .strategy-list li:last-child { border-bottom: none; }
+
+        .strategy-list li i { 
+            color: var(--success-green); 
+            margin-right: 15px; 
+            font-size: 1.1rem;
+        }
+
+        .footer-msg {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--success-green);
+            text-shadow: 0 0 10px rgba(70, 211, 105, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .step-card { flex-direction: column; text-align: center; gap: 15px; }
+            .header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Modelo de Estudo Estratégico</h1>
+    </div>
+
+    <div class="intro-box">
+        <strong><i class="fas fa-user-shield"></i> Guia para quem tem pouco tempo:</strong> 
+        O segredo não é estudar muito, é estudar o que realmente cai.
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-item"><i class="fas fa-clock"></i> 1h a 2h por dia</div>
+        <div class="stat-item"><i class="fas fa-calendar-alt"></i> Seg a Sáb</div>
+        <div class="stat-item"><i class="fas fa-redo"></i> Domingo: Revisão</div>
+    </div>
+
+    <h3>📌 O PASSO A PASSO DIÁRIO</h3>
+
+    <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <strong>30 min – Teoria Objetiva</strong>
+            <p>Assista aos módulos gravados focados no edital do DETRAN MG.</p>
+            <a href="listas_gravadas.html" class="btn-action">Abrir Aulas</a>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <strong>30 min – Prática de Simulados</strong>
+            <p>Treine com as questões reais da prova teórica.</p>
+            <a href="lista-simulados.html" class="btn-action">Fazer Simulado</a>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <strong>15 min – Análise de Erros</strong>
+            <p>Não pule este passo! Entenda o motivo de cada questão errada.</p>
+        </div>
+    </div>
+
+    <div class="detran-badge">
+        🎯 FOCO TOTAL DETRAN MG – 20 PONTOS PARA APROVAÇÃO
+    </div>
+
+    <div style="margin-top: 30px; color: #a3a3a3; font-size: 0.9rem; text-align: center;">
+        <p>Minas Gerais exige 70% de acerto. Use a estratégia acima para garantir sua vaga.</p>
+    </div>
+
+    <h3>📌 REGRAS DE OURO</h3>
+    <ul class="strategy-list">
+        <li><i class="fas fa-check"></i> <strong>Foco:</strong> Estude apenas o conteúdo indicado.</li>
+        <li><i class="fas fa-check"></i> <strong>Material:</strong> Use o Livro Azul como suporte.</li>
+        <li><i class="fas fa-check"></i> <strong>Mentalidade:</strong> Errar no simulado é o caminho para acertar na prova.</li>
+        <li><i class="fas fa-check"></i> <strong>Constância:</strong> Um pouco todo dia é melhor que muito uma vez por semana.</li>
+    </ul>
+
+    <div class="footer-msg">
+        Siga o plano. A CNH é sua! 🚦✅
+    </div>
+</div>
+
+</body>
+</html>

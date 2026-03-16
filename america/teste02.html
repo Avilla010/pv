@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNH Blindada - Aulas Gravadas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* ESTÉTICA NETFLIX ORIGINALS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+
+        body { 
+            background-color: #141414; /* Preto Netflix */
+            color: #fff; 
+            padding: 40px 4%; 
+            overflow-x: hidden;
+        }
+
+        .header-section { 
+            margin-bottom: 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end;
+        }
+
+        .header-section h2 { font-size: 2rem; color: #E50914; text-transform: uppercase; letter-spacing: 1px; }
+        .header-section p { color: #a3a3a3; margin-top: 5px; }
+
+        /* GRID ESTILO CATÁLOGO */
+        .video-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 40px 20px; 
+        }
+
+        .video-card { 
+            background: #181818; 
+            border-radius: 4px; 
+            overflow: hidden; 
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 3px solid transparent;
+        }
+
+        /* EFEITO ZOOM NETFLIX */
+        .video-card:hover { 
+            transform: scale(1.08); 
+            z-index: 10;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+            border-color: #E50914;
+        }
+
+        .thumbnail { 
+            width: 100%; 
+            height: 160px; 
+            background-size: cover; 
+            background-position: center; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        /* Ícone de Play central que aparece no hover */
+        .thumbnail i { 
+            color: #fff; 
+            font-size: 3rem; 
+            z-index: 2;
+            opacity: 0;
+            transition: 0.3s;
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .video-card:hover .thumbnail i { opacity: 0.9; }
+
+        .video-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        .video-title { 
+            font-size: 1rem; 
+            font-weight: 700; 
+            margin-bottom: 10px; 
+            color: #fff;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        /* BARRA DE PROGRESSO VERMELHA (ESTILO "CONTINUAR ASSISTINDO") */
+        .progress-container { 
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.2); 
+            height: 4px; 
+            z-index: 5;
+        }
+        .progress-bar { height: 100%; transition: 1s ease; }
+        .bg-pendente { background: #555; }
+        .bg-concluido { background: #E50914; box-shadow: 0 0 10px #E50914; }
+
+        .progress-text { 
+            font-size: 0.7rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .text-pendente { color: #808080; }
+        .text-concluido { color: #46d369; } /* Verde para concluído, mantém o padrão de sucesso */
+
+        .btn-play { 
+            width: 100%; 
+            padding: 10px; 
+            background: #fff; 
+            color: #000; 
+            text-align: center; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: 0.2s;
+            margin-top: auto;
+        }
+
+        .video-card:hover .btn-play { background: #E50914; color: #fff; }
+
+        .btn-reset { 
+            background: transparent; 
+            color: #555; 
+            border: 1px solid #555; 
+            padding: 8px 15px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 0.75rem; 
+            transition: 0.3s;
+        }
+        .btn-reset:hover { border-color: #fff; color: #fff; }
+
+        @media (max-width: 768px) {
+            .video-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+            .header-section h2 { font-size: 1.4rem; }
+            .thumbnail { height: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <div>
+            <h2>AULAS <span style="font-weight: 400; color: #fff;">GRAVADAS</span></h2>
+            <p>Sua maratona rumo à Carteira de Habilitação.</p>
+        </div>
+        <button class="btn-reset" onclick="resetProgress()">Zerar Histórico</button>
+    </div>
+
+    <div class="video-grid" id="grid-aulas"></div>
+
+    <script>
+        const aulas = [
+            { id: 'aula01', titulo: '01 - Processo de Habilitação', yt: 'oe0ZXYg63uE', simulado: 'simulado01.html' },
+            { id: 'aula02', titulo: '02 - Sinalização de Trânsito', yt: 'bNnr291TaIA', simulado: 'simulado02.html' },
+            { id: 'aula03', titulo: '03 - Normas de Circulação', yt: 'veoWUKYvGYs', simulado: 'simulado03.html' },
+            { id: 'aula04', titulo: '04 - Penalidades e Crimes', yt: 'dM0bJq--4vk', simulado: 'simulado04.html' },
+            { id: 'aula05', titulo: '05 - Direção Defensiva', yt: '1xvY6PIyrwY', simulado: 'simulado05.html' },
+            { id: 'aula06', titulo: '06 - Primeiros Socorros', yt: 'cKWwEOkASw4', simulado: 'simulado06.html' },
+            { id: 'aula07', titulo: '07 - Meio Ambiente e Cidadania', yt: 'XEiVKViHUe0', simulado: 'simulado07.html' },
+            { id: 'aula09', titulo: '09 - Mecânica Básica', yt: 'koQ-yQGLSBA', simulado: 'simulado08.html' }
+        ];
+
+        function render() {
+            const grid = document.getElementById('grid-aulas');
+            grid.innerHTML = '';
+            aulas.forEach(a => {
+                const feito = localStorage.getItem(a.id) === 'sim';
+                const thumbnailUrl = `https://img.youtube.com/vi/${a.yt}/maxresdefault.jpg`;
+                const videoUrl = `assistir.html?id=${a.yt}&aula=${a.id}&title=${encodeURIComponent(a.titulo)}&simulado=${a.simulado || ''}`;
+
+                grid.innerHTML += `
+                    <div class="video-card" onclick="window.location.href='${videoUrl}'">
+                        <div class="thumbnail" style="background-image: url('${thumbnailUrl}')">
+                            <i class="fas fa-play"></i>
+                            <div class="progress-container">
+                                <div class="progress-bar ${feito ? 'bg-concluido' : 'bg-pendente'}" 
+                                     style="width: ${feito ? '100%' : '20%'}"></div>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <span class="progress-text ${feito ? 'text-concluido' : 'text-pendente'}">
+                                ${feito ? '● Finalizado' : 'Continuar Assistindo'}
+                            </span>
+                            <h3 class="video-title">${a.titulo}</h3>
+                            <div class="btn-play">Assistir</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function resetProgress() {
+            if(confirm("Deseja apagar sua lista de 'Aulas Assistidas'?")) { 
+                aulas.forEach(a => localStorage.removeItem(a.id)); 
+                render(); 
+            }
+        }
+        render();
+    </script>
+</body>
+</html>

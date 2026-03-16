@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado 03 - Primeiros Socorros | CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --text: #fff; 
+        }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: var(--netflix-black); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 800px; 
+            background: transparent;
+        }
+
+        /* --- HEADER --- */
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-voltar { 
+            text-decoration: none; 
+            color: #a3a3a3; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-voltar:hover { color: #fff; }
+
+        h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- STATS --- */
+        .stats-bar { 
+            display: none; 
+            justify-content: space-around; 
+            background: var(--netflix-card); 
+            padding: 20px; 
+            border-radius: 4px; 
+            margin-bottom: 25px; 
+            font-weight: bold; 
+            border-bottom: 2px solid #333;
+        }
+
+        /* --- QUIZ SECTION --- */
+        .quiz-section { 
+            background: var(--netflix-card); 
+            padding: 40px; 
+            border-radius: 4px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .progress-container { 
+            height: 4px; 
+            background: #333; 
+            margin-bottom: 30px; 
+            display: none; 
+        }
+        .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s; }
+        
+        .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; color: #fff; }
+        
+        .option { 
+            display: block; 
+            padding: 18px; 
+            margin: 12px 0; 
+            border: 1px solid #333; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            background: rgba(255,255,255,0.02);
+            font-size: 1rem;
+        }
+        .option:hover { background: rgba(255,255,255,0.08); }
+        .option input { margin-right: 15px; accent-color: var(--netflix-red); }
+
+        .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; }
+        .option.disabled { pointer-events: none; }
+
+        .btn-action { 
+            width: 100%; 
+            background: #fff; 
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: var(--netflix-red); color: #fff; }
+
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
+        
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Voltar</a>
+        <h1>Simulado 03</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div id="live-stats" class="stats-bar">
+        <span style="color:#fff"><i class="far fa-clock"></i> <span id="timer">15:00</span></span>
+        <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
+        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
+        
+        <div id="start-screen" style="text-align:center">
+            <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
+                <h3 style="color:#fff; margin-bottom:15px">Módulo: Primeiros Socorros</h3>
+                • Atendimento inicial e sinalização<br>
+                • Omissão de socorro e limites legais<br>
+                • Sinais vitais e queimaduras<br>
+                • 15 questões | 11 acertos necessários
+            </div>
+            <button class="btn-action" onclick="startQuiz()">INICIAR MISSÃO</button>
+        </div>
+
+        <div id="quiz-area"></div>
+
+        <div id="result-area">
+            <h3>Relatório de Atendimento</h3>
+            <div id="score-text" class="score-box">0/15</div>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Refazer Simulado</button>
+            <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color:#fff">Próximo Módulo</a>
+        </div>
+    </div>
+
+    <div class="footer">Confia no processo e executa! 🚦✅</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+const questions = [
+    {
+        "q": "Quando o socorrista não se sente à vontade ao ver sangramentos e lesões, mas gostaria de ajudar na assistência das vítimas, que providências deve tomar?",
+        "options": ["Afrouxar a roupa dos acidentados e oferecer-lhes água para beber.", "Sinalizar o local para evitar novos acidentes e atropelamentos.", "Ligar a chave de ignição dos veículos acidentados.", "Remover o veículo do lugar do acidente."],
+        "correct": 1
+    },
+    {
+        "q": "Conter o sangramento com gaze estéril, sem aplicar pressão direta e chamar o resgate é procedimento adequado em caso de:",
+        "options": ["Parada respiratória.", "Acidente em que a vítima apresenta fratura aberta.", "Parada cardíaca.", "Crise convulsiva."],
+        "correct": 1
+    },
+    {
+        "q": "Uma vítima de acidente de trânsito está gritando, com muita dor. Nessa situação, você deve:",
+        "options": ["Dar remédio para dor.", "Fazer compressas geladas no local da dor.", "Fazer compressas quentes no local da dor.", "Esperar a chegada do resgate."],
+        "correct": 3
+    },
+    {
+        "q": "Em acidente de trânsito envolvendo veículo com passageiros e fio elétrico caído sobre o veículo, os passageiros deverão, até ser desligada a energia:",
+        "options": ["Permanecer no veículo.", "Afastar o veículo do fio elétrico.", "Sair um a um do veículo.", "Serem retirados imediatamente."],
+        "correct": 0
+    },
+    {
+        "q": "Em acidentes de trânsito, afastar os curiosos, se for seguro, desligar o motor do veículo envolvido e orientar para que não fumem no local. É uma ação do socorrista para a possibilidade de ocorrência de:",
+        "options": ["Atropelamento.", "Óleo ou obstáculo na pista.", "Incêndio.", "Cabos de eletricidade caindo no local."],
+        "correct": 2
+    },
+    {
+        "q": "Ao transportar uma vítima é incorreto:",
+        "options": ["Manter a vítima em jejum.", "Transportar a vítima imobilizada.", "Manter as vias aéreas livres, desobstruídas.", "Manter, a qualquer custo, a vítima acordada."],
+        "correct": 3
+    },
+    {
+        "q": "Não constitui procedimento correto diante de acidente de trânsito, com vítima:",
+        "options": ["Arrastar a vítima do local do acidente.", "Sinalizar o local, para evitar novos acidentes.", "Acionar o pisca alerta dos veículos próximo ao local.", "Definir a melhor colocação do triângulo."],
+        "correct": 0
+    },
+    {
+        "q": "Vítima de acidente pede água para beber. Nessa situação, você deve:",
+        "options": ["Dar bastante líquido para hidratar a vítima.", "Mantê-la em jejum.", "Deixá-la beber, apenas o que quiser.", "Dar refrigerante para refrescar."],
+        "correct": 1
+    },
+    {
+        "q": "Agir com prudência, respeitar os limites de seu conhecimento, seguir os protocolos estabelecidos, são princípios fundamentais da ação do:",
+        "options": ["Motorista.", "Policial no local do acidente.", "Passageiro.", "Socorrista."],
+        "correct": 3
+    },
+    {
+        "q": "A incapacidade de reagir a estímulos nas pernas e nos braços, após um acidente é indício de:",
+        "options": ["Traumatismo femoral.", "Lesão na cabeça.", "Lesão na coluna.", "Fratura nos pés."],
+        "correct": 2
+    },
+    {
+        "q": "Nas hemorragias externas devemos:",
+        "options": ["Evitar contato direto com o sangue da vítima.", "Fazer torniquete para conter o sangramento.", "Dar líquido para a vítima ingerir.", "Movimentar a vítima."],
+        "correct": 0
+    },
+    {
+        "q": "Não constitui procedimento correto com uma vítima em estado de choque:",
+        "options": ["Manter a vítima deitada com as pernas elevadas, se não houver fratura dos membros.", "Afrouxar suas roupas.", "Manter a respiração, se necessário usar respiração de socorro.", "Dar bastante líquido à vítima inconsciente que vomitou."],
+        "correct": 3
+    },
+    {
+        "q": "O sinal vital que não varia com a idade é:",
+        "options": ["Pulso.", "Temperatura.", "Respiração.", "Pressão arterial."],
+        "correct": 1
+    },
+    {
+        "q": "O procedimento correto com o acidentado que sofreu queimaduras é:",
+        "options": ["Passar pasta de dente na ferida.", "Cobrir a ferida com gaze e umedecer com água.", "Esfrie a área com água corrente.", "Dar água para a pessoa tomar."],
+        "correct": 2
+    },
+    {
+        "q": "O melhor local no corpo para se verificar a pulsação é:",
+        "options": ["No pé.", "No pescoço.", "No punho.", "Em alguma veia saliente."],
+        "correct": 1
+    }
+];
+
+let currentQ = 0;
+let score = 0;
+let errors = 0;
+let answered = false;
+let timeLeft = 900; 
+let timerInterval;
+
+function startQuiz() {
+    document.getElementById('start-screen').style.display = "none";
+    document.getElementById('quiz-area').style.display = "block";
+    document.getElementById('live-stats').style.display = "flex";
+    document.getElementById('p-cont').style.display = "block";
+    renderQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showFinalResult();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    const q = questions[currentQ];
+    
+    area.innerHTML = `
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) checkAnswer();
+    else nextQuestion();
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) return;
+    
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const correctChoice = questions[currentQ].correct;
+    
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+    
+    if (userChoice === correctChoice) {
+        score++;
+        document.getElementById('count-correct').innerHTML = score;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play().catch(()=>{});
+    } else {
+        errors++;
+        document.getElementById('count-wrong').innerHTML = errors;
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play().catch(()=>{});
+    }
+    
+    const btn = document.getElementById('btn-quiz');
+    btn.innerHTML = "Próxima Questão";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) {
+        renderQuestion();
+    } else {
+        showFinalResult();
+    }
+}
+
+function showFinalResult() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('live-stats').style.display = "none";
+    document.getElementById('p-cont').style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
+    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 EXCELENTE! Você agiu como um verdadeiro socorrista." : "⚠️ ATENÇÃO! Em Primeiros Socorros, um erro pode ser fatal. Revise os procedimentos de queimaduras e jejum.";
+}
+</script>
+</body>
+</html>

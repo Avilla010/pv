@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado 02 - Sinalização | CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --text: #fff; 
+        }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: var(--netflix-black); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 800px; 
+            background: transparent;
+        }
+
+        /* --- HEADER & NAV --- */
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        .btn-voltar { 
+            text-decoration: none; 
+            color: #a3a3a3; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-voltar:hover { color: #fff; }
+
+        h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- BARRA DE STATUS --- */
+        .stats-bar { 
+            display: none; 
+            justify-content: space-around; 
+            background: var(--netflix-card); 
+            padding: 20px; 
+            border-radius: 4px; 
+            margin-bottom: 25px; 
+            font-weight: bold; 
+            border-bottom: 2px solid #333;
+        }
+
+        .timer-box { color: #fff; }
+        .score-correct { color: var(--success); }
+        .score-wrong { color: var(--netflix-red); }
+
+        /* --- TELA INICIAL --- */
+        .alert { 
+            background: rgba(255,255,255,0.05); 
+            border-left: 4px solid var(--netflix-red); 
+            padding: 25px; 
+            margin: 20px 0; 
+            border-radius: 4px; 
+            font-size: 1rem; 
+            color: #ccc; 
+            line-height: 1.8;
+        }
+        
+        .quiz-section { 
+            background: var(--netflix-card); 
+            padding: 40px; 
+            border-radius: 4px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* --- PROGRESSO --- */
+        .progress-container { 
+            height: 4px; 
+            background: #333; 
+            border-radius: 2px; 
+            margin-bottom: 30px; 
+            overflow: hidden; 
+            display: none; 
+        }
+        .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* --- QUESTÕES & IMAGENS --- */
+        .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; color: #fff; display: block; line-height: 1.4; }
+        
+        .quiz-img { 
+            display: block; 
+            margin: 0 auto 25px; 
+            max-width: 200px; 
+            height: auto; 
+            background: #fff; /* Fundo branco para as placas se destacarem */
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .option { 
+            display: block; 
+            padding: 18px; 
+            margin: 12px 0; 
+            border: 1px solid #333; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            background: rgba(255,255,255,0.02);
+            font-size: 1rem;
+        }
+        .option:hover { background: rgba(255,255,255,0.08); border-color: #666; }
+        .option input { margin-right: 15px; accent-color: var(--netflix-red); }
+
+        /* --- FEEDBACK VISUAL --- */
+        .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; color: #fff; }
+        .option.disabled { pointer-events: none; }
+
+        /* --- BOTÕES --- */
+        .btn-action { 
+            width: 100%; 
+            background: #fff; 
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: var(--netflix-red); color: #fff; }
+
+        /* --- RESULTADO --- */
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
+        
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        @media (max-width: 600px) {
+            .quiz-section { padding: 25px 20px; }
+            h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
+        <h1>Simulado 02</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div id="live-stats" class="stats-bar">
+        <span class="timer-box"><i class="far fa-clock"></i> <span id="timer">15:00</span></span>
+        <span class="score-correct"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
+        <span class="score-wrong"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
+        
+        <div id="start-screen">
+            <div class="alert">
+                <h3 style="color: #fff; margin-bottom: 15px;">Módulo: Sinalização</h3>
+                • 15 Questões (Placas, Gestos e Marcas)<br>
+                • Tempo limite: 15 minutos<br>
+                • Meta de aprovação: 11 acertos<br>
+                • Observe atentamente as imagens das placas!
+            </div>
+            <button class="btn-action" onclick="startQuiz()">Iniciar Treinamento</button>
+        </div>
+
+        <div id="quiz-area"></div>
+
+        <div id="result-area">
+            <h3>Desempenho Final</h3>
+            <div id="score-text" class="score-box">0/15</div>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            <button class="btn-action" style="margin-bottom: 15px;" onclick="location.reload()">Refazer Simulado</button>
+            <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color: #fff;">Outros Simulados</a>
+        </div>
+    </div>
+
+    <div class="footer">CNH Blindada Originals &copy; 2026</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+// Mantive os dados das questões originais integrados à nova interface
+const questions = [
+    { "q": "A placa SS-07 destina-se à sinalização:", "img": "Mao.png", "options": ["Ordem de parada para todos os veículos.", "Ordem de parada apenas para veículos pesados.", "De pedestres, indicando quando atravessar ou aguardar.", "Diminuir a marcha."], "correct": 2 },
+    { "q": "Esta marcação de sinalização horizontal indica:", "img": "Mudanca.png", "options": ["Siga em frente.", "Mudança obrigatória de faixa.", "Passagem permitida.", "Curva acentuada."], "correct": 1 },
+    { "q": "A placa de regulamentação abaixo ordena:", "img": "Passagem.png", "options": ["Sentido proibido.", "Siga em frente ou à direita.", "Passagem obrigatória.", "Vire à direita."], "correct": 2 },
+    { "q": "A placa de sinalização abaixo indica:", "img": "Sentido.png", "options": ["Sentido único de circulação.", "Siga em frente.", "Vire à esquerda.", "Sentido duplo."], "correct": 0 },
+    { "q": "A placa de advertência abaixo alerta para:", "img": "Sinuosa.png", "options": ["Curva à esquerda.", "Pista escorregadia.", "Sucessão de curvas, sendo a primeira à esquerda.", "Pista sinuosa, sendo a primeira curva à esquerda."], "correct": 3 },
+    { "q": "A placa de advertência A-20A corresponde a:", "img": "Declive.png", "options": ["Rampa com descida.", "Pista escorregadia.", "Declive acentuado.", "Aclive acentuado."], "correct": 2 },
+    { "q": "O gesto do agente de trânsito identificado como GA-01, caracterizado pela palma da mão voltada para frente, indica:", "img": "Guarda.png", "options": ["Atenção.", "Diminua a velocidade.", "Siga.", "Parada obrigatória para todos sentidos."], "correct": 3 },
+    { "q": "A placa R-1 indica parada obrigatória. O desrespeito a ela gera:", "options": ["Infração grave.", "Infração média.", "Infração gravíssima.", "Infração leve."], "correct": 2 },
+    { "q": "Qual a cor predominante nas placas de indicação de serviços auxiliares?", "options": ["Amarela.", "Azul.", "Verde.", "Branca."], "correct": 1 },
+    { "q": "Linhas amarelas contínuas dividindo o fluxo indicam:", "options": ["Permitido ultrapassar.", "Fluxo de sentido único.", "Proibido ultrapassar para ambos os sentidos.", "Pista exclusiva de ônibus."], "correct": 2 },
+    { "q": "Qual a única placa de advertência que tem a cor laranja:", "options": ["Sinalização de obras.", "Sinalização turística.", "Educação.", "Advertência comum."], "correct": 0 },
+    { "q": "A sinalização vertical é composta por:", "options": ["Pinturas no chão.", "Placas.", "Gestos.", "Luzes do semáforo."], "correct": 1 },
+    { "q": "O sinal luminoso vermelho intermitente significa:", "options": ["Atenção.", "Pare.", "Siga.", "Passagem permitida com cuidado."], "correct": 1 },
+    { "q": "O sinal sonoro de 1 silvo breve, emitido pelo apito do agente de trânsito, indica:", "options": ["Atenção.", "Diminua a velocidade.", "Siga.", "Pare."], "correct": 2 },
+    { "q": "A ordem do Agente de Trânsito prevalece sobre:", "options": ["As normas de circulação apenas.", "O semáforo apenas.", "Todas as demais sinalizações e normas.", "Apenas sobre as placas."], "correct": 2 }
+];
+
+let currentQ = 0;
+let score = 0;
+let errors = 0;
+let answered = false;
+let timeLeft = 900; 
+let timerInterval;
+
+function startQuiz() {
+    document.getElementById('start-screen').style.display = "none";
+    document.getElementById('quiz-area').style.display = "block";
+    document.getElementById('live-stats').style.display = "flex";
+    document.getElementById('p-cont').style.display = "block";
+    renderQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showFinalResult();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    const q = questions[currentQ];
+    const imgHtml = q.img ? `<img src="${q.img}" class="quiz-img">` : '';
+
+    area.innerHTML = `
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        ${imgHtml}
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) checkAnswer();
+    else nextQuestion();
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) return;
+    
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const correctChoice = questions[currentQ].correct;
+    
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+    
+    if (userChoice === correctChoice) {
+        score++;
+        document.getElementById('count-correct').innerHTML = score;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play().catch(()=>{});
+    } else {
+        errors++;
+        document.getElementById('count-wrong').innerHTML = errors;
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play().catch(()=>{});
+    }
+    
+    const btn = document.getElementById('btn-quiz');
+    btn.innerHTML = "Próxima Questão";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) {
+        renderQuestion();
+    } else {
+        showFinalResult();
+    }
+}
+
+function showFinalResult() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('live-stats').style.display = "none";
+    document.getElementById('p-cont').style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
+    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 APROVADO! Você domina a sinalização." : "⚠️ QUASE LÁ! As placas são fundamentais, revise e tente de novo.";
+}
+</script>
+</body>
+</html>

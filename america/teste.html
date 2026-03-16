@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNH Blindada - Originals</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.jpg" type="image/jpeg">
+    <style>
+        /* Estética Netflix: Fundo escuro e fontes robustas */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        
+        body { 
+            background-color: #141414; /* Preto Netflix */
+            color: #fff; 
+            padding: 40px 4%; 
+            overflow-x: hidden;
+        }
+
+        .header-section { 
+            margin-bottom: 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end;
+        }
+
+        h2 { font-size: 2rem; color: #E50914; text-transform: uppercase; letter-spacing: 1px; }
+        .header-section p { color: #a3a3a3; font-size: 1rem; margin-top: 5px; }
+        
+        /* Grid estilo 'Trending Now' */
+        .grid-simulados { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 40px 20px; 
+        }
+
+        .card-simulado { 
+            background: #181818; 
+            border-radius: 4px; 
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
+            position: relative;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        /* Efeito de Zoom clássico da Netflix */
+        .card-simulado:hover { 
+            transform: scale(1.1); 
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            border-color: #E50914;
+        }
+
+        .thumbnail-placeholder {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(45deg, #222, #333);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #E50914;
+        }
+
+        .card-content { padding: 15px; }
+
+        .simulado-info h3 { font-size: 1rem; margin-bottom: 8px; color: #fff; }
+        .simulado-info p { font-size: 0.75rem; color: #808080; line-height: 1.4; margin-bottom: 12px; height: 34px; overflow: hidden; }
+
+        /* Badges Minimalistas */
+        .score-badge {
+            font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 2px;
+            display: inline-block; margin-bottom: 10px; text-transform: uppercase;
+        }
+        
+        .status-pendente { border: 1px solid #555; color: #aaa; } 
+        .status-concluido { background: #46d369; color: #fff; } /* Verde Netflix para sucesso */
+
+        .btn-start {
+            display: block; width: 100%; padding: 10px; background: #fff; color: #000;
+            text-align: center; text-decoration: none; font-size: 0.85rem; font-weight: 700;
+            border-radius: 4px; transition: 0.2s; border: none;
+        }
+        .btn-start:hover { background: #E50914; color: #fff; }
+
+        .btn-reset { 
+            background: transparent; color: #555; border: 1px solid #555; 
+            padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; 
+            transition: 0.3s;
+        }
+        .btn-reset:hover { border-color: #fff; color: #fff; }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .grid-simulados { grid-template-columns: 1fr 1fr; }
+            h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <div>
+            <h2>CNH BLINDADA <span style="font-weight: 400; color: #fff;">ORIGINALS</span></h2>
+            <p>Escolha seu próximo desafio para a aprovação.</p>
+        </div>
+        <button class="btn-reset" onclick="resetSimulados()">Resetar Histórico</button>
+    </div>
+
+    <div class="grid-simulados" id="lista-simulados"></div>
+
+    <script>
+        const simulados = [
+            { id: 'sim01', titulo: 'Habilitação: A Estreia', questoes: 30, link: 'simulado01.html', desc: 'O início de tudo. O processo completo de habilitação.', icon: 'fa-id-card' },
+            { id: 'sim02', titulo: 'Sinalização: O Código', questoes: 15, link: 'simulado02.html', desc: 'Decifre todas as placas de regulamentação.', icon: 'fa-traffic-light' }, // ÍCONE CORRIGIDO AQUI
+            { id: 'sim03', titulo: 'Normas de Conduta', questoes: 15, link: 'simulado03.html', desc: 'As regras de ouro da circulação e ultrapassagem.', icon: 'fa-road' },
+            { id: 'sim04', titulo: 'Infrações e Multas', questoes: 10, link: 'simulado04.html', desc: 'O que não fazer. Penalidades e medidas.', icon: 'fa-gavel' },
+            { id: 'sim05', titulo: 'Direção Defensiva', questoes: 15, link: 'simulado05.html', desc: 'A arte de prever perigos e evitar acidentes.', icon: 'fa-shield-halved' },
+            { id: 'sim06', titulo: 'Primeiros Socorros', questoes: 10, link: 'simulado06.html', desc: 'Ação imediata. Procedimentos que salvam vidas.', icon: 'fa-kit-medical' },
+            { id: 'sim07', titulo: 'Meio Ambiente', questoes: 10, link: 'simulado07.html', desc: 'Cidadania e impacto ambiental no trânsito.', icon: 'fa-leaf' },
+            { id: 'sim08', titulo: 'Mecânica: O Motor', questoes: 10, link: 'simulado08.html', desc: 'Conheça o coração do seu veículo.', icon: 'fa-gears' }
+        ];
+
+        function marcarComoFeito(id, link) {
+            localStorage.setItem(`feito_${id}`, 'true');
+            window.location.href = link;
+        }
+
+        function carregarSimulados() {
+            const container = document.getElementById('lista-simulados');
+            container.innerHTML = '';
+
+            simulados.forEach(sim => {
+                const jaClicou = localStorage.getItem(`feito_${sim.id}`);
+                const ultimaNota = localStorage.getItem(`nota_${sim.id}`);
+                
+                let badgeHTML = '';
+
+                if (ultimaNota !== null || jaClicou === 'true') {
+                    let texto = "Concluído";
+                    if(ultimaNota !== null) {
+                        texto = `Score: ${Math.round((ultimaNota/sim.questoes)*100)}%`;
+                    }
+                    badgeHTML = `<span class="score-badge status-concluido">${texto}</span>`;
+                } else {
+                    badgeHTML = `<span class="score-badge status-pendente">Novo Simulado</span>`;
+                }
+
+                container.innerHTML += `
+                    <div class="card-simulado" onclick="marcarComoFeito('${sim.id}', '${sim.link}')">
+                        <div class="thumbnail-placeholder">
+                            <i class="fas ${sim.icon}"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="simulado-info">
+                                ${badgeHTML}
+                                <h3>${sim.titulo}</h3>
+                                <p>${sim.desc}</p>
+                            </div>
+                            <button class="btn-start">Assistir (Iniciar)</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function resetSimulados() {
+            if(confirm("Deseja apagar sua lista de 'Já assistidos'?")) {
+                simulados.forEach(sim => {
+                    localStorage.removeItem(`nota_${sim.id}`);
+                    localStorage.removeItem(`feito_${sim.id}`);
+                });
+                carregarSimulados();
+            }
+        }
+
+        carregarSimulados();
+    </script>
+</body>
+</html>

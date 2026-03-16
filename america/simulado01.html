@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado - CNH Blindada Originals</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --text: #fff; 
+        }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: var(--netflix-black); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 800px; 
+            background: transparent;
+        }
+
+        /* --- HEADER & NAV --- */
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        .btn-voltar { 
+            text-decoration: none; 
+            color: #a3a3a3; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-voltar:hover { color: #fff; }
+
+        h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- BARRA DE STATUS --- */
+        .stats-bar { 
+            display: none; 
+            justify-content: space-around; 
+            background: var(--netflix-card); 
+            padding: 20px; 
+            border-radius: 4px; 
+            margin-bottom: 25px; 
+            font-weight: bold; 
+            border-bottom: 2px solid #333;
+        }
+
+        .timer-box { color: #fff; }
+        .score-correct { color: var(--success); }
+        .score-wrong { color: var(--netflix-red); }
+
+        /* --- TELA INICIAL --- */
+        .alert { 
+            background: rgba(255,255,255,0.05); 
+            border-left: 4px solid var(--netflix-red); 
+            padding: 25px; 
+            margin: 20px 0; 
+            border-radius: 4px; 
+            font-size: 1rem; 
+            color: #ccc; 
+            line-height: 1.8;
+        }
+        
+        .quiz-section { 
+            background: var(--netflix-card); 
+            padding: 40px; 
+            border-radius: 4px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* --- PROGRESSO --- */
+        .progress-container { 
+            height: 4px; 
+            background: #333; 
+            border-radius: 2px; 
+            margin-bottom: 30px; 
+            overflow: hidden; 
+            display: none; 
+        }
+        .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* --- QUESTÕES --- */
+        .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; color: #fff; display: block; line-height: 1.4; }
+        
+        .option { 
+            display: block; 
+            padding: 18px; 
+            margin: 12px 0; 
+            border: 1px solid #333; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            background: rgba(255,255,255,0.02);
+            font-size: 1rem;
+        }
+        .option:hover { background: rgba(255,255,255,0.08); border-color: #666; }
+        .option input { margin-right: 15px; accent-color: var(--netflix-red); }
+
+        /* --- FEEDBACK VISUAL --- */
+        .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; color: #fff; }
+        .option.disabled { pointer-events: none; }
+
+        /* --- BOTÕES --- */
+        .btn-action { 
+            width: 100%; 
+            background: #fff; 
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: var(--netflix-red); color: #fff; }
+
+        /* --- RESULTADO --- */
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
+        
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        @media (max-width: 600px) {
+            .quiz-section { padding: 25px 20px; }
+            h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
+        <h1>Simulado 01</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div id="live-stats" class="stats-bar">
+        <span class="timer-box"><i class="far fa-clock"></i> <span id="timer">15:00</span></span>
+        <span class="score-correct"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
+        <span class="score-wrong"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
+        
+        <div id="start-screen">
+            <div class="alert">
+                <h3 style="color: #fff; margin-bottom: 15px;">Instruções do Exame</h3>
+                • 15 Questões de fixação<br>
+                • Tempo limite: 15 minutos<br>
+                • Meta de aprovação: 11 acertos (73%)<br>
+                • Sistema de correção imediata
+            </div>
+            <button class="btn-action" onclick="startQuiz()">Começar Agora</button>
+        </div>
+
+        <div id="quiz-area"></div>
+
+        <div id="result-area">
+            <h3>Desempenho Final</h3>
+            <div id="score-text" class="score-box">0/15</div>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            <button class="btn-action" style="margin-bottom: 15px;" onclick="location.reload()">Tentar Novamente</button>
+            <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color: #fff;">Voltar para a Lista</a>
+        </div>
+    </div>
+
+    <div class="footer">CNH Blindada Originals &copy; 2026</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+// (O Script permanece o mesmo, a lógica de funcionamento é idêntica à sua)
+const questions = [
+    { "q": "A licença de Aprendizagem (LADV) será expedida pelo DETRAN ao candidato que:", "options": ["Tenha 16 anos.", "Tenha 18 anos.", "Tenha veículo próprio.", "Tenha sido aprovado nos exames médico, psicotécnico e legislação."], "correct": 3 },
+    { "q": "A não obtenção da CNH definitiva pelo permissionário (PPD) implica em reiniciar o processo no prazo de:", "options": ["15 dias.", "30 dias.", "360 dias.", "A qualquer tempo."], "correct": 3 },
+    { "q": "Para se habilitar na categoria A, o exame de prática deve ser em veículo de 2 rodas com cilindrada:", "options": ["De 50 cm3.", "De 100 cm3.", "De 120 cm3.", "Acima de 120 cm3."], "correct": 3 },
+    { "q": "O processo do candidato à habilitação ficará ativado no DETRAN pelo prazo de:", "options": ["06 meses.", "24 meses.", "12 meses.", "Validade do exame médico."], "correct": 2 },
+    { "q": "A CNH não será conferida ao portador da PPD se ele cometer:", "options": ["Uma infração média.", "Uma infração grave.", "Reincidência em leve.", "Uma infração leve."], "correct": 1 },
+    { "q": "Se a PPD for cassada, o condutor poderá reiniciar o processo de habilitação realizando:", "options": ["Todos os exames novamente.", "Apenas psicotécnico.", "Apenas prática.", "Legislação e prática."], "correct": 0 },
+    { "q": "Do condutor de veículo de condução de escolares, exige-se:", "options": ["Zero infrações na vida.", "Idade superior a 18 anos.", "Registro no RENAVAM.", "Certificado em curso especializado."], "correct": 3 },
+    { "q": "Qual é o órgão responsável por expedir o CRLV?", "options": ["PRF", "SENATRAN", "DETRAN", "CONTRAN"], "correct": 2 },
+    { "q": "O condutor habilitado na B que deseja habilitar-se na A terá quantos registros no RENACH?", "options": ["Dois registros.", "Apenas um registro atualizado.", "Três registros.", "Nenhum registro."], "correct": 1 },
+    { "q": "Qual órgão é responsável pela organização e manutenção do RENACH?", "options": ["CONTRAN", "SENATRAN (antigo DENATRAN)", "DETRAN", "PRF"], "correct": 1 },
+    { "q": "Do total das multas, qual percentual vai para o FUNSET?", "options": ["5%", "2%", "1%", "10%"], "correct": 0 },
+    { "q": "Para condutores com 70 anos ou mais, o exame médico vale por:", "options": ["10 anos.", "5 anos.", "3 anos.", "1 ano."], "correct": 2 },
+    { "q": "O condutor que teve sua CNH cassada deverá:", "options": ["Pagar as multas.", "Refazer todo o processo após 2 anos.", "Solicitar PPD em 6 meses.", "Fazer apenas reciclagem."], "correct": 1 },
+    { "q": "A suspensão do direito de dirigir ocorre quando o condutor:", "options": ["Fica 2 anos sem renovar.", "Atinge o limite de pontos (20, 30 ou 40).", "Bate o carro sem vítima.", "Não licencia o veículo."], "correct": 1 },
+    { "q": "Os veículos automotores são classificados quanto à:", "options": ["Tração, espécie e categoria.", "Potência e peso.", "Espécie e cor.", "Finalidade e cor."], "correct": 0 }
+];
+
+let currentQ = 0;
+let score = 0;
+let errors = 0;
+let answered = false;
+let timeLeft = 900; 
+let timerInterval;
+
+function startQuiz() {
+    document.getElementById('start-screen').style.display = "none";
+    document.getElementById('quiz-area').style.display = "block";
+    document.getElementById('live-stats').style.display = "flex";
+    document.getElementById('p-cont').style.display = "block";
+    renderQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showFinalResult();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    const q = questions[currentQ];
+    area.innerHTML = `
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) checkAnswer();
+    else nextQuestion();
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) return;
+    
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const correctChoice = questions[currentQ].correct;
+    
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+    
+    if (userChoice === correctChoice) {
+        score++;
+        document.getElementById('count-correct').innerHTML = score;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play().catch(()=>{});
+    } else {
+        errors++;
+        document.getElementById('count-wrong').innerHTML = errors;
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play().catch(()=>{});
+    }
+    
+    const btn = document.getElementById('btn-quiz');
+    btn.innerHTML = "Próxima Questão";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) {
+        renderQuestion();
+    } else {
+        showFinalResult();
+    }
+}
+
+function showFinalResult() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('live-stats').style.display = "none";
+    document.getElementById('p-cont').style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
+    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 APROVADO! Você dominou o processo." : "⚠️ QUASE LÁ! Revise a teoria e tente novamente.";
+    
+    localStorage.setItem('nota_sim01', score);
+}
+</script>
+</body>
+</html>

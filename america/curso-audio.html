@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso em Áudio - CNH Blindada Originals</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --netflix-grey: #808080;
+        }
+
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: var(--netflix-black); 
+            color: #fff; 
+            margin: 0; 
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-section { 
+            text-align: left; 
+            margin-bottom: 40px; 
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .header-section h2 { 
+            font-size: 1.8rem; 
+            color: #fff; 
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .audio-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            width: 100%;
+            max-width: 800px; 
+            padding-bottom: 200px; /* Espaço para o botão flutuante */
+        }
+
+        .audio-card {
+            background: var(--netflix-card);
+            padding: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.3s;
+            filter: brightness(0.3); /* Bloqueado */
+            cursor: not-allowed;
+            border: 1px solid transparent;
+        }
+
+        .audio-card:hover {
+            border-color: #333;
+        }
+
+        .audio-info { display: flex; align-items: center; gap: 20px; }
+        
+        .audio-icon { 
+            font-size: 1.2rem;
+            color: var(--netflix-grey);
+            width: 30px;
+            text-align: center;
+        }
+
+        .audio-text h4 { 
+            margin: 0; 
+            font-size: 1rem; 
+            color: #fff; 
+            font-weight: bold;
+        }
+        
+        .audio-text span { 
+            font-size: 0.8rem; 
+            color: var(--netflix-grey); 
+        }
+
+        .lock-status { color: var(--netflix-red); font-size: 0.9rem; }
+
+        /* --- FOOTER OVERLAY --- */
+        .premium-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0));
+            padding: 80px 20px 40px 20px;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .btn-upgrade {
+            background: var(--netflix-red);
+            color: #fff;
+            text-decoration: none;
+            padding: 16px 50px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.2s;
+            text-transform: uppercase;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        }
+
+        .btn-upgrade:hover { 
+            background: #ff0a16;
+            transform: scale(1.05);
+        }
+
+        .badge-original {
+            color: var(--netflix-red);
+            font-weight: bold;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <span class="badge-original"><i class="fas fa-crown"></i> ORIGINAL CNH BLINDADA</span>
+        <h2>Curso em Áudio</h2>
+        <p style="color: var(--netflix-grey);">Ouvir agora • 5 Módulos</p>
+    </div>
+
+    <div class="audio-list">
+        <div class="audio-card">
+            <div class="audio-info">
+                <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                <div class="audio-text">
+                    <h4>1. Processo de Habilitação</h4>
+                    <span>Episódio 1 • 12 min</span>
+                </div>
+            </div>
+            <div class="lock-status">PREMIUM</div>
+        </div>
+
+        <div class="audio-card">
+            <div class="audio-info">
+                <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                <div class="audio-text">
+                    <h4>2. Legislação e Sinalização</h4>
+                    <span>Episódio 2 • 25 min</span>
+                </div>
+            </div>
+            <div class="lock-status">PREMIUM</div>
+        </div>
+
+        <div class="audio-card">
+            <div class="audio-info">
+                <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                <div class="audio-text">
+                    <h4>3. Direção Defensiva</h4>
+                    <span>Episódio 3 • 18 min</span>
+                </div>
+            </div>
+            <div class="lock-status">PREMIUM</div>
+        </div>
+        
+        <div class="audio-card">
+            <div class="audio-info">
+                <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                <div class="audio-text">
+                    <h4>4. Primeiros Socorros</h4>
+                    <span>Episódio 4 • 15 min</span>
+                </div>
+            </div>
+            <div class="lock-status">PREMIUM</div>
+        </div>
+
+        <div class="audio-card">
+            <div class="audio-info">
+                <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                <div class="audio-text">
+                    <h4>5. Mecânica Básica</h4>
+                    <span>Episódio 5 • 11 min</span>
+                </div>
+            </div>
+            <div class="lock-status">PREMIUM</div>
+        </div>
+    </div>
+
+    <div class="premium-overlay">
+        <p style="margin-bottom: 20px; font-weight: bold; color: #fff; font-size: 1.1rem;">Ouça em qualquer lugar, até mesmo offline.</p>
+        <a href="https://w.app/nparqq" target="_parent" class="btn-upgrade">DESBLOQUEAR TUDO</a>
+    </div>
+
+</body>
+</html>
