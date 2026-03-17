@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            // Se não estiver logado, manda para o login que está na pasta anterior ou raiz
+            window.location.href = 'login.html'; 
+        }
+    </script>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso em Áudio - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0f172a; 
+            --accent-color: #fbbf24;  
+            --bg-body: #f8fafc;       
+            --text-main: #1e293b;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 20px; 
+            padding-bottom: 250px; /* Espaço para não cobrir o conteúdo com o overlay */
+        }
+
+        .header-section { margin-bottom: 30px; }
+        .header-section h2 { font-size: 1.5rem; color: var(--primary-color); display: flex; align-items: center; gap: 10px; }
+
+        .audio-list { display: flex; flex-direction: column; gap: 15px; max-width: 800px; }
+
+        .audio-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        /* Estilo para os cards travados */
+        .locked {
+            filter: grayscale(0.5);
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .audio-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .audio-info { display: flex; align-items: center; gap: 15px; }
+        .audio-icon { 
+            width: 45px; height: 45px; background: #f1f5f9; 
+            border-radius: 10px; display: flex; align-items: center; 
+            justify-content: center; color: #94a3b8; font-size: 1.2rem;
+        }
+
+        /* Ícone azul para o que está liberado */
+        .unlocked .audio-icon {
+            background: #e0f2fe;
+            color: #0ea5e9;
+        }
+
+        .audio-text h4 { margin: 0; font-size: 1rem; color: #475569; }
+        .audio-text span { font-size: 0.8rem; color: #94a3b8; }
+
+        .lock-status { color: #94a3b8; font-size: 1.1rem; }
+
+        audio {
+            width: 100%;
+            height: 35px;
+        }
+
+        /* --- OVERLAY DE BLOQUEIO --- */
+        .premium-overlay {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            z-index: 100;
+            border: 2px solid var(--accent-color);
+        }
+
+        .premium-overlay h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .premium-overlay p { margin: 0 0 20px 0; font-size: 0.9rem; color: #cbd5e1; }
+
+        .btn-upgrade {
+            background: var(--accent-color);
+            color: #000;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .btn-upgrade:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+
+        @media (max-width: 600px) {
+            .premium-overlay { bottom: 20px; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <h2><i class="fas fa-headphones"></i> Curso em Áudio</h2>
+        <p style="color: #64748b;">Ouça as matérias em qualquer lugar e acelere sua aprovação.</p>
+    </div>
+
+    <div class="audio-list">
+        <div class="audio-card unlocked">
+            <div class="audio-header">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-volume-up"></i></div>
+                    <div class="audio-text">
+                        <h4>01. Processo de Habilitação</h4>
+                        <span>Duração: 12:45 • MP3</span>
+                    </div>
+                </div>
+                <div class="lock-status"><i class="fas fa-check-circle" style="color: #10b981;"></i></div>
+            </div>
+            <audio controls controlsList="nodownload">
+                <source src="audio01.wav" type="audio/mpeg">
+                Seu navegador não suporta áudio.
+            </audio>
+        </div>
+
+        <div class="audio-card locked">
+            <div class="audio-header">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-play"></i></div>
+                    <div class="audio-text">
+                        <h4>02. Penalidades e Crimes de Trânsito</h4>
+                        <span>Duração: 15:20 • MP3</span>
+                    </div>
+                </div>
+                <div class="lock-status"><i class="fas fa-lock"></i></div>
+            </div>
+        </div>
+
+        <div class="audio-card locked">
+            <div class="audio-header">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-play"></i></div>
+                    <div class="audio-text">
+                        <h4>03. Primeiros Socorros</h4>
+                        <span>Duração: 10:30 • MP3</span>
+                    </div>
+                </div>
+                <div class="lock-status"><i class="fas fa-lock"></i></div>
+            </div>
+        </div>
+
+        <div class="audio-card locked">
+            <div class="audio-header">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-play"></i></div>
+                    <div class="audio-text">
+                        <h4>04. Meio Ambiente e Cidadania</h4>
+                        <span>Duração: 08:15 • MP3</span>
+                    </div>
+                </div>
+                <div class="lock-status"><i class="fas fa-lock"></i></div>
+            </div>
+        </div>
+
+        <div class="audio-card locked">
+            <div class="audio-header">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-play"></i></div>
+                    <div class="audio-text">
+                        <h4>05. Mecânica Básica</h4>
+                        <span>Duração: 11:50 • MP3</span>
+                    </div>
+                </div>
+                <div class="lock-status"><i class="fas fa-lock"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="premium-overlay">
+        <i class="fas fa-crown" style="color: var(--accent-color); font-size: 2rem; margin-bottom: 15px;"></i>
+        <h3>Conteúdo Exclusivo</h3>
+        <p>O curso em áudio completo está disponível apenas para alunos <strong>CNH Blindada</strong>.</p>
+        <a href="https://pay.kiwify.com.br/x0yY637" target="_parent" class="btn-upgrade">Quero Acesso Completo</a>
+    </div>
+
+</body>
+</html>

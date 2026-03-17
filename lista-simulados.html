@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            // Se não estiver logado, manda para o login que está na pasta anterior ou raiz
+            window.location.href = 'login.html'; 
+        }
+    </script>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulados - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.jpg" type="image/jpeg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8fafc; padding: 20px; color: #1e293b; }
+        
+        .header-section { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .grid-simulados { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+
+        .card-simulado { 
+            background: #fff; 
+            border-radius: 12px; 
+            padding: 20px; 
+            border: 1px solid #e2e8f0; 
+            display: flex; 
+            flex-direction: column; 
+            transition: 0.3s;
+        }
+        
+        .card-simulado:hover { transform: translateY(-5px); border-color: #2563eb; }
+
+        .icon-area { 
+            width: 50px; height: 50px; background: #eff6ff; color: #2563eb; 
+            border-radius: 10px; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.5rem; margin-bottom: 15px; 
+        }
+
+        .simulado-info h3 { font-size: 1.1rem; margin-bottom: 5px; color: #0f172a; }
+        .simulado-info p { font-size: 0.85rem; color: #64748b; margin-bottom: 15px; }
+
+        /* Estilos das Badges */
+        .score-badge {
+            font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+            display: inline-block; margin-bottom: 15px;
+        }
+        
+        /* Cores solicitadas */
+        .status-pendente { background: #fee2e2; color: #ef4444; } /* Vermelho */
+        .status-concluido { background: #dcfce7; color: #10b981; } /* Verde */
+
+        .btn-start {
+            display: block; width: 100%; padding: 12px; background: #0f172a; color: #fff;
+            text-align: center; text-decoration: none; font-size: 0.9rem; font-weight: 600;
+            border-radius: 8px; transition: 0.3s; border: none; cursor: pointer;
+        }
+        .btn-start:hover { background: #2563eb; }
+
+        .btn-reset { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <div>
+            <h2>Centro de Simulados</h2>
+            <p>Teste seus conhecimentos com questões oficiais.</p>
+        </div>
+        <button class="btn-reset" onclick="resetSimulados()">Limpar Histórico</button>
+    </div>
+
+    <div class="grid-simulados" id="lista-simulados"></div>
+
+    <script>
+        const simulados = [
+            { id: 'sim01', titulo: 'Simulado 01: Processo de habilitação', questoes: 30, link: 'simulado01.html', desc: 'Abrange todo o processo de habilitação.' },
+            { id: 'sim02', titulo: 'Simulado 02: Sinalização', questoes: 15, link: 'simulado02.html', desc: 'Foco em placas de regulamentação e advertência.' },
+            { id: 'sim03', titulo: 'Simulado 03: Normas de circulação', questoes: 15, link: 'simulado03.html', desc: 'Regras de preferência, ultrapassagem e conduta.' },
+            { id: 'sim04', titulo: 'Simulado 04: Penalidades', questoes: 10, link: 'simulado04.html', desc: 'Infrações, multas e medidas administrativas.' },
+            // NOVOS SIMULADOS ADICIONADOS ABAIXO
+            { id: 'sim05', titulo: 'Simulado 05: Direção Defensiva', questoes: 15, link: 'simulado05.html', desc: 'Como evitar acidentes e agir em condições adversas.' },
+            { id: 'sim06', titulo: 'Simulado 06: Primeiros Socorros', questoes: 10, link: 'simulado06.html', desc: 'Procedimentos iniciais em caso de acidentes de trânsito.' },
+            { id: 'sim07', titulo: 'Simulado 07: Meio Ambiente e Cidadania', questoes: 10, link: 'simulado07.html', desc: 'O convívio social e o impacto ambiental no trânsito.' },
+            { id: 'sim08', titulo: 'Simulado 08: Mecânica Básica', questoes: 10, link: 'simulado08.html', desc: 'Conhecimentos fundamentais sobre o funcionamento do veículo.' }
+        ];
+
+        function marcarComoFeito(id, link) {
+            localStorage.setItem(`feito_${id}`, 'true');
+            window.location.href = link;
+        }
+
+        function carregarSimulados() {
+            const container = document.getElementById('lista-simulados');
+            container.innerHTML = '';
+
+            simulados.forEach(sim => {
+                const jaClicou = localStorage.getItem(`feito_${sim.id}`);
+                const ultimaNota = localStorage.getItem(`nota_${sim.id}`);
+                
+                let badgeHTML = '';
+
+                // Lógica de cores (Verde se feito/nota, Vermelho se pendente)
+                if (ultimaNota !== null || jaClicou === 'true') {
+                    let texto = "Concluído";
+                    if(ultimaNota !== null) {
+                        texto = `Último Resultado: ${ultimaNota}/${sim.questoes}`;
+                    }
+                    badgeHTML = `<span class="score-badge status-concluido"><i class="fas fa-check"></i> ${texto}</span>`;
+                } 
+                else {
+                    badgeHTML = `<span class="score-badge status-pendente">Ainda não realizado</span>`;
+                }
+
+                container.innerHTML += `
+                    <div class="card-simulado">
+                        <div class="icon-area"><i class="fas fa-file-alt"></i></div>
+                        <div class="simulado-info">
+                            <h3>${sim.titulo}</h3>
+                            <p>${sim.desc}</p>
+                            ${badgeHTML}
+                        </div>
+                        <a href="javascript:void(0)" onclick="marcarComoFeito('${sim.id}', '${sim.link}')" class="btn-start">Iniciar Simulado</a>
+                    </div>
+                `;
+            });
+        }
+
+        function resetSimulados() {
+            if(confirm("Deseja apagar todos os resultados e marcações?")) {
+                simulados.forEach(sim => {
+                    localStorage.removeItem(`nota_${sim.id}`);
+                    localStorage.removeItem(`feito_${sim.id}`);
+                });
+                carregarSimulados();
+            }
+        }
+
+        carregarSimulados();
+    </script>
+</body>
+</html>

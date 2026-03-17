@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            // Se não estiver logado, manda para o login que está na pasta anterior ou raiz
+            window.location.href = 'login.html'; 
+        }
+    </script>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Ao Vivo - CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #fbbf24;
+            --bg-body: #f1f5f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg-body); padding: 20px; color: #1e293b; overflow: hidden; }
+
+        /* --- TRAVA DE CONTEÚDO --- */
+        .locked-content {
+            filter: blur(8px);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .live-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .live-badge {
+            background: #ef4444;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* Proporção 16:9 */
+            height: 0;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border: 4px solid #fff;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: none;
+        }
+
+        .live-info {
+            background: white;
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .live-info h2 { font-size: 1.4rem; color: var(--primary-color); margin-bottom: 10px; }
+        .live-info p { color: #64748b; line-height: 1.6; }
+
+        .chat-notice {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* --- ESTILO DA TRAVA (CTA) --- */
+        .premium-overlay {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.4);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            z-index: 1000;
+            border: 2px solid var(--accent-color);
+        }
+
+        .premium-overlay h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .premium-overlay p { margin: 0 0 20px 0; font-size: 0.9rem; color: #cbd5e1; }
+
+        .btn-upgrade {
+            background: var(--accent-color);
+            color: #000;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .btn-upgrade:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+
+        @media (max-width: 768px) {
+            .live-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .premium-overlay { bottom: 20px; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container locked-content">
+        <div class="live-header">
+            <div>
+                <h1 style="font-size: 1.6rem; color: var(--primary-color);">Aulas Ao Vivo</h1>
+                <p style="color: #64748b;">Participe em tempo real e tire suas dúvidas.</p>
+            </div>
+            <div class="live-badge">
+                <i class="fas fa-circle"></i> EM TRANSMISSÃO
+            </div>
+        </div>
+
+        <div class="video-wrapper">
+            <iframe 
+                src="https://www.youtube.com/embed/LIVE_ID_AQUI" 
+                title="Aula Ao Vivo CNH Blindada" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="live-info">
+            <h2>Próxima Aula: Estratégias de Prova DETRAN MG</h2>
+            <p>Acompanhe a aula completa com as principais pegadinhas do Detran. Não esqueça de deixar suas dúvidas no chat do YouTube para que possamos responder ao final da explicação.</p>
+            
+            <div class="chat-notice">
+                <i class="fas fa-comments"></i> O chat está disponível diretamente no vídeo acima.
+            </div>
+        </div>
+    </div>
+
+    <div class="premium-overlay">
+        <i class="fas fa-lock" style="color: var(--accent-color); font-size: 2rem; margin-bottom: 15px;"></i>
+        <h3>Aula Exclusiva</h3>
+        <p>As transmissões ao vivo e mentorias estão disponíveis apenas para membros da <strong>CNH Blindada</strong>.</p>
+        <a href="https://seulinkdevenda.com" target="_parent" class="btn-upgrade">Adquirir Acesso Completo</a>
+    </div>
+
+</body>
+</html>

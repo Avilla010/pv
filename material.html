@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            // Se não estiver logado, manda para o login que está na pasta anterior ou raiz
+            window.location.href = 'login.html'; 
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material de Apoio - CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #fbbf24; /* Amarelo da sua plataforma */
+            --bg-body: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid-materiais {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card-material {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-material:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .icon-box {
+            background: #fff9e6;
+            color: var(--accent-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .info {
+            flex-grow: 1;
+        }
+
+        .info h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .info p {
+            margin: 0;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .btn-download {
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-download:hover {
+            background-color: var(--accent-color);
+            color: #000;
+        }
+
+        .badge-pdf {
+            background: #fee2e2;
+            color: #ef4444;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><i class="fas fa-folder-open" style="color: var(--accent-color);"></i> Materiais Didáticos</h1>
+    </div>
+
+    <div class="grid-materiais">
+        
+        <div class="card-material">
+            <div class="icon-box">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="info">
+                <span class="badge-pdf">PDF</span>
+                <h3>Plano de Aulas 2024</h3>
+                <p>Cronograma completo do curso.</p>
+            </div>
+            <a href="plano-de-aulas.pdf" download class="btn-download">
+                <i class="fas fa-download"></i> Baixar
+            </a>
+        </div>
+
+        <div class="card-material">
+            <div class="icon-box">
+                <i class="fas fa-file-signature"></i>
+            </div>
+            <div class="info">
+                <span class="badge-pdf">PDF</span>
+                <h3>Gabarito de Simulados</h3>
+                <p>Respostas das questões de fixação.</p>
+            </div>
+            <a href="gabarito.pdf" download class="btn-download">
+                <i class="fas fa-download"></i> Baixar
+            </a>
+        </div>
+
+        <div class="card-material">
+            <div class="icon-box">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="info">
+                <span class="badge-pdf">PDF</span>
+                <h3>Resumo das aulas em texto</h3>
+                <p>Conteúdo teórico resumido.</p>
+            </div>
+            <a href="apostila.pdf" download class="btn-download">
+                <i class="fas fa-download"></i> Baixar
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

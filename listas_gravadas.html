@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            // Se não estiver logado, manda para o login que está na pasta anterior ou raiz
+            window.location.href = 'login.html'; 
+        }
+    </script>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aulas Gravadas - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            --netflix-black: #0f172a; 
+            --netflix-dark: #070b14;
+            --accent-gold: #fbbf24;
+            --text-light: #e2e8f0;
+            --card-bg: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { 
+            background-color: var(--netflix-dark); 
+            padding: 40px 20px; 
+            color: var(--text-light); 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header-section { 
+            margin-bottom: 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end;
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 20px;
+        }
+
+        .header-section h2 { font-size: 2rem; color: #fff; letter-spacing: -1px; }
+        .header-section p { color: #94a3b8; margin-top: 5px; }
+
+        /* GRID RESPONSIVO */
+        .video-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 30px; 
+        }
+
+        .video-card { 
+            background: var(--card-bg); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* EFEITO DE HOVER (PC) */
+        @media (min-width: 769px) {
+            .video-card:hover { 
+                transform: scale(1.05); 
+                z-index: 10;
+                box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+                border-color: var(--accent-gold);
+            }
+        }
+
+        .thumbnail { 
+            width: 100%; 
+            height: 180px; 
+            background-size: cover; 
+            background-position: center; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        .thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .thumbnail i { 
+            position: relative; 
+            color: var(--accent-gold); 
+            font-size: 3rem; 
+            z-index: 2;
+            opacity: 0.8;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .video-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        .video-title { 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            margin-bottom: 15px; 
+            color: #fff;
+        }
+
+        /* BARRA DE PROGRESSO NETFLIX */
+        .progress-container { 
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.2); 
+            height: 4px; 
+            z-index: 5;
+        }
+        .progress-bar { height: 100%; transition: 1s ease; }
+        .bg-pendente { background: #475569; }
+        .bg-concluido { background: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold); }
+
+        .progress-text { 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .text-pendente { color: #94a3b8; }
+        .text-concluido { color: var(--accent-gold); }
+
+        .btn-play { 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%; 
+            padding: 14px; 
+            background: #fff; 
+            color: #000; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 800; 
+            border-radius: 6px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            margin-top: auto;
+        }
+
+        .btn-reset { 
+            background: transparent; 
+            color: #64748b; 
+            border: 1px solid #334155; 
+            padding: 10px 18px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 0.75rem; 
+            transition: 0.3s;
+        }
+        .btn-reset:hover { background: #ef4444; color: white; border-color: #ef4444; }
+
+        /* ADAPTAÇÃO PARA CELULAR (MOBILE) */
+        @media (max-width: 768px) {
+            body { padding: 20px 15px; }
+            
+            .header-section { margin-bottom: 30px; }
+            .header-section h2 { font-size: 1.6rem; }
+            
+            .video-grid { 
+                grid-template-columns: 1fr; /* Um card por linha */
+                gap: 20px;
+            }
+
+            .thumbnail { height: 200px; } /* Thumbnail maior no mobile */
+
+            .video-card:active { transform: scale(0.98); } /* Efeito de clique no toque */
+            
+            .btn-play { padding: 16px; font-size: 0.9rem; } /* Botão maior para o dedo */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <div>
+            <h2>Curso Completo CNH Blindada</h2>
+            <p>Sua jornada para a aprovação começa aqui.</p>
+        </div>
+        <button class="btn-reset" onclick="resetProgress()">Zerar Progresso</button>
+    </div>
+
+    <div class="video-grid" id="grid-aulas"></div>
+
+    <script>
+        const aulas = [
+            { id: 'aula01', titulo: '01 - Processo de Habilitação', yt: 'oe0ZXYg63uE', simulado: 'simulado01.html' },
+            { id: 'aula02', titulo: '02 - Sinalização', yt: 'bNnr291TaIA', simulado: 'simulado02.html' },
+            { id: 'aula03', titulo: '03 - Normas de Circulação', yt: 'veoWUKYvGYs', simulado: 'simulado03.html' },
+            { id: 'aula04', titulo: '04 - Penalidades', yt: 'dM0bJq--4vk', simulado: 'simulado04.html' },
+            { id: 'aula05', titulo: '05 - Direção Defensiva', yt: '1xvY6PIyrwY', simulado: 'simulado05.html' },
+            { id: 'aula06', titulo: '06 - Primeiros Socorros', yt: 'cKWwEOkASw4', simulado: 'simulado06.html' },
+            { id: 'aula07', titulo: '07 - Meio Ambiente', yt: 'XEiVKViHUe0', simulado: 'simulado07.html' },
+            { id: 'aula09', titulo: '09 - Mecânica', yt: 'koQ-yQGLSBA', simulado: 'simulado08.html' }
+        ];
+
+        function render() {
+            const grid = document.getElementById('grid-aulas');
+            grid.innerHTML = '';
+            aulas.forEach(a => {
+                const feito = localStorage.getItem(a.id) === 'sim';
+                const thumbnailUrl = `https://img.youtube.com/vi/${a.yt}/maxresdefault.jpg`;
+                const videoUrl = `assistir.html?id=${a.yt}&aula=${a.id}&title=${encodeURIComponent(a.titulo)}&simulado=${a.simulado || ''}`;
+
+                grid.innerHTML += `
+                    <div class="video-card" onclick="window.location.href='${videoUrl}'">
+                        <div class="thumbnail" style="background-image: url('${thumbnailUrl}')">
+                            <i class="fas fa-play-circle"></i>
+                            <div class="progress-container">
+                                <div class="progress-bar ${feito ? 'bg-concluido' : 'bg-pendente'}" 
+                                     style="width: ${feito ? '100%' : '15%'}"></div>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">${a.titulo}</h3>
+                            <span class="progress-text ${feito ? 'text-concluido' : 'text-pendente'}">
+                                ${feito ? '<i class="fas fa-check-circle"></i> Aula Concluída' : 'Continuar Assistindo'}
+                            </span>
+                            <div class="btn-play">
+                                <i class="fas fa-play"></i> Assistir agora
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function resetProgress() {
+            if(confirm("Deseja resetar todo o seu progresso nas aulas?")) { 
+                aulas.forEach(a => localStorage.removeItem(a.id)); 
+                render(); 
+            }
+        }
+        render();
+    </script>
+</body>
+</html>

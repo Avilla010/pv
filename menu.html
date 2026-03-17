@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNH Blindada - Plataforma de Ensino</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0f172a; 
+            --accent-color: #fbbf24;  
+            --bg-body: #f1f5f9;       
+            --sidebar-bg: #ffffff;    
+            --text-main: #1e293b;
+            --sidebar-width: 260px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg-body); display: flex; color: var(--text-main); overflow-x: hidden; }
+
+        /* --- SIDEBAR CLARA --- */
+        .sidebar {
+            width: var(--sidebar-width); height: 100vh; 
+            background-color: var(--sidebar-bg);
+            position: fixed; transition: all 0.3s ease;
+            z-index: 1000; display: flex; flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.05); 
+            border-right: 1px solid #e2e8f0; 
+        }
+
+        .logo-area { padding: 40px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-area img { max-width: 160px; height: auto; display: block; margin: 0 auto;}
+
+        .nav-menu { flex-grow: 1; padding: 20px 10px; overflow-y: auto; }
+        
+        .nav-item {
+            display: flex; align-items: center; padding: 14px 15px; margin-bottom: 8px;
+            color: #475569; 
+            text-decoration: none; border-radius: 12px; transition: 0.3s; 
+            font-weight: 500; cursor: pointer;
+        }
+        
+        .nav-item i { margin-right: 12px; font-size: 1.1rem; width: 25px; text-align: center; color: #94a3b8;}
+        
+        .nav-item:hover, .nav-item.active { 
+            background-color: var(--accent-color) !important; 
+            color: #000000 !important; 
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
+        }
+
+        .nav-item:hover i, .nav-item.active i {
+            color: #000000 !important;
+        }
+
+        /* Estilo especial para o botão sair */
+        .nav-item.logout { color: #ef4444; margin-top: 20px; border: 1px solid transparent; }
+        .nav-item.logout i { color: #ef4444; }
+        .nav-item.logout:hover { background-color: #fef2f2 !important; color: #b91c1c !important; border-color: #fecaca; box-shadow: none; }
+        .nav-item.logout:hover i { color: #b91c1c !important; }
+
+        .sidebar-status { 
+            padding: 20px; 
+            background: #f8fafc; 
+            margin: 15px; 
+            border-radius: 15px; 
+            border: 1px solid #e2e8f0;
+        }
+        .status-title { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block;}
+        .status-badge { display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: bold; font-size: 0.9rem; }
+        .status-badge i { color: var(--accent-color); }
+
+        .main-content { margin-left: var(--sidebar-width); width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+
+        header {
+            height: 70px; background: #fff; padding: 0 30px; display: flex;
+            align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0;
+        }
+
+        .btn-mobile { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary-color); }
+
+        #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 70px); }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .dashboard-grid { padding: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+
+        .card {
+            background: #fff; padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid transparent;
+            transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-8px); border-color: var(--accent-color); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .card i { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 20px; transition: 0.3s; }
+        .card:hover i { transform: scale(1.1); color: var(--primary-color); }
+        .card h3 { margin-bottom: 10px; font-size: 1.25rem; }
+        .card p { color: #64748b; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .sidebar { left: -100%; }
+            .sidebar.show { left: 0; }
+            .main-content { margin-left: 0; }
+            .btn-mobile { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <img src="cnh.png" alt="CNH Blindada">
+        </div>
+        
+        <nav class="nav-menu">
+            <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-th-large"></i> Painel Geral</div>
+            
+            <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-map-marked-alt"></i> Plano de Estudo</div>
+            
+            <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item"><i class="fas fa-satellite-dish"></i> Aulas Ao Vivo</div>
+            
+            <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em áudio</div>
+            
+            <div onclick="loadPage('listas_gravadas.html')" class="nav-item"><i class="fas fa-layer-group"></i> Módulos Gravados</div>
+            <div onclick="loadPage('lista-simulados.html')" class="nav-item"><i class="fas fa-check-double"></i> Meus Simulados</div>
+            <div onclick="loadPage('material.html')" class="nav-item"><i class="fas fa-file-download"></i> Material Digital (PDF)</div>
+            <div onclick="loadPage('suporte.html')" class="nav-item"><i class="fas fa-headset"></i> SOS Aluno</div>
+
+            <div onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair da Conta</div>
+        </nav>
+
+        <div class="sidebar-status">
+            <span class="status-title">Status do Aluno</span>
+            <div class="status-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Acesso Liberado</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="btn-mobile" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="user-profile">
+                <span>Bem-vindo, <strong style="color: var(--accent-color);">Aluno</strong></span>
+            </div>
+        </header>
+
+        <section id="view-home" class="dashboard-grid">
+            <div class="card" onclick="loadPage('aula01.html')">
+                <i class="fas fa-play-circle"></i>
+                <h3>Continuar Estudos</h3>
+                <p>Módulo: Processo de Habilitação</p>
+            </div>
+            <div class="card" onclick="loadPage('lista-simulados.html')">
+                <i class="fas fa-clipboard-check"></i>
+                <h3>Praticar Simulado</h3>
+                <p>15 questões de fixação rápida.</p>
+            </div>
+            <div class="card" onclick="loadPage('material.html')">
+                <i class="fas fa-download"></i>
+                <h3>Material Digital</h3>
+                <p>Baixe seus PDFs aqui.</p>
+            </div>
+        </section>
+
+        <div id="content-frame-container">
+            <iframe src="" id="main-frame" title="Conteúdo"></iframe>
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+
+        function loadPage(url) {
+            const home = document.getElementById('view-home');
+            const frameContainer = document.getElementById('content-frame-container');
+            const frame = document.getElementById('main-frame');
+
+            home.style.display = 'none';
+            frameContainer.style.display = 'block';
+            frame.src = url; 
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+
+            if(window.innerWidth <= 768) toggleSidebar();
+        }
+
+        function openHome() {
+            document.getElementById('view-home').style.display = 'grid';
+            document.getElementById('content-frame-container').style.display = 'none';
+            document.getElementById('main-frame').src = "";
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('menu-painel').classList.add('active');
+            if(window.innerWidth <= 768) toggleSidebar();
+        }
+
+        // Função de Logout
+        function logout() {
+            localStorage.removeItem('acesso_cnh');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

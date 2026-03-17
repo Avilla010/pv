@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            // Se não estiver logado, manda para o login que está na pasta anterior ou raiz
+            window.location.href = 'login.html'; 
+        }
+    </script>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Estudo - CNH Blindada</title>
+        <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #fbbf24;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 25px;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .intro-box {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .step-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .step-card:hover {
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content { flex-grow: 1; }
+
+        .btn-action {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: var(--accent);
+            color: #000;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .detran-badge {
+            background: #ef4444;
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+
+        .strategy-list {
+            margin-top: 20px;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .strategy-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .strategy-list li i { color: #10b981; margin-right: 10px; }
+
+        .footer-msg {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #10b981;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📘 MODELO DE ESTUDO QUE FUNCIONA</h1>
+    </div>
+
+    <div class="intro-box">
+        <strong>Se você trabalha, tem família e pouco tempo, esse é o jeito certo de estudar 👇</strong>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-item"><i class="fas fa-clock"></i> 1h a 2h por dia</div>
+        <div class="stat-item"><i class="fas fa-calendar-alt"></i> Segunda a sábado</div>
+        <div class="stat-item"><i class="fas fa-redo"></i> Domingo: Revisão</div>
+    </div>
+
+    <h3>📌 Modelo diário de estudo:</h3>
+
+    <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <strong>30 min – Teoria (Vídeos e Módulos)</strong>
+            <p style="margin: 5px 0;">Estude só o que CAI na prova (nada de excesso).</p>
+            <a href="listas_gravadas.html" class="btn-action">Ir para os Módulos</a>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <strong>30 min – Questões Simuladão do Detran</strong>
+            <p style="margin: 5px 0;">Treine no estilo da prova do Detran MG.</p>
+            <a href="lista-simulados.html" class="btn-action">Praticar Simulados</a>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <strong>10 min – Revisão dos erros</strong>
+            <p style="margin: 5px 0;">Errou? É aí que aprende de verdade.</p>
+        </div>
+    </div>
+
+    <div class="detran-badge">
+        🎯 FOCO TOTAL NA APROVAÇÃO – DETRAN MG
+    </div>
+
+    <p style="margin-top: 20px;">
+        👉 Hoje, em Minas Gerais, o exame teórico exige mínimo de 20 pontos para aprovação.<br>
+        👉 Não precisa gabaritar. Precisa acertar o que mais cai.
+    </p>
+
+    <h3>📌 Resumo da estratégia vencedora:</h3>
+    <ul class="strategy-list">
+        <li><i class="fas fa-check-circle"></i> Teoria objetiva (Vídeo ou Apostila)</li>
+        <li><i class="fas fa-check-circle"></i> Muitas questões (Livro Azul Simuladão)</li>
+        <li><i class="fas fa-check-circle"></i> Revisão dos erros (Porque você errou?)</li>
+        <li><i class="fas fa-check-circle"></i> Constância diária (O que garante aprovação!)</li>
+    </ul>
+
+    <div class="footer-msg">
+        Confia no processo e executa. 🚦✅
+    </div>
+</div>
+
+</body>
+</html>
