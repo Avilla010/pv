@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar Aula - Auto escola Digital Campo Belo MG</title>
+    <title>Agendar Aula - Auto escola Digital</title>
     
-    <link rel="shortcut icon" href="digital.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-color: #0f172a; 
-            --accent-color: #fbbf24;  
-            --bg-body: #f1f5f9;       
-            --whatsapp-green: #25d366;
+            --primary: #0f172a; 
+            --accent: #fbbf24;  
+            --bg: #f1f5f9;       
+            --whatsapp: #25d366;
+            --danger-bg: #fef2f2;
+            --danger-text: #991b1b;
         }
 
         body {
-            background-color: var(--bg-body);
+            background-color: var(--bg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -30,77 +31,104 @@
 
         .login-container {
             background: #fff;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
             text-align: center;
         }
 
-        .logo-login img { max-width: 180px; margin-bottom: 20px; }
-        h2 { color: var(--primary-color); margin-bottom: 5px; font-size: 1.5rem; }
-        p { color: #64748b; font-size: 0.85rem; margin-bottom: 20px; }
-
-        .horarios-alert {
-            background-color: #fef3c7;
-            border: 1px solid #fde68a;
-            color: #92400e;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
+        .logo-login img { max-width: 150px; margin-bottom: 15px; }
+        h2 { color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; }
+        
         .input-group { text-align: left; margin-bottom: 15px; }
         .input-group label {
             display: block;
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 8px;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .input-group input, .input-group select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
-            outline: none;
-            transition: 0.3s;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
-            background-color: #fff;
         }
 
-        .input-group input:focus, .input-group select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        /* ESTILO DO CRONOGRAMA PRESENCIAL */
+        #aviso-presencial {
+            display: none;
+            background-color: var(--danger-bg);
+            border: 1px solid #fecaca;
+            color: var(--danger-text);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .cronograma-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .turno-box {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #fee2e2;
+        }
+
+        .turno-box h4 {
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
+            text-align: center;
+            border-bottom: 1px solid #fecaca;
+            padding-bottom: 5px;
+        }
+
+        .lista-horarios {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            text-align: center;
         }
 
         .btn-whatsapp {
             width: 100%;
             padding: 14px;
-            background-color: var(--whatsapp-green);
+            background-color: var(--whatsapp);
             color: #fff;
             border: none;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
-            font-size: 1rem;
-            margin-top: 10px;
+            margin-top: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        .btn-whatsapp:hover {
-            background-color: #128c7e;
-            transform: translateY(-2px);
+        .horarios-alert {
+            background-color: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            text-align: left;
         }
     </style>
 </head>
@@ -108,91 +136,115 @@
 
     <div class="login-container">
         <div class="logo-login">
-            <img src="digital.png" alt="Auro escola Digital Campo Belo MG">
+            <img src="digital.png" alt="Auto escola Digital">
         </div>
         
-        <h2>Agendar Aula Online - Pro Aulas 2.0</h2>
-        <p>Aulas de 50 minutos (Segunda a Sexta)</p>
+        <h2>Agendamento Pro Aulas 2.0</h2>
 
-        <div class="horarios-alert">
-            <i class="fas fa-info-circle"></i> <strong>Blocos de Aula:</strong><br>
-            Manhã: 07:00 às 12:00<br>
-            Tarde/Noite: 17:00 às 19:30
+        <div class="input-group">
+            <label><i class="fas fa-user"></i> Nome do Aluno</label>
+            <input type="text" id="nome" placeholder="Seu nome completo">
         </div>
 
         <div class="input-group">
-            <label><i class="fas fa-user"></i> Seu Nome</label>
-            <input type="text" id="nome" placeholder="Ex: João Silva">
-        </div>
-
-        <div class="input-group">
-            <label><i class="fas fa-calendar-alt"></i> Data da Aula</label>
-            <input type="date" id="data" onchange="validarFimDeSemana(this)">
-        </div>
-
-        <div class="input-group">
-            <label><i class="fas fa-clock"></i> Escolha o Horário</label>
-            <select id="hora">
-                <option value="">Selecione um horário...</option>
-                <optgroup label="Turno da Manhã">
-                    <option value="07:00 - 07:50">07:00 - 07:50</option>
-                    <option value="07:50 - 08:40">07:50 - 08:40</option>
-                    <option value="08:40 - 09:30">08:40 - 09:30</option>
-                    <option value="09:30 - 10:20">09:30 - 10:20</option>
-                    <option value="10:20 - 11:10">10:20 - 11:10</option>
-                    <option value="11:10 - 12:00">11:10 - 12:00</option>
-                </optgroup>
-                <optgroup label="Turno Tarde/Noite">
-                    <option value="17:00 - 17:50">17:00 - 17:50</option>
-                    <option value="17:50 - 18:40">17:50 - 18:40</option>
-                    <option value="18:40 - 19:30">18:40 - 19:30</option>
-                </optgroup>
+            <label><i class="fas fa-id-card"></i> Como você fará as aulas?</label>
+            <select id="modalidade" onchange="alternarModalidade()">
+                <option value="online">Online (Remoto pela Plataforma)</option>
+                <option value="presencial">Presencial (Na Autoescola)</option>
             </select>
         </div>
 
-        <button onclick="enviarWhatsapp()" class="btn-whatsapp">
-            <i class="fab fa-whatsapp"></i> Confirmar no WhatsApp
-        </button>
+        <div id="secao-online">
+            <div class="horarios-alert">
+                <i class="fas fa-calendar-check"></i> Agende sua aula de segunda a sexta.
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-calendar-alt"></i> Data da Aula</label>
+                <input type="date" id="data" onchange="validarFimDeSemana(this)">
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-clock"></i> Escolha o Horário</label>
+                <select id="hora">
+                    <option value="">Selecione...</option>
+                    <optgroup label="Manhã">
+                        <option value="07:00 - 07:50">07:00 - 07:50</option>
+                        <option value="07:50 - 08:40">07:50 - 08:40</option>
+                        <option value="08:40 - 09:30">08:40 - 09:30</option>
+                        <option value="09:30 - 10:20">09:30 - 10:20</option>
+                        <option value="10:20 - 11:10">10:20 - 11:10</option>
+                        <option value="11:10 - 12:00">11:10 - 12:00</option>
+                    </optgroup>
+                    <optgroup label="Tarde/Noite">
+                        <option value="17:00 - 17:50">17:00 - 17:50</option>
+                        <option value="17:50 - 18:40">17:50 - 18:40</option>
+                        <option value="18:40 - 19:30">18:40 - 19:30</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <button onclick="enviarWhatsapp()" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Confirmar no WhatsApp
+            </button>
+        </div>
+
+        <div id="aviso-presencial">
+            <i class="fas fa-ban"></i> <strong>Agendamento Online Indisponível</strong>
+            <p style="font-size: 0.8rem; margin: 8px 0;">Como você não optou pelo online na matrícula, siga o cronograma presencial (Segunda a Sexta):</p>
+            
+            <div class="cronograma-container">
+                <div class="turno-box">
+                    <h4><i class="fas fa-sun"></i> Manhã</h4>
+                    <ul class="lista-horarios">
+                        <li>07:00 - 07:50</li>
+                        <li>07:50 - 08:40</li>
+                        <li>08:40 - 09:30</li>
+                        <li>09:30 - 10:20</li>
+                        <li>10:20 - 11:10</li>
+                        <li>11:10 - 12:00</li>
+                    </ul>
+                </div>
+                <div class="turno-box">
+                    <h4><i class="fas fa-moon"></i> Tarde/Noite</h4>
+                    <ul class="lista-horarios">
+                        <li>17:00 - 17:50</li>
+                        <li>17:50 - 18:40</li>
+                        <li>18:40 - 19:30</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="font-size: 0.7rem; margin-top: 10px; color: #7f1d1d; text-align: center;">
+                * Compareça à sala de aula física nestes horários.
+            </p>
+        </div>
     </div>
 
     <script>
-        // Trava para não selecionar datas passadas
-        const hoje = new Date().toISOString().split('T')[0];
-        document.getElementById('data').setAttribute('min', hoje);
+        // Trava datas passadas
+        document.getElementById('data').setAttribute('min', new Date().toISOString().split('T')[0]);
 
-        // Função para validar se é fim de semana
+        function alternarModalidade() {
+            const mod = document.getElementById('modalidade').value;
+            document.getElementById('secao-online').style.display = (mod === "presencial") ? "none" : "block";
+            document.getElementById('aviso-presencial').style.display = (mod === "presencial") ? "block" : "none";
+        }
+
         function validarFimDeSemana(input) {
-            const dataSelecionada = new Date(input.value + 'T00:00:00');
-            const diaSemana = dataSelecionada.getDay(); // 0 = Domingo, 6 = Sábado
-            if (diaSemana === 0 || diaSemana === 6) {
-                alert("Aulas apenas de Segunda a Sexta-feira!");
-                input.value = "";
-            }
+            const d = new Date(input.value + 'T00:00:00').getDay();
+            if (d === 0 || d === 6) { alert("Apenas de Segunda a Sexta!"); input.value = ""; }
         }
 
         function enviarWhatsapp() {
-            const meuNumero = "5535998781881"; 
             const nome = document.getElementById('nome').value;
             const data = document.getElementById('data').value;
             const hora = document.getElementById('hora').value;
 
-            if(!nome || !data || !hora) {
-                alert("Por favor, preencha todos os campos.");
-                return;
-            }
+            if(!nome || !data || !hora) { alert("Preencha tudo!"); return; }
 
-            const dataFormatada = data.split('-').reverse().join('/');
-
-            // Removi os emojis que causavam o erro  e usei caracteres simples para garantir a entrega
-            const mensagem = "Olá! Gostaria de agendar uma aula online na plataforma Pro Aulas modelo novo 2.0.\n\n" +
-                             "*Nome:* " + nome + "\n" +
-                             "*Data:* " + dataFormatada + " (Seg-Sex)\n" +
-                             "*Horário:* " + hora;
-
-            const url = "https://wa.me/" + meuNumero + "?text=" + encodeURIComponent(mensagem);
-            window.open(url, '_blank');
+            const msg = `Olá! Sou o aluno(a) *${nome}*.\nAgendamento de aula online Pro Aulas 2.0:\n\n📅 *Data:* ${data.split('-').reverse().join('/')}\n⏰ *Horário:* ${hora}`;
+            window.open(`https://wa.me/5535998781881?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
-
 </body>
 </html>
