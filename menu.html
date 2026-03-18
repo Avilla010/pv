@@ -3,185 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNH Blindada - Dashboard Premium</title>
+    <title>CNH Blindada - Plataforma de Ensino</title>
     
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --netflix-red: #E50914;
-            --netflix-black: #141414;
-            --netflix-dark-grey: #181818;
+            --primary-color: #0f172a; 
+            --accent-color: #fbbf24;  
+            --bg-body: #f1f5f9;       
+            --sidebar-bg: #ffffff;    
+            --text-main: #1e293b;
             --sidebar-width: 260px;
         }
 
-        /* Reset e Base */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-        body { background-color: var(--netflix-black); display: flex; color: #fff; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
-        /* --- SIDEBAR --- */
+        body { background-color: var(--bg-body); display: flex; color: var(--text-main); overflow-x: hidden; }
+
+        /* --- SIDEBAR CLARA --- */
         .sidebar {
             width: var(--sidebar-width); height: 100vh; 
-            background-color: #000;
+            background-color: var(--sidebar-bg);
             position: fixed; transition: all 0.3s ease;
-            z-index: 1001; display: flex; flex-direction: column;
-            border-right: 1px solid #333; 
+            z-index: 1000; display: flex; flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.05); 
+            border-right: 1px solid #e2e8f0; 
         }
 
-        .sidebar-overlay {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000;
-        }
+        .logo-area { padding: 40px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-area img { max-width: 160px; height: auto; display: block; margin: 0 auto;}
 
-        .logo-area { padding: 40px 20px; text-align: center; }
-        .logo-area img { max-width: 140px; height: auto; filter: drop-shadow(0 0 5px rgba(229, 9, 20, 0.2)); }
-
-        .nav-menu { flex-grow: 1; padding: 10px; overflow-y: auto; }
+        .nav-menu { flex-grow: 1; padding: 20px 10px; overflow-y: auto; }
         
         .nav-item {
-            display: flex; align-items: center; padding: 12px 15px; margin-bottom: 5px;
-            color: #b3b3b3; text-decoration: none; border-radius: 4px; transition: 0.2s; 
-            font-weight: 400; cursor: pointer; font-size: 0.9rem;
+            display: flex; align-items: center; padding: 14px 15px; margin-bottom: 8px;
+            color: #475569; 
+            text-decoration: none; border-radius: 12px; transition: 0.3s; 
+            font-weight: 500; cursor: pointer;
         }
         
-        .nav-item i { margin-right: 15px; font-size: 1.1rem; width: 20px; text-align: center; }
-        .nav-item:hover, .nav-item.active { background-color: rgba(255,255,255,0.1); color: #fff; }
-        .nav-item.active { border-left: 4px solid var(--netflix-red); padding-left: 11px; }
+        .nav-item i { margin-right: 12px; font-size: 1.1rem; width: 25px; text-align: center; color: #94a3b8;}
+        
+        .nav-item:hover, .nav-item.active { 
+            background-color: var(--accent-color) !important; 
+            color: #000000 !important; 
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
+        }
 
-        /* --- CONTEÚDO PRINCIPAL --- */
+        .nav-item:hover i, .nav-item.active i {
+            color: #000000 !important;
+        }
+
+        /* Estilo especial para o botão sair */
+        .nav-item.logout { color: #ef4444; margin-top: 20px; border: 1px solid transparent; }
+        .nav-item.logout i { color: #ef4444; }
+        .nav-item.logout:hover { background-color: #fef2f2 !important; color: #b91c1c !important; border-color: #fecaca; box-shadow: none; }
+        .nav-item.logout:hover i { color: #b91c1c !important; }
+
+        .sidebar-status { 
+            padding: 20px; 
+            background: #f8fafc; 
+            margin: 15px; 
+            border-radius: 15px; 
+            border: 1px solid #e2e8f0;
+        }
+        .status-title { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block;}
+        .status-badge { display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: bold; font-size: 0.9rem; }
+        .status-badge i { color: var(--accent-color); }
+
         .main-content { margin-left: var(--sidebar-width); width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
 
         header {
-            height: 70px; background: rgba(20, 20, 20, 0.95); padding: 0 30px; display: flex;
-            align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 900;
+            height: 70px; background: #fff; padding: 0 30px; display: flex;
+            align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0;
         }
 
-        .btn-mobile { display: none; font-size: 1.5rem; cursor: pointer; color: #fff; }
+        .btn-mobile { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary-color); }
 
-        #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 70px); background: #000; }
+        #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 70px); }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* GRID DE CARDS (TELA DA DIREITA) */
         .dashboard-grid { padding: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
 
         .card {
-            background: var(--netflix-dark-grey); border-radius: 4px; overflow: hidden;
-            transition: 0.4s; cursor: pointer; position: relative;
-            border-bottom: 3px solid transparent; padding-bottom: 10px;
+            background: #fff; padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid transparent;
+            transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden;
         }
-
-        .card:hover { transform: scale(1.05); z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.6); border-bottom-color: var(--netflix-red); }
-
-        .card-image {
-            height: 150px; background: linear-gradient(135deg, #1a1a1a, #333);
-            display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--netflix-red);
-        }
-
-        .card-body { padding: 15px; }
-        .card h3 { margin-bottom: 5px; font-size: 1rem; color: #fff; }
-        .card p { color: #808080; font-size: 0.8rem; line-height: 1.4; }
-
-        .badge-netflix {
-            background: var(--netflix-red); color: white; padding: 2px 8px; 
-            font-size: 0.65rem; font-weight: bold; border-radius: 2px;
-            position: absolute; top: 10px; left: 10px; z-index: 5;
-        }
+        .card:hover { transform: translateY(-8px); border-color: var(--accent-color); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .card i { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 20px; transition: 0.3s; }
+        .card:hover i { transform: scale(1.1); color: var(--primary-color); }
+        .card h3 { margin-bottom: 10px; font-size: 1.25rem; }
+        .card p { color: #64748b; font-size: 0.9rem; }
 
         @media (max-width: 768px) {
             .sidebar { left: -100%; }
             .sidebar.show { left: 0; }
-            .sidebar.show + .sidebar-overlay { display: block; }
             .main-content { margin-left: 0; }
             .btn-mobile { display: block; }
-            .dashboard-grid { grid-template-columns: 1fr; padding: 20px; }
         }
     </style>
 </head>
-<body onclick="closeSidebarOnMobile()">
+<body>
+
+    <script>
+        if (localStorage.getItem('acesso_cnh') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
 
     <aside class="sidebar" id="sidebar">
-        <div class="logo-area"><img src="cnh.png" alt="CNH Blindada"></div>
+        <div class="logo-area">
+            <img src="cnh.png" alt="CNH Blindada">
+        </div>
+        
         <nav class="nav-menu">
-            <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-home"></i> Início</div>
-            <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em Áudio</div>
-            <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-list-ul"></i> Meu Plano De Estudos</div>
-            <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item"><i class="fas fa-video"></i> Ao Vivo</div>
-            <div onclick="loadPage('listas_gravadas.html')" class="nav-item"><i class="fas fa-film"></i> Aulas Gravadas</div>
-            <div onclick="loadPage('lista-simulados.html')" class="nav-item"><i class="fas fa-check-circle"></i> Simulados</div>
-            <div onclick="loadPage('material.html')" class="nav-item"><i class="fas fa-file-alt"></i> Materiais</div>
-            <div onclick="loadPage('suporte.html')" class="nav-item"><i class="fas fa-headset"></i> Suporte</div>
-        </nav>
-    </aside>
+            <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-th-large"></i> Painel Geral</div>
+            
+            <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-map-marked-alt"></i> Plano de Estudo</div>
+            
+            <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item"><i class="fas fa-satellite-dish"></i> Aulas Ao Vivo</div>
+            
+            <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em áudio</div>
+            
+            <div onclick="loadPage('listas_gravadas.html')" class="nav-item"><i class="fas fa-layer-group"></i> Módulos Gravados</div>
+            <div onclick="loadPage('lista-simulados.html')" class="nav-item"><i class="fas fa-check-double"></i> Meus Simulados</div>
+            <div onclick="loadPage('material.html')" class="nav-item"><i class="fas fa-file-download"></i> Material Digital (PDF)</div>
+            <div onclick="loadPage('suporte.html')" class="nav-item"><i class="fas fa-headset"></i> SOS Aluno</div>
 
-    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+            <div onclick="logout()" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair da Conta</div>
+        </nav>
+
+        <div class="sidebar-status">
+            <span class="status-title">Status do Aluno</span>
+            <div class="status-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Acesso Liberado</span>
+            </div>
+        </div>
+    </aside>
 
     <main class="main-content">
         <header>
-            <div class="btn-mobile" onclick="event.stopPropagation(); toggleSidebar();">
+            <div class="btn-mobile" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </div>
             <div class="user-profile">
-                <span style="font-size: 0.9rem;">Olá, <strong>Condutor Blindado</strong></span>
+                <span>Bem-vindo, <strong style="color: var(--accent-color);">Aluno</strong></span>
             </div>
         </header>
 
         <section id="view-home" class="dashboard-grid">
-
-
-            <div class="card" onclick="loadPage('listas_gravadas.html')">
-                <span class="badge-netflix">CONTINUAR</span>
-                <div class="card-image"><i class="fas fa-play"></i></div>
-                <div class="card-body">
-                    <h3>Aulas Gravadas</h3>
-                    <p>Assista aos módulos completos de legislação e sinalização.</p>
-                </div>
+            <div class="card" onclick="loadPage('aula01.html')">
+                <i class="fas fa-play-circle"></i>
+                <h3>Continuar Estudos</h3>
+                <p>Módulo: Processo de Habilitação</p>
             </div>
-
             <div class="card" onclick="loadPage('lista-simulados.html')">
-                <div class="card-image" style="color: #46d369;"><i class="fas fa-edit"></i></div>
-                <div class="card-body">
-                    <h3>Simulados Blindados</h3>
-                    <p>Treine com questões reais e passe de primeira.</p>
-                </div>
-            </div>            
-            
-            <div class="card" onclick="loadPage('curso-audio.html')">
-                <span class="badge-netflix">NOVO MODO</span>
-                <div class="card-image" style="color: #ff9800;"><i class="fas fa-headphones"></i></div>
-                <div class="card-body">
-                    <h3>Curso em Áudio</h3>
-                    <p>Estude enquanto dirige ou caminha. Toda a matéria em áudio HD.</p>
-                </div>
+                <i class="fas fa-clipboard-check"></i>
+                <h3>Praticar Simulado</h3>
+                <p>15 questões de fixação rápida.</p>
             </div>
-
-            <div class="card" onclick="loadPage('plano-estudo.html')">
-                <div class="card-image" style="color: #e50914;"><i class="fas fa-list-ul"></i></div>
-                <div class="card-body">
-                    <h3>Plano de Estudos</h3>
-                    <p>O roteiro exato para sua aprovação organizada.</p>
-                </div>
-            </div>
-
-
-
             <div class="card" onclick="loadPage('material.html')">
-                <div class="card-image" style="color: #54b4ff;"><i class="fas fa-arrow-alt-circle-down"></i></div>
-                <div class="card-body">
-                    <h3>Materiais & PDF</h3>
-                    <p>Mapas mentais e resumos estratégicos para baixar.</p>
-                </div>
+                <i class="fas fa-download"></i>
+                <h3>Material Digital</h3>
+                <p>Baixe seus PDFs aqui.</p>
             </div>
-
-            <div class="card" onclick="loadPage('suporte.html')">
-                <div class="card-image" style="color: #f1f1f1;"><i class="fas fa-headset"></i></div>
-                <div class="card-body">
-                    <h3>Suporte Aluno</h3>
-                    <p>Fale conosco se tiver dúvidas ou problemas técnicos.</p>
-                </div>
-            </div>
-
         </section>
 
         <div id="content-frame-container">
@@ -190,16 +180,8 @@
     </main>
 
     <script>
-        const sidebar = document.getElementById('sidebar');
-
         function toggleSidebar() {
-            sidebar.classList.toggle('show');
-        }
-
-        function closeSidebarOnMobile() {
-            if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
-                sidebar.classList.remove('show');
-            }
+            document.getElementById('sidebar').classList.toggle('show');
         }
 
         function loadPage(url) {
@@ -211,16 +193,13 @@
             frameContainer.style.display = 'block';
             frame.src = url; 
 
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             
-            navItems.forEach(item => {
-                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(url)) {
-                    item.classList.add('active');
-                }
-            });
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
 
-            closeSidebarOnMobile();
+            if(window.innerWidth <= 768) toggleSidebar();
         }
 
         function openHome() {
@@ -229,7 +208,13 @@
             document.getElementById('main-frame').src = "";
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById('menu-painel').classList.add('active');
-            closeSidebarOnMobile();
+            if(window.innerWidth <= 768) toggleSidebar();
+        }
+
+        // Função de Logout
+        function logout() {
+            localStorage.removeItem('acesso_cnh');
+            window.location.href = 'login.html';
         }
     </script>
 </body>
