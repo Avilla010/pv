@@ -46,7 +46,7 @@
             gap: 12px; 
             width: 100%;
             max-width: 800px; 
-            padding-bottom: 200px; /* Espaço para o botão flutuante */
+            padding-bottom: 200px; 
         }
 
         .audio-card {
@@ -54,16 +54,33 @@
             padding: 20px;
             border-radius: 4px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column; /* Ajustado para comportar o player */
+            gap: 15px;
             transition: 0.3s;
-            filter: brightness(0.3); /* Bloqueado */
-            cursor: not-allowed;
             border: 1px solid transparent;
         }
 
-        .audio-card:hover {
+        /* Classe para itens bloqueados */
+        .locked {
+            filter: brightness(0.3);
+            cursor: not-allowed;
+        }
+
+        /* Classe para o item liberado */
+        .unlocked {
+            filter: brightness(1);
             border-color: #333;
+        }
+
+        .audio-card:hover {
+            border-color: #444;
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
 
         .audio-info { display: flex; align-items: center; gap: 20px; }
@@ -74,6 +91,8 @@
             width: 30px;
             text-align: center;
         }
+
+        .unlocked .audio-icon { color: var(--netflix-red); }
 
         .audio-text h4 { 
             margin: 0; 
@@ -88,8 +107,14 @@
         }
 
         .lock-status { color: var(--netflix-red); font-size: 0.9rem; }
+        .free-status { color: #2ecc71; font-size: 0.9rem; font-weight: bold; }
 
-        /* --- FOOTER OVERLAY --- */
+        audio {
+            width: 100%;
+            height: 35px;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5); /* Estilo para combinar com dark mode */
+        }
+
         .premium-overlay {
             position: fixed;
             bottom: 0;
@@ -115,11 +140,6 @@
             box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
         }
 
-        .btn-upgrade:hover { 
-            background: #ff0a16;
-            transform: scale(1.05);
-        }
-
         .badge-original {
             color: var(--netflix-red);
             font-weight: bold;
@@ -139,59 +159,73 @@
     </div>
 
     <div class="audio-list">
-        <div class="audio-card">
-            <div class="audio-info">
-                <div class="audio-icon"><i class="fas fa-lock"></i></div>
-                <div class="audio-text">
-                    <h4>1. Processo de Habilitação</h4>
-                    <span>Episódio 1 • 12 min</span>
+        <div class="audio-card unlocked">
+            <div class="card-content">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-play"></i></div>
+                    <div class="audio-text">
+                        <h4>1. Processo de Habilitação</h4>
+                        <span>Episódio 1 • 12 min</span>
+                    </div>
                 </div>
+                <div class="free-status">GRÁTIS</div>
             </div>
-            <div class="lock-status">PREMIUM</div>
+            <audio controls>
+                <source src="audio01.wav" type="audio/wav">
+                Seu navegador não suporta o player de áudio.
+            </audio>
         </div>
 
-        <div class="audio-card">
-            <div class="audio-info">
-                <div class="audio-icon"><i class="fas fa-lock"></i></div>
-                <div class="audio-text">
-                    <h4>2. Legislação e Sinalização</h4>
-                    <span>Episódio 2 • 25 min</span>
+        <div class="audio-card locked">
+            <div class="card-content">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                    <div class="audio-text">
+                        <h4>2. Legislação e Sinalização</h4>
+                        <span>Episódio 2 • 25 min</span>
+                    </div>
                 </div>
+                <div class="lock-status">PREMIUM</div>
             </div>
-            <div class="lock-status">PREMIUM</div>
         </div>
 
-        <div class="audio-card">
-            <div class="audio-info">
-                <div class="audio-icon"><i class="fas fa-lock"></i></div>
-                <div class="audio-text">
-                    <h4>3. Direção Defensiva</h4>
-                    <span>Episódio 3 • 18 min</span>
+        <div class="audio-card locked">
+            <div class="card-content">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                    <div class="audio-text">
+                        <h4>3. Direção Defensiva</h4>
+                        <span>Episódio 3 • 18 min</span>
+                    </div>
                 </div>
+                <div class="lock-status">PREMIUM</div>
             </div>
-            <div class="lock-status">PREMIUM</div>
         </div>
         
-        <div class="audio-card">
-            <div class="audio-info">
-                <div class="audio-icon"><i class="fas fa-lock"></i></div>
-                <div class="audio-text">
-                    <h4>4. Primeiros Socorros</h4>
-                    <span>Episódio 4 • 15 min</span>
+        <div class="audio-card locked">
+            <div class="card-content">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                    <div class="audio-text">
+                        <h4>4. Primeiros Socorros</h4>
+                        <span>Episódio 4 • 15 min</span>
+                    </div>
                 </div>
+                <div class="lock-status">PREMIUM</div>
             </div>
-            <div class="lock-status">PREMIUM</div>
         </div>
 
-        <div class="audio-card">
-            <div class="audio-info">
-                <div class="audio-icon"><i class="fas fa-lock"></i></div>
-                <div class="audio-text">
-                    <h4>5. Mecânica Básica</h4>
-                    <span>Episódio 5 • 11 min</span>
+        <div class="audio-card locked">
+            <div class="card-content">
+                <div class="audio-info">
+                    <div class="audio-icon"><i class="fas fa-lock"></i></div>
+                    <div class="audio-text">
+                        <h4>5. Mecânica Básica</h4>
+                        <span>Episódio 5 • 11 min</span>
+                    </div>
                 </div>
+                <div class="lock-status">PREMIUM</div>
             </div>
-            <div class="lock-status">PREMIUM</div>
         </div>
     </div>
 
