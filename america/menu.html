@@ -26,8 +26,13 @@
             width: var(--sidebar-width); height: 100vh; 
             background-color: #000;
             position: fixed; transition: all 0.3s ease;
-            z-index: 1000; display: flex; flex-direction: column;
+            z-index: 1001; display: flex; flex-direction: column;
             border-right: 1px solid #333; 
+        }
+
+        .sidebar-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000;
         }
 
         .logo-area { padding: 40px 20px; text-align: center; }
@@ -58,7 +63,7 @@
         #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 70px); background: #000; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* GRID DE CARDS */
+        /* GRID DE CARDS (TELA DA DIREITA) */
         .dashboard-grid { padding: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
 
         .card {
@@ -87,22 +92,19 @@
         @media (max-width: 768px) {
             .sidebar { left: -100%; }
             .sidebar.show { left: 0; }
+            .sidebar.show + .sidebar-overlay { display: block; }
             .main-content { margin-left: 0; }
             .btn-mobile { display: block; }
             .dashboard-grid { grid-template-columns: 1fr; padding: 20px; }
         }
     </style>
 </head>
-<body>
+<body onclick="closeSidebarOnMobile()">
 
     <aside class="sidebar" id="sidebar">
-        <div class="logo-area">
-            <img src="cnh.png" alt="CNH Blindada">
-        </div>
-        
+        <div class="logo-area"><img src="cnh.png" alt="CNH Blindada"></div>
         <nav class="nav-menu">
             <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-home"></i> Início</div>
-            
             <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em Áudio</div>
             <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-list-ul"></i> Meu Plano De Estudos</div>
             <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item"><i class="fas fa-video"></i> Ao Vivo</div>
@@ -111,25 +113,39 @@
             <div onclick="loadPage('material.html')" class="nav-item"><i class="fas fa-file-alt"></i> Materiais</div>
             <div onclick="loadPage('suporte.html')" class="nav-item"><i class="fas fa-headset"></i> Suporte</div>
         </nav>
-
-        <div style="padding: 20px; background: #111; border-top: 1px solid #333;">
-            <div style="color: var(--netflix-red); font-weight: bold; font-size: 0.8rem; text-align: center;">
-                <i class="fas fa-crown"></i> PREMIUM ATIVO
-            </div>
-        </div>
     </aside>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
     <main class="main-content">
         <header>
-            <div class="btn-mobile" onclick="toggleSidebar()">
+            <div class="btn-mobile" onclick="event.stopPropagation(); toggleSidebar();">
                 <i class="fas fa-bars"></i>
             </div>
             <div class="user-profile">
-                <span style="font-size: 0.9rem; color: #e5e5e5;">Olá, <strong style="color: #fff;">Condutor Blindado</strong></span>
+                <span style="font-size: 0.9rem;">Olá, <strong>Condutor Blindado</strong></span>
             </div>
         </header>
 
         <section id="view-home" class="dashboard-grid">
+
+
+            <div class="card" onclick="loadPage('listas_gravadas.html')">
+                <span class="badge-netflix">CONTINUAR</span>
+                <div class="card-image"><i class="fas fa-play"></i></div>
+                <div class="card-body">
+                    <h3>Aulas Gravadas</h3>
+                    <p>Assista aos módulos completos de legislação e sinalização.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="loadPage('lista-simulados.html')">
+                <div class="card-image" style="color: #46d369;"><i class="fas fa-edit"></i></div>
+                <div class="card-body">
+                    <h3>Simulados Blindados</h3>
+                    <p>Treine com questões reais e passe de primeira.</p>
+                </div>
+            </div>            
             
             <div class="card" onclick="loadPage('curso-audio.html')">
                 <span class="badge-netflix">NOVO MODO</span>
@@ -140,22 +156,15 @@
                 </div>
             </div>
 
-            <div class="card" onclick="loadPage('listas_gravadas.html')">
-                <span class="badge-netflix">CONTINUAR</span>
-                <div class="card-image"><i class="fas fa-play"></i></div>
+            <div class="card" onclick="loadPage('plano-estudo.html')">
+                <div class="card-image" style="color: #e50914;"><i class="fas fa-list-ul"></i></div>
                 <div class="card-body">
-                    <h3>Aulas Gravadas</h3>
-                    <p>Módulo 01: Processo de Habilitação</p>
+                    <h3>Plano de Estudos</h3>
+                    <p>O roteiro exato para sua aprovação organizada.</p>
                 </div>
             </div>
 
-            <div class="card" onclick="loadPage('lista-simulados.html')">
-                <div class="card-image" style="color: #46d369;"><i class="fas fa-edit"></i></div>
-                <div class="card-body">
-                    <h3>Simulados Blindados</h3>
-                    <p>Treine com questões reais e passe de primeira.</p>
-                </div>
-            </div>
+
 
             <div class="card" onclick="loadPage('material.html')">
                 <div class="card-image" style="color: #54b4ff;"><i class="fas fa-arrow-alt-circle-down"></i></div>
@@ -181,8 +190,16 @@
     </main>
 
     <script>
+        const sidebar = document.getElementById('sidebar');
+
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('show');
+            sidebar.classList.toggle('show');
+        }
+
+        function closeSidebarOnMobile() {
+            if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+            }
         }
 
         function loadPage(url) {
@@ -194,19 +211,16 @@
             frameContainer.style.display = 'block';
             frame.src = url; 
 
-            // Gerenciamento de classes ativas no menu
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => item.classList.remove('active'));
             
-            // Lógica para marcar o item como ativo no menu lateral
-            // Procuramos o item que tem o atributo onclick contendo a url
             navItems.forEach(item => {
                 if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(url)) {
                     item.classList.add('active');
                 }
             });
 
-            if(window.innerWidth <= 768) toggleSidebar();
+            closeSidebarOnMobile();
         }
 
         function openHome() {
@@ -215,7 +229,7 @@
             document.getElementById('main-frame').src = "";
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById('menu-painel').classList.add('active');
-            if(window.innerWidth <= 768) toggleSidebar();
+            closeSidebarOnMobile();
         }
     </script>
 </body>
