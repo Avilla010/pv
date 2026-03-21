@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Aula - Auto escola Digital</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #E50914; /* Vermelho Netflix */
+            --accent: #ffffff;  
+            --bg: #141414;      /* Preto Netflix */
+            --card-bg: #181818; /* Cinza Dark */
+            --whatsapp: #25d366;
+            --danger-bg: #2a0a0a;
+            --danger-text: #ff9494;
+            --input-bg: #2a2a2a;
+        }
+
+        body {
+            background-color: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .login-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .logo-login img { max-width: 150px; margin-bottom: 15px; }
+        h2 { color: #fff; margin-bottom: 20px; font-size: 1.3rem; font-weight: 700; }
+        
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #b3b3b3;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            background-color: var(--input-bg);
+            color: #fff;
+        }
+
+        /* Campo Travado */
+        .input-group input[readonly] {
+            background-color: #121212;
+            color: #888;
+            border-color: #333;
+            cursor: not-allowed;
+        }
+
+        #aviso-presencial {
+            display: none;
+            background-color: var(--danger-bg);
+            border: 1px solid #4a1010;
+            color: var(--danger-text);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .cronograma-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .turno-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+
+        .turno-box h4 {
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .lista-horarios {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            text-align: center;
+            color: #ccc;
+        }
+
+        .btn-whatsapp {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--whatsapp);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .btn-whatsapp:hover { background-color: #1eb956; transform: translateY(-2px); }
+
+        .horarios-alert {
+            background-color: #2e260a;
+            border: 1px solid #5e4d10;
+            color: #fbbf24;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo-login">
+            <img src="digital.png" alt="Auto escola Digital">
+        </div>
+        
+        <h2>Agendamento Pro Aulas 2.0</h2>
+
+        <div class="input-group">
+            <label><i class="fas fa-user"></i> Nome do Aluno</label>
+            <input type="text" id="nome" readonly title="Nome preenchido automaticamente pelo sistema">
+        </div>
+
+        <div class="input-group">
+            <label><i class="fas fa-id-card"></i> Como você fará as aulas?</label>
+            <select id="modalidade" onchange="alternarModalidade()">
+                <option value="online">Online (Remoto pela Plataforma)</option>
+                <option value="presencial">Presencial (Na Autoescola)</option>
+            </select>
+        </div>
+
+        <div id="secao-online">
+            <div class="horarios-alert">
+                <i class="fas fa-calendar-check"></i> Agende sua aula de segunda a sexta.
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-calendar-alt"></i> Data da Aula</label>
+                <input type="date" id="data" onchange="validarFimDeSemana(this)">
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-clock"></i> Escolha o Horário</label>
+                <select id="hora">
+                    <option value="">Selecione...</option>
+                    <optgroup label="Manhã">
+                        <option value="07:00 - 07:50">07:00 - 07:50</option>
+                        <option value="07:50 - 08:40">07:50 - 08:40</option>
+                        <option value="08:40 - 09:30">08:40 - 09:30</option>
+                        <option value="09:30 - 10:20">09:30 - 10:20</option>
+                        <option value="10:20 - 11:10">10:20 - 11:10</option>
+                        <option value="11:10 - 12:00">11:10 - 12:00</option>
+                    </optgroup>
+                    <optgroup label="Tarde/Noite">
+                        <option value="17:00 - 17:50">17:00 - 17:50</option>
+                        <option value="17:50 - 18:40">17:50 - 18:40</option>
+                        <option value="18:40 - 19:30">18:40 - 19:30</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <button onclick="enviarWhatsapp()" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Confirmar no WhatsApp
+            </button>
+        </div>
+
+        <div id="aviso-presencial">
+            <i class="fas fa-ban"></i> <strong>Agendamento Online Indisponível</strong>
+            <p style="font-size: 0.8rem; margin: 8px 0;">Como você não optou pelo online na matrícula, siga o cronograma presencial (Segunda a Sexta):</p>
+            
+            <div class="cronograma-container">
+                <div class="turno-box">
+                    <h4><i class="fas fa-sun"></i> Manhã</h4>
+                    <ul class="lista-horarios">
+                        <li>07:00 - 07:50</li>
+                        <li>07:50 - 08:40</li>
+                        <li>08:40 - 09:30</li>
+                        <li>09:30 - 10:20</li>
+                        <li>10:20 - 11:10</li>
+                        <li>11:10 - 12:00</li>
+                    </ul>
+                </div>
+                <div class="turno-box">
+                    <h4><i class="fas fa-moon"></i> Tarde/Noite</h4>
+                    <ul class="lista-horarios">
+                        <li>17:00 - 17:50</li>
+                        <li>17:50 - 18:40</li>
+                        <li>18:40 - 19:30</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="font-size: 0.7rem; margin-top: 10px; color: #ff9494; text-align: center;">
+                * Compareça à sala de aula física nestes horários.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Carrega nome do login e bloqueia alteração
+        window.onload = function() {
+            const dados = JSON.parse(localStorage.getItem('usuario_logado'));
+            if (dados && dados.nomeCompleto) {
+                document.getElementById('nome').value = dados.nomeCompleto;
+            } else {
+                document.getElementById('nome').placeholder = "Nome não identificado";
+            }
+        }
+
+        // Trava datas passadas
+        document.getElementById('data').setAttribute('min', new Date().toISOString().split('T')[0]);
+
+        function alternarModalidade() {
+            const mod = document.getElementById('modalidade').value;
+            document.getElementById('secao-online').style.display = (mod === "presencial") ? "none" : "block";
+            document.getElementById('aviso-presencial').style.display = (mod === "presencial") ? "block" : "none";
+        }
+
+        function validarFimDeSemana(input) {
+            const d = new Date(input.value + 'T00:00:00').getDay();
+            if (d === 0 || d === 6) { alert("Apenas de Segunda a Sexta!"); input.value = ""; }
+        }
+
+        function enviarWhatsapp() {
+            const nome = document.getElementById('nome').value;
+            const data = document.getElementById('data').value;
+            const hora = document.getElementById('hora').value;
+
+            if(!data || !hora) { alert("Por favor, selecione a data e o horário!"); return; }
+
+            const msg = `Olá! Sou o aluno(a) *${nome}*.\nAgendamento de aula online Pro Aulas 2.0:\n\n📅 *Data:* ${data.split('-').reverse().join('/')}\n⏰ *Horário:* ${hora}`;
+            window.open(`https://wa.me/5535998781881?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    </script>
+</body>
+</html>

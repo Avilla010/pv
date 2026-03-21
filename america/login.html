@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --netflix-red: #E50914; --netflix-black: #141414; }
+        body { 
+            background-color: var(--netflix-black); 
+            color: white; 
+            font-family: 'Roboto', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0;
+        }
+        .login-card {
+            background: rgba(0,0,0,0.75);
+            padding: 60px;
+            border-radius: 8px;
+            width: 100%; max-width: 450px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        h2 { margin-bottom: 25px; font-size: 2rem; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #b3b3b3; font-size: 0.9rem; }
+        input, select {
+            width: 100%; padding: 12px;
+            background: #333; border: none; border-radius: 4px;
+            color: white; font-size: 1rem;
+        }
+        button {
+            width: 100%; padding: 15px;
+            background: var(--netflix-red); color: white;
+            border: none; border-radius: 4px; font-weight: bold;
+            cursor: pointer; font-size: 1.1rem; margin-top: 20px;
+        }
+        button:hover { background: #f40612; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>Entrar</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Auto Escola</label>
+                <select id="autoescola" required>
+                    <option value="Auto Escola Digital Campo Belo Mg">Auto Escola Digital Campo Belo Mg</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Nome Completo</label>
+                <input type="text" id="nome" placeholder="Ex: João Silva" required>
+            </div>
+            <div class="input-group">
+                <label>CPF</label>
+                <input type="text" id="cpf" placeholder="000.000.000-00" required>
+            </div>
+            <button type="submit">ACESSAR PLATAFORMA</button>
+        </form>
+    </div>
+
+    <script>
+        // Se já estiver logado, vai direto para o dashboard
+        if(localStorage.getItem('usuario_logado')) {
+            window.location.href = 'menu.html'; // ajuste para o nome do seu arquivo principal
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nomeCompleto = document.getElementById('nome').value;
+            const primeiroNome = nomeCompleto.split(' ')[0];
+            const cpf = document.getElementById('cpf').value;
+
+            // Salva os dados no navegador
+            const dadosUsuario = {
+                nomeCompleto: nomeCompleto,
+                primeiroNome: primeiroNome,
+                cpf: cpf,
+                escola: document.getElementById('autoescola').value
+            };
+
+            localStorage.setItem('usuario_logado', JSON.stringify(dadosUsuario));
+            window.location.href = 'menu.html'; // redireciona
+        });
+    </script>
+</body>
+</html>
