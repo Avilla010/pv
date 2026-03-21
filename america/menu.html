@@ -54,7 +54,10 @@
         .main-content { margin-left: var(--sidebar-width); width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
 
         header {
-            height: 70px; background: rgba(20, 20, 20, 0.95); padding: 0 30px; display: flex;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(20, 20, 20, 0.8);
+            height: 70px; padding: 0 30px; display: flex;
             align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 900;
         }
 
@@ -107,6 +110,7 @@
             <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-home"></i> Início</div>
             <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em Áudio</div>
             <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-list-ul"></i> Meu Plano De Estudos</div>
+            <div onclick="loadPage('agendar.html')" class="nav-item"><i class="fas fa-calendar-alt"></i> Agendar Aula Online</div>
             <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item"><i class="fas fa-video"></i> Ao Vivo</div>
             <div onclick="loadPage('listas_gravadas.html')" class="nav-item"><i class="fas fa-film"></i> Aulas Gravadas</div>
             <div onclick="loadPage('lista-simulados.html')" class="nav-item"><i class="fas fa-check-circle"></i> Simulados</div>
@@ -123,12 +127,11 @@
                 <i class="fas fa-bars"></i>
             </div>
             <div class="user-profile">
-                <span style="font-size: 0.9rem;">Olá, <strong>Condutor Blindado</strong></span>
+                <span style="font-size: 0.9rem;">Olá, <strong id="user-display-name">Condutor Blindado</strong></span>
             </div>
         </header>
 
         <section id="view-home" class="dashboard-grid">
-
 
             <div class="card" onclick="loadPage('listas_gravadas.html')">
                 <span class="badge-netflix">CONTINUAR</span>
@@ -164,7 +167,13 @@
                 </div>
             </div>
 
-
+            <div class="card" onclick="loadPage('agendar.html')">
+                <div class="card-image" style="color: #6c5ce7;"><i class="fas fa-calendar-check"></i></div>
+                <div class="card-body">
+                    <h3>Agendar Aula Online</h3>
+                    <p>Escolha o melhor horário para suas aulas remotas.</p>
+                </div>
+            </div>
 
             <div class="card" onclick="loadPage('material.html')">
                 <div class="card-image" style="color: #54b4ff;"><i class="fas fa-arrow-alt-circle-down"></i></div>
@@ -191,6 +200,16 @@
 
     <script>
         const sidebar = document.getElementById('sidebar');
+
+        // Lógica de verificação de login e nome do usuário
+        window.onload = function() {
+            const dados = JSON.parse(localStorage.getItem('usuario_logado'));
+            if (!dados) {
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById('user-display-name').innerText = dados.primeiroNome;
+            }
+        }
 
         function toggleSidebar() {
             sidebar.classList.toggle('show');
@@ -224,12 +243,20 @@
         }
 
         function openHome() {
-            document.getElementById('view-home').style.display = 'grid';
-            document.getElementById('content-frame-container').style.display = 'none';
-            document.getElementById('main-frame').src = "";
+            const home = document.getElementById('view-home');
+            const frameContainer = document.getElementById('content-frame-container');
+            const frame = document.getElementById('main-frame');
+
+            home.style.display = 'grid';
+            frameContainer.style.display = 'none';
+            frame.src = "about:blank"; 
+
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById('menu-painel').classList.add('active');
-            closeSidebarOnMobile();
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('show');
+            }
         }
     </script>
 </body>
