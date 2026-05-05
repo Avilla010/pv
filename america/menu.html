@@ -69,7 +69,7 @@
         #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 70px); background: #000; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* GRID DE CARDS (TELA DA DIREITA) */
+        /* GRID DE CARDS */
         .dashboard-grid { padding: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
 
         .card {
@@ -111,6 +111,7 @@
         <div class="logo-area"><img src="cnh.png" alt="CNH Blindada"></div>
         <nav class="nav-menu">
             <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-home"></i> Início</div>
+            <div onclick="loadPage('shorts.html')" class="nav-item"><i class="fas fa-bolt"></i> Dicas Rápidas (Shorts)</div>
             <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em Áudio</div>
             <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-list-ul"></i> Meu Plano De Estudos</div>
             <div onclick="loadPage('agendar.html')" class="nav-item"><i class="fas fa-calendar-alt"></i> Agendar Aula Online</div>
@@ -135,6 +136,15 @@
         </header>
 
         <section id="view-home" class="dashboard-grid">
+
+            <div class="card" onclick="loadPage('shorts.html')">
+                <span class="badge-netflix">BOMBANDO</span>
+                <div class="card-image" style="color: #ffeb3b;"><i class="fas fa-bolt"></i></div>
+                <div class="card-body">
+                    <h3>Dicas Rápidas</h3>
+                    <p>Vídeos curtos com as melhores sacadas para a prova.</p>
+                </div>
+            </div>
 
             <div class="card" onclick="loadPage('listas_gravadas.html')">
                 <span class="badge-netflix">CONTINUAR</span>
@@ -204,7 +214,6 @@
     <script>
         const sidebar = document.getElementById('sidebar');
 
-        // Lógica de verificação de login e nome do usuário
         window.onload = function() {
             const dados = JSON.parse(localStorage.getItem('usuario_logado'));
             if (!dados) {
