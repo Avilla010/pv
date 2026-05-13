@@ -18,78 +18,23 @@
             --text: #fff; 
         }
         
-        body { 
-            font-family: 'Roboto', sans-serif; 
-            background: var(--netflix-black); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 20px; 
-            display: flex;
-            justify-content: center;
-        }
-
-        .container { 
-            width: 100%;
-            max-width: 800px; 
-            background: transparent;
-        }
-
-        /* --- HEADER --- */
+        body { font-family: 'Roboto', sans-serif; background: var(--netflix-black); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: transparent; }
         .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .btn-voltar { 
-            text-decoration: none; 
-            color: #a3a3a3; 
-            font-size: 0.9rem; 
-            font-weight: bold; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            transition: 0.3s;
-        }
+        .btn-voltar { text-decoration: none; color: #a3a3a3; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .btn-voltar:hover { color: #fff; }
-
         h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- STATS --- */
-        .stats-bar { 
-            display: none; 
-            justify-content: space-around; 
-            background: var(--netflix-card); 
-            padding: 20px; 
-            border-radius: 4px; 
-            margin-bottom: 25px; 
-            font-weight: bold; 
-            border-bottom: 2px solid #333;
-        }
+        .stats-bar { display: none; justify-content: space-around; background: var(--netflix-card); padding: 20px; border-radius: 4px; margin-bottom: 25px; font-weight: bold; border-bottom: 2px solid #333; }
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
 
-        /* --- QUIZ SECTION --- */
-        .quiz-section { 
-            background: var(--netflix-card); 
-            padding: 40px; 
-            border-radius: 4px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .progress-container { 
-            height: 4px; 
-            background: #333; 
-            margin-bottom: 30px; 
-            display: none; 
-        }
+        .quiz-section { background: var(--netflix-card); padding: 40px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .progress-container { height: 4px; background: #333; margin-bottom: 30px; display: none; }
         .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s; }
         
         .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; }
-        
-        .option { 
-            display: block; 
-            padding: 18px; 
-            margin: 12px 0; 
-            border: 1px solid #333; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            background: rgba(255,255,255,0.02);
-        }
+        .option { display: block; padding: 18px; margin: 12px 0; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
         .option:hover { background: rgba(255,255,255,0.08); }
         .option input { margin-right: 15px; accent-color: var(--netflix-red); }
 
@@ -97,26 +42,11 @@
         .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; }
         .option.disabled { pointer-events: none; }
 
-        .btn-action { 
-            width: 100%; 
-            background: #fff; 
-            color: #000; 
-            border: none; 
-            padding: 18px; 
-            border-radius: 4px; 
-            font-size: 0.9rem; 
-            font-weight: 700; 
-            cursor: pointer; 
-            margin-top: 20px; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; letter-spacing: 1px; }
         .btn-action:hover { background: var(--netflix-red); color: #fff; }
-        .btn-next-step { background: var(--netflix-red); color: #fff; }
 
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
-        
         .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
@@ -125,12 +55,15 @@
 <div class="container">
     <div class="header-nav">
         <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Voltar</a>
-        <h1>Simulado 02</h1>
+        <h1>Simulado 02 Profissional</h1>
         <div style="width: 50px;"></div>
     </div>
 
     <div id="live-stats" class="stats-bar">
-        <span style="color:#fff"><i class="far fa-clock"></i> <span id="timer">15:00</span></span>
+        <span id="timer-display" style="color:#fff; text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">30:00</span>
+            <span id="pause-tag" class="pause-notice" style="display:none;">PAUSADO PARA ANÁLISE</span>
+        </span>
         <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
         <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
     </div>
@@ -140,11 +73,10 @@
         
         <div id="start-screen" style="text-align:center">
             <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
-                <h3 style="color:#fff; margin-bottom:15px">Módulo: Direção Defensiva</h3>
-                • Estabilidade e física (Centrífuga vs Centrípeta)<br>
-                • Equipamentos de Segurança e Cinto<br>
-                • Condições Adversas e Tempo de Reação<br>
-                • 15 questões | 11 acertos necessários
+                <h3 style="color:#fff; margin-bottom:15px">Módulo: Direção Defensiva Master</h3>
+                • 30 Questões (Fixação + Top 15 Prova)<br>
+                • Tempo: 30 Minutos (Pausa na correção)<br>
+                • Meta: 21 acertos para aprovação
             </div>
             <button class="btn-action" onclick="startQuiz()">INICIAR TREINAMENTO</button>
         </div>
@@ -153,13 +85,11 @@
 
         <div id="result-area">
             <h3>Análise de Desempenho</h3>
-            <div id="score-text" class="score-box">0/15</div>
+            <div id="score-text" class="score-box">0/30</div>
             <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
-            <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Refazer</button>
-            <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color:#fff">Concluir Módulo</a>
+            <button class="btn-action" onclick="location.reload()">Refazer Simulado</button>
         </div>
     </div>
-
     <div class="footer">Confia no processo e executa! 🚦✅</div>
 </div>
 
@@ -168,88 +98,43 @@
 
 <script>
 const questions = [
-    {
-        "q": "Para garantir a estabilidade da motocicleta nas curvas, o condutor deverá solicitar ao 'carona' que:",
-        "options": ["Movimente o corpo em sentido contrário ao do condutor.", "Movimente o corpo da mesma maneira que condutor.", "Mantenha-se em posição reta.", "A posição do 'carona' não interfere na estabilidade da motocicleta."],
-        "correct": 1
-    },
-    {
-        "q": "Crianças com até __ anos de idade, somente, podem ser transportadas no banco ________ acomodadas em dispositivos de retenção afixados ao cinto de segurança do veículo.",
-        "options": ["07, dianteiro.", "10, dianteiro.", "10, traseiro.", "12, traseiro."],
-        "correct": 1
-    },
-    {
-        "q": "Não é efeito direto dos acidentes de trânsito:",
-        "options": ["Danos pessoais e materiais.", "Pagamento de indenização pelo Estado ou pelo particular.", "Morte.", "Pagamento do Seguro Obrigatório."],
-        "correct": 3
-    },
-    {
-        "q": "A velocidade que permite ao condutor reagir diante de um obstáculo, um pedestre ou outro veículo é a:",
-        "options": ["Compatível com as características da via onde está circulando.", "Máxima permitida para a via onde está circulando.", "Máxima de 80 km/h, de acordo com a legislação de trânsito.", "De 30 km/h, em qualquer via."],
-        "correct": 0
-    },
-    {
-        "q": "O cinto de segurança é um equipamento que deve ser usado:",
-        "options": ["Pelo condutor e passageiro do banco dianteiro.", "Pelos passageiros dos bancos traseiros.", "Por todos os ocupantes do veículo.", "Pelos ocupantes do veículo, exceto gestantes e crianças."],
-        "correct": 2
-    },
-    {
-        "q": "Os retrovisores externos têm por finalidade:",
-        "options": ["Reduzir a possibilidade de 'pontos cegos' ou sem alcance visual.", "Todas as alternativas estão corretas.", "Auxiliar o condutor na execução de manobras.", "Auxiliar no deslocamento lateral."],
-        "correct": 1
-    },
-    {
-        "q": "O motociclista circulando em piso molhado ou cheio de areia deve:",
-        "options": ["Utilizar somente o freio dianteiro.", "Utilizar os freios traseiro e dianteiro de forma brusca.", "Utilizar somente o freio traseiro.", "Utilizar os freios dianteiro e traseiro de forma muito suave."],
-        "correct": 3
-    },
-    {
-        "q": "Antes de efetuar uma viagem, o condutor deverá verificar os itens:",
-        "options": ["Nível de óleo lubrificante e água do radiador.", "Palhetas do limpador de parabrisa e funcionamento dos faróis.", "Luzes indicativas de direção e luz de freio.", "Todas as alternativas estão corretas."],
-        "correct": 3
-    },
-    {
-        "q": "No acostamento é proibido:",
-        "options": ["Trafegar com veículos automotores.", "Para ou estacionar o veiculo em situação de emergência.", "Circular pedestres.", "Parar para realizar manobras."],
-        "correct": 0
-    },
-    {
-        "q": "As alterações exigidas nos limites de velocidades estabelecidos nas vias, variam de acordo com as condições:",
-        "options": ["Da condição física da via.", "Do veículo e da carga.", "Todas as alternativas estão corretas.", "Das condições meteorológicas."],
-        "correct": 2
-    },
-    {
-        "q": "Não constitui exemplo de condições adversas no contexto viário:",
-        "options": ["Estação chuvosa e fria.", "Motociclista conduzindo uma motocicleta pela manhã, rumo ao seu trabalho.", "Trânsito com fluxo lento.", "Trecho da rodovia submetida a obras de restauração do pavimento."],
-        "correct": 1
-    },
-    {
-        "q": "A atitude defensiva de um condutor, ao se aproximar de um cruzamento não sinalizado, é:",
-        "options": ["Ficar atento e acelerar o máximo que puder.", "Avisar ao motorista da retaguarda que vai frear.", "Não se preocupar, quando transitando por vias preferenciais.", "Ficar atento para parar, se necessário, colocando o pé sobre o pedal de freio."],
-        "correct": 3
-    },
-    {
-        "q": "A força que tende a jogar o veículo para fora da curva denomina-se:",
-        "options": ["Centripeta.", "Misteriosa.", "Centrífuga.", "Molecular."],
-        "correct": 2
-    },
-    {
-        "q": "A 'regra dos dois segundos' serve para:",
-        "options": ["Avaliar a distância correta de segurança.", "Avaliar a distância lateral de segurança.", "Avaliar a distância necessária entre seu veiculo e o semáforo.", "Avaliar a distância necessária para parar no acostamento."],
-        "correct": 0
-    },
-    {
-        "q": "A posição correta ao dirigir produz menos desgaste físico e aumenta a sua segurança.",
-        "options": ["Segure o volante com as duas mãos, na posição sobreposta de 15 horas.", "Segure o volante com as duas mãos pela parte interna do volante.", "Não se exige posição correta das mãos.", "Segure o volante com as duas mãos na posição imaginária de 9 horas e 15 minutos."],
-        "correct": 3
-    }
+    // --- 15 ORIGINAIS ---
+    { "q": "Para garantir a estabilidade da motocicleta nas curvas, o condutor deverá solicitar ao 'carona' que:", "options": ["Movimente o corpo em sentido contrário ao do condutor.", "Movimente o corpo da mesma maneira que condutor.", "Mantenha-se em posição reta.", "A posição do 'carona' não interfere na estabilidade da motocicleta."], "correct": 1 },
+    { "q": "Crianças com até __ anos de idade, somente, podem ser transportadas no banco ________ acomodadas em dispositivos de retenção afixados ao cinto de segurança do veículo.", "options": ["07, dianteiro.", "10, dianteiro.", "10, traseiro.", "12, traseiro."], "correct": 1 },
+    { "q": "Não é efeito direto dos acidentes de trânsito:", "options": ["Danos pessoais e materiais.", "Pagamento de indenização pelo Estado ou pelo particular.", "Morte.", "Pagamento do Seguro Obrigatório."], "correct": 3 },
+    { "q": "A velocidade que permite ao condutor reagir diante de um obstáculo, um pedestre ou outro veículo é a:", "options": ["Compatível com as características da via onde está circulando.", "Máxima permitida para a via onde está circulando.", "Máxima de 80 km/h, de acordo com a legislação de trânsito.", "De 30 km/h, em qualquer via."], "correct": 0 },
+    { "q": "O cinto de segurança é um equipamento que deve ser usado:", "options": ["Pelo condutor e passageiro do banco dianteiro.", "Pelos passageiros dos bancos traseiros.", "Por todos os ocupantes do veículo.", "Pelos ocupantes do veículo, exceto gestantes e crianças."], "correct": 2 },
+    { "q": "Os retrovisores externos têm por finalidade:", "options": ["Reduzir a possibilidade de 'pontos cegos' ou sem alcance visual.", "Todas as alternativas estão corretas.", "Auxiliar o condutor na execução de manobras.", "Auxiliar no deslocamento lateral."], "correct": 1 },
+    { "q": "O motociclista circulando em piso molhado ou cheio de areia deve:", "options": ["Utilizar somente o freio dianteiro.", "Utilizar os freios traseiro e dianteiro de forma brusca.", "Utilizar somente o freio traseiro.", "Utilizar os freios dianteiro e traseiro de forma muito suave."], "correct": 3 },
+    { "q": "Antes de efetuar uma viagem, o condutor deverá verificar os itens:", "options": ["Nível de óleo lubrificante e água do radiador.", "Palhetas do limpador de parabrisa e funcionamento dos faróis.", "Luzes indicativas de direção e luz de freio.", "Todas as alternativas estão corretas."], "correct": 3 },
+    { "q": "No acostamento é proibido:", "options": ["Trafegar com veículos automotores.", "Para ou estacionar o veiculo em situação de emergência.", "Circular pedestres.", "Parar para realizar manobras."], "correct": 0 },
+    { "q": "As alterações exigidas nos limites de velocidades estabelecidos nas vias, variam de acordo com as condições:", "options": ["Da condição física da via.", "Do veículo e da carga.", "Todas as alternativas estão corretas.", "Das condições meteorológicas."], "correct": 2 },
+    { "q": "Não constitui exemplo de condições adversas no contexto viário:", "options": ["Estação chuvosa e fria.", "Motociclista conduzindo uma motocicleta pela manhã, rumo ao seu trabalho.", "Trânsito com fluxo lento.", "Trecho da rodovia submetida a obras de restauração do pavimento."], "correct": 1 },
+    { "q": "A atitude defensiva de um condutor, ao se aproximar de um cruzamento não sinalizado, é:", "options": ["Ficar atento e acelerar o máximo que puder.", "Avisar ao motorista da retaguarda que vai frear.", "Não se preocupar, quando transitando por vias preferenciais.", "Ficar atento para parar, se necessário, colocando o pé sobre o pedal de freio."], "correct": 3 },
+    { "q": "A força que tende a jogar o veículo para fora da curva denomina-se:", "options": ["Centripeta.", "Misteriosa.", "Centrífuga.", "Molecular."], "correct": 2 },
+    { "q": "A 'regra dos dois segundos' serve para:", "options": ["Avaliar a distância correta de segurança.", "Avaliar a distância lateral de segurança.", "Avaliar a distância necessária entre seu veiculo e o semáforo.", "Avaliar a distância necessária para parar no acostamento."], "correct": 0 },
+    { "q": "A posição correta ao dirigir produz menos desgaste físico e aumenta a sua segurança.", "options": ["Segure o volante com as duas mãos, na posição sobreposta de 15 horas.", "Segure o volante com as duas mãos pela parte interna do volante.", "Não se exige posição correta das mãos.", "Segure o volante com as duas mãos na posição imaginária de 9 horas e 15 minutos."], "correct": 3 },
+
+    // --- +15 NOVAS DE DIREÇÃO DEFENSIVA ---
+    { "q": "O tempo de reação é aquele que transcorre entre:", "options": ["O avistamento do perigo e a parada total.", "O acionamento do freio e a parada total.", "O ver o perigo e o início da ação de frear.", "O ver o perigo e a colisão."], "correct": 2 },
+    { "q": "A distância de frenagem é definida como:", "options": ["A distância percorrida do momento em que vê o perigo até parar.", "A distância percorrida desde o início da frenagem até a parada total.", "A distância entre dois veículos em movimento.", "A soma da distância de reação com a de seguimento."], "correct": 1 },
+    { "q": "O que é aquaplanagem?", "options": ["Frenagem brusca no asfalto seco.", "Perda de aderência dos pneus com o solo devido a uma camada de água.", "Técnica de dirigir em áreas alagadas.", "Deslizamento em pista com areia."], "correct": 1 },
+    { "q": "Em caso de neblina intensa, a atitude correta do condutor é:", "options": ["Ligar o farol alto.", "Parar no acostamento com o pisca-alerta ligado.", "Acender os faróis baixos (ou de neblina) e nunca parar na pista.", "Acelerar para sair rápido da neblina."], "correct": 2 },
+    { "q": "O que deve ser feito ao perceber um 'ponto cego' no retrovisor?", "options": ["Nada, é normal do veículo.", "Ajustar os espelhos e girar levemente a cabeça se necessário antes de manobras.", "Instalar espelhos maiores.", "Mudar de faixa o mais rápido possível."], "correct": 1 },
+    { "q": "A fadiga e o sono são condições adversas do:", "options": ["Veículo.", "Tempo.", "Condutor.", "Vias."], "correct": 2 },
+    { "q": "Para evitar a colisão com o veículo da frente, o condutor deve:", "options": ["Manter distância de seguimento e estar atento.", "Andar sempre a 20km/h.", "Utilizar o farol alto constantemente.", "Mudar de faixa constantemente."], "correct": 0 },
+    { "q": "A força centrípeta é aquela que:", "options": ["Joga o veículo para fora da curva.", "Mantém o veículo na trajetória da curva (empurra para dentro).", "Aumenta a velocidade nas retas.", "Trava as rodas em frenagens."], "correct": 1 },
+    { "q": "O que o condutor deve fazer ao ser ofuscado pela luz de outro veículo?", "options": ["Ligar o farol alto para revidar.", "Olhar fixamente para o farol do outro.", "Desviar o olhar para a linha de bordo à direita.", "Fechar os olhos por alguns segundos."], "correct": 2 },
+    { "q": "Pneus lisos (carecas) aumentam o risco de:", "options": ["Economia de combustível.", "Aquaplanagem e perda de estabilidade.", "Aumento da velocidade final.", "Conforto ao dirigir."], "correct": 1 },
+    { "q": "O uso do capacete com viseira ou óculos de proteção é obrigatório para:", "options": ["Apenas o condutor da moto.", "Apenas o passageiro da moto.", "Condutor e passageiro de motocicletas.", "Apenas em rodovias."], "correct": 2 },
+    { "q": "A 'Direção Preventiva' ocorre quando o condutor:", "options": ["Reage após o acidente acontecer.", "Antecipa-se aos riscos e dirige com atenção.", "Dirige apenas quando o tempo está bom.", "Possui seguro total do veículo."], "correct": 1 },
+    { "q": "Em uma descida de serra, o procedimento mais seguro é:", "options": ["Descer em ponto morto (banguela) para economizar.", "Descer com o veículo engrenado (freio motor).", "Manter o pé no freio o tempo todo.", "Desligar o motor."], "correct": 1 },
+    { "q": "Qual a distância lateral mínima ao ultrapassar um ciclista?", "options": ["50 centímetros.", "1 metro.", "1,5 metro.", "2 metros."], "correct": 2 },
+    { "q": "Em caso de chuva torrencial, se a visibilidade for nula, o condutor deve:", "options": ["Continuar devagar.", "Parar em local seguro (posto, refúgio), fora do acostamento.", "Ligar o farol alto e acelerar.", "Parar na faixa de rolamento."], "correct": 1 }
 ];
 
-let currentQ = 0;
-let score = 0;
-let errors = 0;
-let answered = false;
-let timeLeft = 900; 
+let currentQ = 0; let score = 0; let errors = 0; let answered = false;
+let timeLeft = 1800; // 30 Minutos
 let timerInterval;
 
 function startQuiz() {
@@ -262,15 +147,14 @@ function startQuiz() {
 }
 
 function startTimer() {
+    document.getElementById('timer-display').classList.remove('timer-paused');
+    document.getElementById('pause-tag').style.display = 'none';
     timerInterval = setInterval(() => {
         timeLeft--;
         let mins = Math.floor(timeLeft / 60);
         let secs = timeLeft % 60;
         document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            showFinalResult();
-        }
+        if (timeLeft <= 0) { clearInterval(timerInterval); showFinalResult(); }
     }, 1000);
 }
 
@@ -278,7 +162,6 @@ function renderQuestion() {
     answered = false;
     const area = document.getElementById('quiz-area');
     const q = questions[currentQ];
-    
     area.innerHTML = `
         <span class="question-text">${currentQ + 1}. ${q.q}</span>
         <div id="options-container">
@@ -295,17 +178,20 @@ function renderQuestion() {
 
 function handleButtonClick() {
     if (!answered) checkAnswer();
-    else nextQuestion();
+    else { startTimer(); nextQuestion(); }
 }
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
     if (!selected) return;
     
+    clearInterval(timerInterval);
+    document.getElementById('timer-display').classList.add('timer-paused');
+    document.getElementById('pause-tag').style.display = 'block';
+
     answered = true;
     const userChoice = parseInt(selected.value);
     const correctChoice = questions[currentQ].correct;
-    
     document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
     
     if (userChoice === correctChoice) {
@@ -320,19 +206,14 @@ function checkAnswer() {
         document.getElementById(`opt-${correctChoice}`).classList.add('correct');
         document.getElementById('snd-wrong').play().catch(()=>{});
     }
-    
     const btn = document.getElementById('btn-quiz');
-    btn.innerHTML = "Próxima Questão";
-    btn.classList.add('btn-next-step');
+    btn.innerHTML = "Próxima Questão <i class='fas fa-arrow-right'></i>";
 }
 
 function nextQuestion() {
     currentQ++;
-    if (currentQ < questions.length) {
-        renderQuestion();
-    } else {
-        showFinalResult();
-    }
+    if (currentQ < questions.length) renderQuestion();
+    else showFinalResult();
 }
 
 function showFinalResult() {
@@ -341,9 +222,8 @@ function showFinalResult() {
     document.getElementById('live-stats').style.display = "none";
     document.getElementById('p-cont').style.display = "none";
     document.getElementById('result-area').style.display = "block";
-    
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 APROVADO! Sua percepção de risco está excelente." : "⚠️ QUASE! Direção defensiva exige atenção total. Revise os conceitos de frenagem e estabilidade.";
+    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Sua percepção de risco está excelente." : "⚠️ QUASE! Direção defensiva exige atenção total. Revise frenagem e condições adversas.";
 }
 </script>
 </body>
