@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulado 03 - Normas de Circulação | CNH Blindada</title>
+    <title>Simulado 03 Especial - Normas de Circulação | CNH Blindada</title>
     <link rel="icon" href="favicon.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -18,115 +18,38 @@
             --text: #fff; 
         }
         
-        body { 
-            font-family: 'Roboto', sans-serif; 
-            background: var(--netflix-black); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 20px; 
-            display: flex;
-            justify-content: center;
-        }
-
-        .container { 
-            width: 100%;
-            max-width: 800px; 
-            background: transparent;
-        }
-
-        /* --- HEADER --- */
+        body { font-family: 'Roboto', sans-serif; background: var(--netflix-black); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: transparent; }
         .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .btn-voltar { 
-            text-decoration: none; 
-            color: #a3a3a3; 
-            font-size: 0.9rem; 
-            font-weight: bold; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            transition: 0.3s;
-        }
+        .btn-voltar { text-decoration: none; color: #a3a3a3; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .btn-voltar:hover { color: #fff; }
-
         h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- STATS --- */
-        .stats-bar { 
-            display: none; 
-            justify-content: space-around; 
-            background: var(--netflix-card); 
-            padding: 20px; 
-            border-radius: 4px; 
-            margin-bottom: 25px; 
-            font-weight: bold; 
-            border-bottom: 2px solid #333;
-        }
-
-        /* --- QUIZ SECTION --- */
-        .quiz-section { 
-            background: var(--netflix-card); 
-            padding: 40px; 
-            border-radius: 4px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .progress-container { 
-            height: 4px; 
-            background: #333; 
-            margin-bottom: 30px; 
-            display: none; 
-        }
+        .stats-bar { display: none; justify-content: space-around; background: var(--netflix-card); padding: 20px; border-radius: 4px; margin-bottom: 25px; font-weight: bold; border-bottom: 2px solid #333; }
+        .quiz-section { background: var(--netflix-card); padding: 40px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .progress-container { height: 4px; background: #333; margin-bottom: 30px; display: none; }
         .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s; }
         
         .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; }
-        
-        /* Ajuste para imagens de situações de trânsito */
-        .quiz-img { 
-            display: block; 
-            margin: 0 auto 25px; 
-            max-width: 100%; 
-            height: auto; 
-            border-radius: 8px;
-            border: 2px solid #333;
-        }
+        .quiz-img { display: block; margin: 0 auto 25px; max-width: 100%; height: auto; border-radius: 8px; border: 2px solid #333; }
 
-        .option { 
-            display: block; 
-            padding: 18px; 
-            margin: 12px 0; 
-            border: 1px solid #333; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            background: rgba(255,255,255,0.02);
-        }
+        .option { display: block; padding: 18px; margin: 12px 0; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
         .option:hover { background: rgba(255,255,255,0.08); }
         .option input { margin-right: 15px; accent-color: var(--netflix-red); }
-
         .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
         .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; }
         .option.disabled { pointer-events: none; }
 
-        .btn-action { 
-            width: 100%; 
-            background: #fff; 
-            color: #000; 
-            border: none; 
-            padding: 18px; 
-            border-radius: 4px; 
-            font-size: 0.9rem; 
-            font-weight: 700; 
-            cursor: pointer; 
-            margin-top: 20px; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
         .btn-action:hover { background: var(--netflix-red); color: #fff; }
         .btn-next-step { background: var(--netflix-red); color: #fff; }
+        
+        /* Estilos da Pausa */
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
 
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
-        
         .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
@@ -135,12 +58,15 @@
 <div class="container">
     <div class="header-nav">
         <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
-        <h1>Simulado 03</h1>
+        <h1>Simulado 03 Especial</h1>
         <div style="width: 50px;"></div>
     </div>
 
     <div id="live-stats" class="stats-bar">
-        <span style="color:#fff"><i class="far fa-clock"></i> <span id="timer">15:00</span></span>
+        <span id="timer-box" style="color:#fff; text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">30:00</span>
+            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
+        </span>
         <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
         <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
     </div>
@@ -150,11 +76,10 @@
         
         <div id="start-screen" style="text-align:center">
             <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
-                <h3 style="color:#fff; margin-bottom:15px">Módulo: Normas de Circulação</h3>
-                • Regras de preferência e prioridade<br>
-                • Velocidades máximas e sinalização de luzes<br>
-                • Ultrapassagem e manobras<br>
-                • Meta: 11 acertos para aprovação
+                <h3 style="color:#fff; margin-bottom:15px">Módulo: Normas de Circulação e Conduta</h3>
+                • 30 Questões (As 15 originais + 15 essenciais)<br>
+                • Tempo: 30 Minutos (Pausa automática na correção)<br>
+                • Meta: 21 acertos para aprovação (70%)
             </div>
             <button class="btn-action" onclick="startQuiz()">Iniciar Exame</button>
         </div>
@@ -163,13 +88,11 @@
 
         <div id="result-area">
             <h3>Resultado do Teste</h3>
-            <div id="score-text" class="score-box">0/15</div>
+            <div id="score-text" class="score-box">0/30</div>
             <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
             <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Refazer</button>
-            <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color:#fff">Finalizar Módulo</a>
         </div>
     </div>
-
     <div class="footer">CNH Blindada Originals &copy; 2026</div>
 </div>
 
@@ -178,90 +101,46 @@
 
 <script>
 const questions = [
-    {
-        "q": "Considerando a imagem ilustrada, onde uma ambulância se aproxima de um cruzamento não sinalizado, qual deve ser a conduta do condutor do veículo amarelo?",
-        "img": "amb.png",
-        "options": ["Ambulância terá prioridade de passagem.", "O veículo amarelo deve acelerar para liberar o cruzamento o mais rápido possível.", "O veículo amarelo deve deixar livre a passagem, parando ou deslocando-se para a direita da via.", "O veículo amarelo tem a preferência por vir à direita da ambulância."],
-        "correct": 3
-    },
-    {
-        "q": "Em um cruzamento não sinalizado, a preferência de passagem será:",
-        "options": ["Sempre do veículo que estiver em maior velocidade.", "Do veículo que vier pela direita do condutor.", "Do veículo que vier pela esquerda do condutor.", "Sempre do veículo de carga."],
-        "correct": 1
-    },
-    {
-        "q": "Qual a velocidade máxima que pode ser atingida por um veiculo de passeio ou motocicleta nas rodovias brasileiras:",
-        "options": ["120 kmh.", "90 kmh.", "110 kmh.", "80 kmh."],
-        "correct": 2
-    },
-    {
-        "q": "Com relação ao movimento efetuado pelo veículo 2 é correto dizer que:",
-        "img": "carro.png",
-        "options": ["É uma manobra permitida.", "É uma manobra perigosa.", "Permitida pois o veículo volta com segurança para sua faixa.", "É uma ultrapassagem proibida."],
-        "correct": 3
-    },
-    {
-        "q": "Os veículos que se deslocam sobre trilhos terão preferência de passagem sobre os demais:",
-        "options": ["Apenas se houver sinalização.", "Respeitadas as normas de circulação.", "Apenas nos cruzamentos com cancelas.", "Sempre, devido à sua natureza."],
-        "correct": 3
-    },
-    {
-        "q": "As luzes de posição (lanternas) devem ser utilizadas obrigatoriamente:",
-        "options": ["Somente durante o dia.", "Sob chuva forte, neblina ou cerração.", "Apenas ao estacionar.", "Em vias iluminadas durante a noite."],
-        "correct": 1
-    },
-    {
-        "q": "O uso da buzina deve ser feito mediante toques breves e somente para:",
-        "options": ["Apressar o pedestre.", "Cumprimentar conhecidos.", "Advertência a fim de evitar acidentes.", "Chamar alguém na calçada."],
-        "correct": 2
-    },
-    {
-        "q": "Nas vias sem sinalização, o condutor deve manter a distância de segurança:",
-        "options": ["Lateral e frontal entre o seu e os demais veículos.", "Apenas frontal.", "Apenas lateral.", "Somente se estiver em alta velocidade."],
-        "correct": 0
-    },
-    {
-        "q": "Ao transitar em uma rotatória, a preferência de passagem é do veículo que:",
-        "options": ["Vier pela direita.", "Estiver circulando por ela.", "Estiver entrando nela.", "For de maior porte."],
-        "correct": 1
-    },
-    {
-        "q": "O condutor de veículo só poderá realizar a ultrapassagem pela direita quando:",
-        "options": ["O veículo à frente for muito lento.", "Houver três faixas de rolamento.", "O veículo à frente sinalizar que vai entrar à esquerda.", "Nunca é permitido ultrapassar pela direita."],
-        "correct": 2
-    },
-    {
-        "q": "Em vias de pista dupla com várias faixas no mesmo sentido, as da esquerda são destinadas à:",
-        "options": ["Veículos lentos e pesados.", "Ultrapassagem e veículos de maior velocidade.", "Circulação de motocicletas apenas.", "Estacionamento de emergência."],
-        "correct": 1
-    },
-    {
-        "q": "Para virar à esquerda em uma via urbana de sentido duplo, o condutor deve:",
-        "options": ["Aproximar-se o máximo possível do bordo direito.", "Aproximar-se o máximo possível do eixo central da via.", "Parar no acostamento e aguardar.", "Cruzar a via direto, sem parar."],
-        "correct": 1
-    },
-    {
-        "q": "Todo condutor deve, antes de entrar em outra via, certificar-se de que pode fazê-lo sem perigo para:",
-        "options": ["Os passageiros do seu carro apenas.", "Os demais usuários da via que a cruzam.", "Apenas para os pedestres na calçada.", "Os veículos que vêm atrás dele."],
-        "correct": 1
-    },
-    {
-        "q": "É dever do condutor, ao ser ultrapassado:",
-        "options": ["Aumentar a velocidade para dificultar.", "Manter-se à esquerda da via.", "Facilitar a ultrapassagem, não acelerando a marcha.", "Ligar o farol alto."],
-        "correct": 2
-    },
-    {
-        "q": "Os pedestres, ao cruzar a pista de rolamento onde não houver faixa, devem fazê-lo:",
-        "options": ["Em sentido diagonal ao eixo da via.", "Em sentido perpendicular ao eixo da via.", "Correndo para atravessar logo.", "Em qualquer sentido."],
-        "correct": 1
-    }
+    // --- AS 15 ORIGINAIS ---
+    { "q": "Considerando a imagem ilustrada, onde uma ambulância se aproxima de um cruzamento não sinalizado, qual deve ser a conduta do condutor do veículo amarelo?", "img": "amb.png", "options": ["Ambulância terá prioridade de passagem.", "O veículo amarelo deve acelerar para liberar o cruzamento o mais rápido possível.", "O veículo amarelo deve deixar livre a passagem, parando ou deslocando-se para a direita da via.", "O veículo amarelo tem a preferência por vir à direita da ambulância."], "correct": 3 },
+    { "q": "Em um cruzamento não sinalizado, a preferência de passagem será:", "options": ["Sempre do veículo que estiver em maior velocidade.", "Do veículo que vier pela direita do condutor.", "Do veículo que vier pela esquerda do condutor.", "Sempre do veículo de carga."], "correct": 1 },
+    { "q": "Qual a velocidade máxima que pode ser atingida por um veiculo de passeio ou motocicleta nas rodovias brasileiras:", "options": ["120 kmh.", "90 kmh.", "110 kmh.", "80 kmh."], "correct": 2 },
+    { "q": "Com relação ao movimento efetuado pelo veículo 2 é correto dizer que:", "img": "carro.png", "options": ["É uma manobra permitida.", "É uma manobra perigosa.", "Permitida pois o veículo volta com segurança para sua faixa.", "É uma ultrapassagem proibida."], "correct": 3 },
+    { "q": "Os veículos que se deslocam sobre trilhos terão preferência de passagem sobre os demais:", "options": ["Apenas se houver sinalização.", "Respeitadas as normas de circulação.", "Apenas nos cruzamentos com cancelas.", "Sempre, devido à sua natureza."], "correct": 3 },
+    { "q": "As luzes de posição (lanternas) devem ser utilizadas obrigatoriamente:", "options": ["Somente durante o dia.", "Sob chuva forte, neblina ou cerração.", "Apenas ao estacionar.", "Em vias iluminadas durante a noite."], "correct": 1 },
+    { "q": "O uso da buzina deve ser feito mediante toques breves e somente para:", "options": ["Apressar o pedestre.", "Cumprimentar conhecidos.", "Advertência a fim de evitar acidentes.", "Chamar alguém na calçada."], "correct": 2 },
+    { "q": "Nas vias sem sinalização, o condutor deve manter a distância de segurança:", "options": ["Lateral e frontal entre o seu e os demais veículos.", "Apenas frontal.", "Apenas lateral.", "Somente se estiver em alta velocidade."], "correct": 0 },
+    { "q": "Ao transitar em uma rotatória, a preferência de passagem é do veículo que:", "options": ["Vier pela direita.", "Estiver circulando por ela.", "Estiver entrando nela.", "For de maior porte."], "correct": 1 },
+    { "q": "O condutor de veículo só poderá realizar a ultrapassagem pela direita quando:", "options": ["O veículo à frente for muito lento.", "Houver três faixas de rolamento.", "O veículo à frente sinalizar que vai entrar à esquerda.", "Nunca é permitido ultrapassar pela direita."], "correct": 2 },
+    { "q": "Em vias de pista dupla com várias faixas no mesmo sentido, as da esquerda são destinadas à:", "options": ["Veículos lentos e pesados.", "Ultrapassagem e veículos de maior velocidade.", "Circulação de motocicletas apenas.", "Estacionamento de emergência."], "correct": 1 },
+    { "q": "Para virar à esquerda em uma via urbana de sentido duplo, o condutor deve:", "options": ["Aproximar-se o máximo possível do bordo direito.", "Aproximar-se o máximo possível do eixo central da via.", "Parar no acostamento e aguardar.", "Cruzar a via direto, sem parar."], "correct": 1 },
+    { "q": "Todo condutor deve, antes de entrar em outra via, certificar-se de que pode fazê-lo sem perigo para:", "options": ["Os passageiros do seu carro apenas.", "Os demais usuários da via que a cruzam.", "Apenas para os pedestres na calçada.", "Os veículos que vêm atrás dele."], "correct": 1 },
+    { "q": "É dever do condutor, ao ser ultrapassado:", "options": ["Aumentar a velocidade para dificultar.", "Manter-se à esquerda da via.", "Facilitar a ultrapassagem, não acelerando a marcha.", "Ligar o farol alto."], "correct": 2 },
+    { "q": "Os pedestres, ao cruzar a pista de rolamento onde não houver faixa, devem fazê-lo:", "options": ["Em sentido diagonal ao eixo da via.", "Em sentido perpendicular ao eixo da via.", "Correndo para atravessar logo.", "Em qualquer sentido."], "correct": 1 },
+
+    // --- +15 QUESTÕES ADICIONAIS ---
+    { "q": "Nas vias urbanas, onde não houver sinalização, a velocidade máxima nas vias de TRÂNSITO RÁPIDO é de:", "options": ["60 km/h", "80 km/h", "40 km/h", "110 km/h"], "correct": 1 },
+    { "q": "Ao aproximar-se de um cruzamento com sinal luminoso (semáforo), o condutor observa a luz amarela. Ele deve:", "options": ["Acelerar para passar antes de ficar vermelho.", "Frear bruscamente.", "Diminuir a marcha e parar, salvo se já estiver no cruzamento.", "Buzinar e continuar."], "correct": 2 },
+    { "q": "O condutor deve utilizar o pisca-alerta nas seguintes situações:", "options": ["Em imobilizações ou situações de emergência.", "Ao rodar em alta velocidade.", "Para avisar que vai virar à direita.", "Sob chuva fina em movimento."], "correct": 0 },
+    { "q": "As crianças com idade inferior a 10 anos que não tenham atingido 1,45m de altura devem:", "options": ["Ser transportadas no banco dianteiro.", "Ser transportadas no banco traseiro em dispositivo de retenção.", "Ser transportadas no colo de um adulto.", "Ser transportadas apenas em motocicletas."], "correct": 1 },
+    { "q": "Nas rodovias de pista simples, a velocidade máxima para automóveis onde não houver sinalização é:", "options": ["110 km/h", "90 km/h", "100 km/h", "80 km/h"], "correct": 2 },
+    { "q": "A ultrapassagem de outro veículo em movimento deverá ser feita pela esquerda, EXCETO:", "options": ["Em rodovias de pista dupla.", "Quando o veículo à frente sinalizar que vai entrar à esquerda.", "Quando o veículo à frente estiver em alta velocidade.", "Nas pontes e viadutos."], "correct": 1 },
+    { "q": "Ao transitar por vias onde haja escolas ou hospitais, o condutor deve:", "options": ["Manter a velocidade constante.", "Reduzir a velocidade e redobrar a atenção.", "Buzinar para avisar sua presença.", "Aumentar a velocidade para sair logo da área."], "correct": 1 },
+    { "q": "O condutor que deixa de manter distância de segurança lateral e frontal entre o seu veículo e os demais comete infração:", "options": ["Leve", "Média", "Grave", "Gravíssima"], "correct": 2 },
+    { "q": "Qual a finalidade das luzes de posição (lanternas) à noite?", "options": ["Iluminar a via à frente.", "Indicar a presença e a largura do veículo.", "Substituir os faróis baixos.", "Apenas para estética."], "correct": 1 },
+    { "q": "Em vias rurais não pavimentadas (estradas), a velocidade máxima para qualquer veículo é:", "options": ["40 km/h", "60 km/h", "80 km/h", "30 km/h"], "correct": 1 },
+    { "q": "Antes de efetuar uma manobra de mudança de faixa, o condutor deve:", "options": ["Apenas olhar pelo retrovisor.", "Sinalizar com antecedência e verificar se a via permite.", "Mudar de faixa rapidamente.", "Buzinar para os outros veículos."], "correct": 1 },
+    { "q": "Os veículos de socorro (ambulância, bombeiros) têm prioridade de passagem apenas quando:", "options": ["Estiverem em velocidade alta.", "Estiverem com os dispositivos sonoros e luminosos acionados.", "O motorista for habilitado há mais de 10 anos.", "Sempre, independentemente de estarem em serviço."], "correct": 1 },
+    { "q": "Onde não houver calçada, a circulação de pedestres em vias rurais deve ser feita:", "options": ["No meio da pista.", "Pelos acostamentos, em fila única e sentido oposto aos veículos.", "No mesmo sentido dos veículos.", "Sempre pelo lado direito."], "correct": 1 },
+    { "q": "Nas vias urbanas, a velocidade máxima nas vias COLETORAS, quando não sinalizadas, é:", "options": ["30 km/h", "40 km/h", "60 km/h", "80 km/h"], "correct": 1 },
+    { "q": "É proibido o uso de buzina no período compreendido entre:", "options": ["20:00 e 06:00", "22:00 e 06:00", "21:00 e 07:00", "23:00 e 05:00"], "correct": 1 }
 ];
 
 let currentQ = 0;
 let score = 0;
 let errors = 0;
 let answered = false;
-let timeLeft = 900; 
+let timeLeft = 1800; // 30 minutos
 let timerInterval;
 
 function startQuiz() {
@@ -274,6 +153,10 @@ function startQuiz() {
 }
 
 function startTimer() {
+    // Reseta visual da pausa
+    document.getElementById('timer-box').classList.remove('timer-paused');
+    document.getElementById('pause-text').style.display = 'none';
+
     timerInterval = setInterval(() => {
         timeLeft--;
         let mins = Math.floor(timeLeft / 60);
@@ -309,13 +192,21 @@ function renderQuestion() {
 
 function handleButtonClick() {
     if (!answered) checkAnswer();
-    else nextQuestion();
+    else {
+        startTimer(); // Retoma o tempo ao ir para a próxima
+        nextQuestion();
+    }
 }
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
     if (!selected) return;
     
+    // PAUSA O TIMER
+    clearInterval(timerInterval);
+    document.getElementById('timer-box').classList.add('timer-paused');
+    document.getElementById('pause-text').style.display = 'block';
+
     answered = true;
     const userChoice = parseInt(selected.value);
     const correctChoice = questions[currentQ].correct;
@@ -336,7 +227,7 @@ function checkAnswer() {
     }
     
     const btn = document.getElementById('btn-quiz');
-    btn.innerHTML = "Próxima Questão";
+    btn.innerHTML = "Próxima Questão <i class='fas fa-chevron-right' style='font-size:0.8rem; margin-left:8px'></i>";
     btn.classList.add('btn-next-step');
 }
 
@@ -357,7 +248,7 @@ function showFinalResult() {
     document.getElementById('result-area').style.display = "block";
     
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 EXCELENTE! Você domina as ruas." : "⚠️ ATENÇÃO! Revise as regras de preferência e segurança.";
+    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Você domina as normas de circulação." : "⚠️ REPROVADO! Revise o conteúdo de regras de preferência e velocidades.";
 }
 </script>
 </body>
