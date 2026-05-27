@@ -111,7 +111,7 @@
             margin-bottom: 12px;
         }
         .text-pendente { color: #808080; }
-        .text-concluido { color: #46d369; } /* Verde para concluído */
+        .text-concluido { color: #46d369; } /* Verde para concluído, mantém o padrão de sucesso */
 
         .btn-play { 
             width: 100%; 
@@ -172,146 +172,41 @@
             { id: 'aula08', titulo: '08 - Mecânica Básica', yt: 'koQ-yQGLSBA', simulado: 'simulado08.html' }
         ];
 
-        let intervaloCronometro;
-
-        function acessarAula(index) {
-            const aulaAtual = aulas[index];
-            const proximaAula = aulas[index + 1];
-
-            // Ativa o cronômetro para a próxima aula
-            if (proximaAula && !localStorage.getItem('liberacao_' + proximaAula.id)) {
-                const dataLiberacao = new Date().getTime(); 
-                localStorage.setItem('liberacao_' + proximaAula.id, dataLiberacao);
-            }
-
-            render();
-
-            const videoUrl = `assistir.html?id=${aulaAtual.yt}&aula=${aulaAtual.id}&title=${encodeURIComponent(aulaAtual.titulo)}&simulado=${aulas[index].simulado || ''}`;
-            setTimeout(() => {
-                window.location.href = videoUrl;
-            }, 1000); 
-        }
-
         function render() {
-            // Limpa o intervalo antigo para evitar múltiplos cronômetros rodando juntos
-            clearInterval(intervaloCronometro);
-
             const grid = document.getElementById('grid-aulas');
             grid.innerHTML = '';
-            const agora = new Date().getTime();
-
-            aulas.forEach((a, index) => {
+            aulas.forEach(a => {
                 const feito = localStorage.getItem(a.id) === 'sim';
                 const thumbnailUrl = `https://img.youtube.com/vi/${a.yt}/maxresdefault.jpg`;
-                
-                let liberada = (index === 0); 
-                let textoStatus = liberada ? (feito ? '● Finalizado' : 'Continuar Assistindo') : '';
-                let textoBotao = 'Assistir';
-                let idStatusRegressivo = `status-${a.id}`; // ID único para atualizar via JavaScript depois
-
-                const numeroAulaAnterior = index > 0 ? aulas[index - 1].titulo.split(' - ')[0] : '';
-
-                if (!liberada) {
-                    const timestampLiberacao = localStorage.getItem('liberacao_' + a.id);
-                    
-                    if (timestampLiberacao) {
-                        const tempoNecessario = 16 * 60 * 60 * 1000; // 16 horas
-                        const dataAlvo = parseInt(timestampLiberacao) + tempoNecessario;
-
-                        if (agora >= dataAlvo) {
-                            liberada = true;
-                            textoStatus = feito ? '● Finalizado' : 'Continuar Assistindo';
-                            textoBotao = 'Assistir';
-                        } else {
-                            // Texto provisório que será substituído instantaneamente pelo cronômetro ativo
-                            textoStatus = `🔒 Calculando tempo...`;
-                            textoBotao = `Após Aula ${numeroAulaAnterior}`;
-                        }
-                    } else {
-                        textoStatus = `🔒 Assista a aula ${numeroAulaAnterior} primeiro`;
-                        textoBotao = `Após Aula ${numeroAulaAnterior}`;
-                    }
-                }
-
-                const clickAcao = liberada ? `onclick="acessarAula(${index})"` : `onclick="alert('Você precisa aguardar o tempo de liberação da aula anterior!')"`;
-                const estiloBloqueado = liberada ? "" : "style='opacity: 0.35; cursor: not-allowed; filter: grayscale(90%);'";
-                const classeTextoStatus = liberada ? (feito ? 'text-concluido' : 'text-pendente') : 'text-pendente';
+                const videoUrl = `assistir.html?id=${a.yt}&aula=${a.id}&title=${encodeURIComponent(a.titulo)}&simulado=${a.simulado || ''}`;
 
                 grid.innerHTML += `
-                    <div class="video-card" ${clickAcao} ${estiloBloqueado}>
+                    <div class="video-card" onclick="window.location.href='${videoUrl}'">
                         <div class="thumbnail" style="background-image: url('${thumbnailUrl}')">
-                            ${liberada ? '<i class="fas fa-play"></i>' : '<i class="fas fa-lock" style="font-size: 2.5rem; opacity: 0.7;"></i>'}
+                            <i class="fas fa-play"></i>
                             <div class="progress-container">
                                 <div class="progress-bar ${feito ? 'bg-concluido' : 'bg-pendente'}" 
                                      style="width: ${feito ? '100%' : '20%'}"></div>
                             </div>
                         </div>
                         <div class="video-info">
-                            <span id="${idStatusRegressivo}" class="progress-text ${classeTextoStatus}">
-                                ${textoStatus}
+                            <span class="progress-text ${feito ? 'text-concluido' : 'text-pendente'}">
+                                ${feito ? '● Finalizado' : 'Continuar Assistindo'}
                             </span>
                             <h3 class="video-title">${a.titulo}</h3>
-                            <div class="btn-play">${textoBotao}</div>
+                            <div class="btn-play">Assistir</div>
                         </div>
                     </div>
                 `;
             });
-
-            // Inicia a função que atualiza a contagem a cada 1 segundo na tela
-            atualizarCronometros();
-            intervaloCronometro = setInterval(atualizarCronometros, 1000);
-        }
-
-        function atualizarCronometros() {
-            const agora = new Date().getTime();
-            let precisaRemontar = false;
-
-            aulas.forEach((a, index) => {
-                if (index === 0) return; // Ignora a primeira aula
-
-                const timestampLiberacao = localStorage.getItem('liberacao_' + a.id);
-                if (timestampLiberacao) {
-                    const tempoNecessario = 16 * 60 * 60 * 1000; 
-                    const dataAlvo = parseInt(timestampLiberacao) + tempoNecessario;
-                    const diferenca = dataAlvo - agora;
-
-                    const elementoStatus = document.getElementById(`status-${a.id}`);
-
-                    if (diferenca <= 0) {
-                        // O tempo acabou enquanto o usuário olhava a página!
-                        precisaRemontar = true;
-                    } else if (elementoStatus) {
-                        // Transforma os milissegundos restantes em Horas, Minutos e Segundos
-                        const horas = Math.floor(diferenca / (1000 * 60 * 60));
-                        const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
-                        const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
-
-                        // Formata para colocar o zero à esquerda quando menor que 10 (ex: 05 em vez de 5)
-                        const hTexto = horas.toString().padStart(2, '0');
-                        const mTexto = minutos.toString().padStart(2, '0');
-                        const sTexto = segundos.toString().padStart(2, '0');
-
-                        elementoStatus.innerHTML = `🔒 Libera em ${hTexto}:${mTexto}:${sTexto}`;
-                    }
-                }
-            });
-
-            // Se alguma aula acabou de desbloquear, reconstrói o visual da página para liberar o botão
-            if (precisaRemontar) {
-                render();
-            }
         }
 
         function resetProgress() {
-            if(confirm("Deseja apagar seu histórico e bloquear as próximas aulas novamente?")) { 
-                aulas.forEach(a => {
-                    localStorage.removeItem(a.id);
-                    localStorage.removeItem('liberacao_' + a.id);
-                }); 
+            if(confirm("Deseja apagar sua lista de 'Aulas Assistidas'?")) { 
+                aulas.forEach(a => localStorage.removeItem(a.id)); 
                 render(); 
             }
         }
-        
         render();
     </script>
 </body>
