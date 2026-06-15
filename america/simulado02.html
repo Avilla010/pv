@@ -105,7 +105,7 @@
             margin: 0 auto 25px; 
             max-width: 200px; 
             height: auto; 
-            background: #fff; /* Fundo branco para as placas se destacarem */
+            background: #fff; 
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -171,7 +171,7 @@
     </div>
 
     <div id="live-stats" class="stats-bar">
-        <span class="timer-box"><i class="far fa-clock"></i> <span id="timer">15:00</span></span>
+        <span class="timer-box"><i class="far fa-clock"></i> <span id="timer">30:00</span></span>
         <span class="score-correct"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
         <span class="score-wrong"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
     </div>
@@ -181,11 +181,11 @@
         
         <div id="start-screen">
             <div class="alert">
-                <h3 style="color: #fff; margin-bottom: 15px;">Módulo: Sinalização</h3>
-                • 15 Questões (Placas, Gestos e Marcas)<br>
-                • Tempo limite: 15 minutos<br>
-                • Meta de aprovação: 11 acertos<br>
-                • Observe atentamente as imagens das placas!
+                <h3 style="color: #fff; margin-bottom: 15px;">Módulo: Sinalização (Padrão Detran-MG)</h3>
+                • 30 Questões (Múltipla Escolha: A, B, C ou D)<br>
+                • Tempo limite: 30 minutos<br>
+                • Meta de aprovação: 21 acertos (70%)<br>
+                • O cronômetro pausa a cada resposta para sua avaliação técnica!
             </div>
             <button class="btn-action" onclick="startQuiz()">Iniciar Treinamento</button>
         </div>
@@ -194,7 +194,7 @@
 
         <div id="result-area">
             <h3>Desempenho Final</h3>
-            <div id="score-text" class="score-box">0/15</div>
+            <div id="score-text" class="score-box">0/30</div>
             <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
             <button class="btn-action" style="margin-bottom: 15px;" onclick="location.reload()">Refazer Simulado</button>
             <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color: #fff;">Outros Simulados</a>
@@ -208,32 +208,44 @@
 <audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
 
 <script>
-// Mantive os dados das questões originais integrados à nova interface
 const questions = [
-    { "q": "A placa SS-07 destina-se à sinalização:", "img": "Mao.png", "options": ["Ordem de parada para todos os veículos.", "Ordem de parada apenas para veículos pesados.", "De pedestres, indicando quando atravessar ou aguardar.", "Diminuir a marcha."], "correct": 2 },
-    { "q": "A sinalização ilustrada identifica uma área de:", "img": "patrimonio.png", "options": ["Reserva biológica.", "Patrimônio natural.", "Área de recreação.", "Parque urbano comercial."], "correct": 1 },
-    { "q": "Ao avistar a placa de atrativo turístico ilustrada, o condutor deve estar ciente de que a área adiante é destinada a:", "img": "nauticos.png", "options": ["Pesca esportiva e amadora.", "Prática de esportes náuticos.", "Surfe.", "Transporte de cargas via balsa."], "correct": 1 },
-    { "q": "Esta marcação de sinalização horizontal indica:", "img": "Mudanca.png", "options": ["Siga em frente.", "Mudança obrigatória de faixa.", "Passagem permitida.", "Curva acentuada."], "correct": 1 },
-    { "q": "A placa de regulamentação abaixo ordena:", "img": "Passagem.png", "options": ["Sentido proibido.", "Siga em frente ou à direita.", "Passagem obrigatória.", "Vire à direita."], "correct": 2 },
-    { "q": "A placa de sinalização abaixo indica:", "img": "Sentido.png", "options": ["Sentido único de circulação.", "Siga em frente.", "Vire à esquerda.", "Sentido duplo."], "correct": 0 },
-    { "q": "A placa de advertência abaixo alerta para:", "img": "Sinuosa.png", "options": ["Curva à esquerda.", "Pista escorregadia.", "Sucessão de curvas, sendo a primeira à esquerda.", "Pista sinuosa, sendo a primeira curva à esquerda."], "correct": 3 },
-    { "q": "A placa de advertência A-20A corresponde a:", "img": "Declive.png", "options": ["Rampa com descida.", "Pista escorregadia.", "Declive acentuado.", "Aclive acentuado."], "correct": 2 },
-    { "q": "O gesto do agente de trânsito identificado como GA-01, caracterizado pela palma da mão voltada para frente, indica:", "img": "Guarda.png", "options": ["Atenção.", "Diminua a velocidade.", "Siga.", "Parada obrigatória para todos sentidos."], "correct": 3 },
-    { "q": "A placa R-1 indica parada obrigatória. O desrespeito a ela gera:", "options": ["Infração grave.", "Infração média.", "Infração gravíssima.", "Infração leve."], "correct": 2 },
-    { "q": "Qual a cor predominante nas placas de indicação de serviços auxiliares?", "options": ["Amarela.", "Azul.", "Verde.", "Branca."], "correct": 1 },
-    { "q": "Linhas amarelas contínuas dividindo o fluxo indicam:", "options": ["Permitido ultrapassar.", "Fluxo de sentido único.", "Proibido ultrapassar para ambos os sentidos.", "Pista exclusiva de ônibus."], "correct": 2 },
-    { "q": "Qual a única placa de advertência que tem a cor laranja:", "options": ["Sinalização de obras.", "Sinalização turística.", "Educação.", "Advertência comum."], "correct": 0 },
-    { "q": "A sinalização vertical é composta por:", "options": ["Pinturas no chão.", "Placas.", "Gestos.", "Luzes do semáforo."], "correct": 1 },
-    { "q": "O sinal luminoso vermelho intermitente significa:", "options": ["Atenção.", "Pare.", "Siga.", "Passagem permitida com cuidado."], "correct": 1 },
-    { "q": "O sinal sonoro de 1 silvo breve, emitido pelo apito do agente de trânsito, indica:", "options": ["Atenção.", "Diminua a velocidade.", "Siga.", "Pare."], "correct": 2 },
-    { "q": "A ordem do Agente de Trânsito prevalece sobre:", "options": ["As normas de circulação apenas.", "O semáforo apenas.", "Todas as demais sinalizações e normas.", "Apenas sobre as placas."], "correct": 2 }
+    { "q": "A placa SS-07 destina-se à sinalização:", "img": "Mao.png", "options": ["A) Ordem de parada para todos os veículos.", "B) Ordem de parada apenas para veículos pesados.", "C) De pedestres, indicando quando atravessar ou aguardar.", "D) Diminuir a marcha."], "correct": 2 },
+    { "q": "A sinalização de atrativo turístico ilustrada identifica uma área de:", "img": "patrimonio.png", "options": ["A) Reserva biológica.", "B) Patrimônio natural.", "C) Área de recreação.", "D) Parque urbano comercial."], "correct": 1 },
+    { "q": "Ao avistar a placa de atrativo turístico ilustrada, o condutor deve estar ciente de que a área adiante é destinada a:", "img": "nauticos.png", "options": ["A) Pesca esportiva e amadora.", "B) Prática de esportes náuticos.", "C) Travessia de pedestres.", "D) Transporte de cargas via balsa."], "correct": 1 },
+    { "q": "Esta marcação de sinalização horizontal indica:", "img": "Mudanca.png", "options": ["A) Siga em frente.", "B) Mudança obrigatória de faixa.", "C) Passagem permitida.", "D) Curva acentuada."], "correct": 1 },
+    { "q": "A placa de regulamentação abaixo ordena:", "img": "Passagem.png", "options": ["A) Sentido proibido.", "B) Siga em frente ou à direita.", "C) Passagem obrigatória.", "D) Vire à direita."], "correct": 2 },
+    { "q": "A placa de sinalização abaixo indica:", "img": "Sentido.png", "options": ["A) Sentido único de circulação.", "B) Siga em frente.", "C) Vire à esquerda.", "D) Sentido duplo."], "correct": 0 },
+    { "q": "A placa de advertência abaixo alerta para:", "img": "Sinuosa.png", "options": ["A) Curva à esquerda.", "B) Pista escorregadia.", "C) Sucessão de curvas, sendo a primeira à esquerda.", "D) Pista sinuosa, sendo a primeira curva à esquerda."], "correct": 3 },
+    { "q": "A placa de advertência A-20A corresponde a:", "img": "Declive.png", "options": ["A) Rampa com descida.", "B) Pista escorregadia.", "C) Declive acentuado.", "D) Aclive acentuado."], "correct": 2 },
+    { "q": "O gesto do agente de trânsito identificado como GA-01, caracterizado pela palma da mão voltada para frente, indica:", "img": "Guarda.png", "options": ["A) Atenção.", "B) Diminua a velocidade.", "C) Siga.", "D) Parada obrigatória para todos os sentidos."], "correct": 3 },
+    { "q": "A placa R-1 indica parada obrigatória. O desrespeito a ela gera:", "options": ["A) Infração grave.", "B) Infração média.", "C) Infração gravíssima.", "D) Infração leve."], "correct": 2 },
+    { "q": "Qual a cor predominante nas placas de indicação de serviços auxiliares?", "options": ["A) Amarela.", "B) Azul.", "C) Verde.", "D) Branca."], "correct": 1 },
+    { "q": "Linhas amarelas contínuas dividindo o fluxo indicam:", "options": ["A) Permitido ultrapassar.", "B) Fluxo de sentido único.", "C) Proibido ultrapassar para ambos os sentidos.", "D) Pista exclusiva de ônibus."], "correct": 2 },
+    { "q": "Qual a única placa de advertência que tem a cor laranja:", "options": ["A) Sinalização de obras.", "B) Sinalização turística.", "C) Educação.", "D) Advertência comum."], "correct": 0 },
+    { "q": "A sinalização vertical é composta por:", "options": ["A) Pinturas no chão.", "B) Placas.", "C) Gestos.", "D) Luzes do semáforo."], "correct": 1 },
+    { "q": "O sinal luminoso vermelho intermitente significa:", "options": ["A) Atenção.", "B) Pare.", "C) Siga.", "D) Passagem permitida com cuidado."], "correct": 1 },
+    { "q": "O sinal sonoro de 1 silvo breve, emitido pelo apito do agente de trânsito, indica:", "options": ["A) Atenção.", "B) Diminua a velocidade.", "C) Siga.", "D) Pare."], "correct": 2 },
+    { "q": "A ordem do Agente de Trânsito prevalece sobre:", "options": ["A) As normas de circulação apenas.", "B) O semáforo apenas.", "C) Todas as demais sinalizações e normas.", "D) Apenas sobre as placas."], "correct": 2 },
+    { "q": "Diante da placa de advertência abaixo, o condutor entende que existe:", "img": "t.png", "options": ["A) Uma bifurcação em T.", "B) Uma interseção em T.", "C) Um cruzamento de vias.", "D) Uma via lateral à esquerda."], "correct": 1 },
+    { "q": "A placa de advertência abaixo indica uma:", "img": "y.png", "options": ["A) Entrada de vias laterais.", "B) Bifurcação em Y.", "C) Interseção em Y.", "D) Confluência à esquerda."], "correct": 1 },
+    { "q": "A placa de advertência abaixo alerta para uma área de:", "img": "escolares.png", "options": ["A) Passagem sinalizada de escolares.", "B) Crianças jogando bola.", "C) Trânsito de pedestres.", "D) Área de recreação infantil."], "correct": 0 },
+    { "q": "A sinalização de advertência ilustrada abaixo avisa sobre uma:", "img": "cerca.png", "options": ["A) Passagem de nível sem barreira.", "B) Área com cerca elétrica.", "C) Passagem de nível com barreira.", "D) Cancelas automáticas."], "correct": 2 },
+    { "q": "A placa de advertência abaixo indica ao condutor:", "img": "inicio_pista.png", "options": ["A) Fim de pista dupla.", "B) Início de pista dupla.", "C) Pista dividida.", "D) Estreitamento de pista ao centro."], "correct": 1 },
+    { "q": "A linha branca simples contínua pintada na pista indica:", "options": ["A) Fluxos de sentidos opostos, sendo proibida a ultrapassagem.", "B) Fluxos de mesmo sentido, sendo permitida a mudança de faixa.", "C) Fluxos de mesmo sentido, sendo proibida a mudança de faixa.", "D) Limitação de pista exclusivamente para o trânsito de ciclistas."], "correct": 2 },
+    { "q": "As linhas longitudinais de cor amarela desenhadas no centro da pista servem para indicar:", "options": ["A) Fluxos de mesmo sentido de direção.", "B) Fluxos de sentidos opostos de direção.", "C) Locais permitidos para estacionamento de veículos pesados.", "D) Faixas exclusivas para veículos de tração animal."], "correct": 1 },
+    { "q": "A sinalização horizontal, que é composta por marcas, símbolos e legendas gravados no pavimento, tem por função:", "options": ["A) Substituir completamente a sinalização vertical (placas).", "B) Orientar, regulamentar e canalizar o fluxo de veículos e pedestres complementando os demais sinais.", "C) Servir apenas como efeito estético e decorativo nas vias urbanas.", "D) Indicar unicamente os locais onde o radar eletrônico está operando."], "correct": 1 },
+    { "q": "Qual cor deve ser utilizada na sinalização horizontal para delimitar ciclovias ou ciclofaixas e indicar cruzamentos cicloviários?", "options": ["A) Azul.", "B) Amarela.", "C) Vermelha.", "D) Branca."], "correct": 2 },
+    { "q": "O ciclista que se encontra desmontado empurrando a sua bicicleta nas vias públicas:", "options": ["A) É considerado um veículo lento e deve circular sempre pela direita.", "B) Equipara-se ao pedestre em direitos e deveres.", "C) Não tem direito à preferência na faixa de pedestres.", "D) Deve obedecer rigorosamente às mesmas regras do ciclista montado."], "correct": 1 },
+    { "q": "Quando a linha divisória de fluxos de mesmo sentido for branca e seccionada (pontilhada), o condutor sabe que:", "options": ["A) A mudança de faixa de trânsito é permitida.", "B) É terminantemente proibido mudar de faixa de trânsito.", "C) A via é de sentido duplo de circulação obrigatória.", "D) Existe um cruzamento rodoferroviário logo adiante."], "correct": 0 },
+    { "q": "As linhas e marcações na cor amarela que delimitam o espaço para parada de ônibus e pontos de táxi servem para:", "options": ["A) Permitir o estacionamento de veículos particulares por até 5 minutos.", "B) Indicar proibição de estacionamento e/ou parada de veículos de outros tipos.", "C) Indicar que qualquer veículo pode parar para realizar embarque rápidos.", "D) Organizar exclusivamente o fluxo de pedestres na calçada."], "correct": 1 },
+    { "q": "A marcação horizontal constituída por uma série de linhas brancas paralelas ao eixo da via (tipo zebrada) identifica:", "options": ["A) Uma linha de retenção obrigatória.", "B) Uma faixa de travessia de pedestres.", "C) Uma área de estacionamento regulamentado.", "D) Uma ciclovia ou ciclofaixa isolada."], "correct": 1 }
 ];
 
 let currentQ = 0;
 let score = 0;
 let errors = 0;
 let answered = false;
-let timeLeft = 1020; 
+let timeLeft = 1800; 
 let timerInterval;
 
 function startQuiz() {
@@ -288,6 +300,8 @@ function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
     if (!selected) return;
     
+    clearInterval(timerInterval);
+    
     answered = true;
     const userChoice = parseInt(selected.value);
     const correctChoice = questions[currentQ].correct;
@@ -316,6 +330,7 @@ function nextQuestion() {
     currentQ++;
     if (currentQ < questions.length) {
         renderQuestion();
+        startTimer();
     } else {
         showFinalResult();
     }
@@ -329,7 +344,7 @@ function showFinalResult() {
     document.getElementById('result-area').style.display = "block";
     
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 APROVADO! Você domina a sinalização." : "⚠️ QUASE LÁ! As placas são fundamentais, revise e tente de novo.";
+    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Você domina a sinalização e o padrão Detran-MG." : "⚠️ QUASE LÁ! As regras e placas são fundamentais, revise e tente de novo.";
 }
 </script>
 </body>
