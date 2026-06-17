@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulado 02 - Direção Defensiva | CNH Blindada</title>
+    <title>Simulado 05 - Direção Defensiva | CNH Blindada</title>
     <link rel="icon" href="favicon.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -44,15 +44,45 @@
 
         .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; letter-spacing: 1px; }
         .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        
+        .btn-pdf { background: #28a745; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #218838; }
+
+        /* Painel Dinâmico de Erros Comportamentais */
+        .error-report-container { text-align: left; margin-top: 35px; border-top: 2px solid #222; padding-top: 25px; display: none; }
+        .error-item { background: rgba(255, 255, 255, 0.01); border-left: 4px solid var(--danger); padding: 20px; margin-bottom: 15px; border-radius: 0 4px 4px 0; border-top: 1px solid #222; border-right: 1px solid #222; border-bottom: 1px solid #222; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 12px; color: #eee; line-height: 1.4; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 6px 0; display: flex; align-items: center; gap: 8px; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 6px 0; display: flex; align-items: center; gap: 8px; }
 
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
         .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* ARQUITETURA DE IMPRESSÃO LIMPA E ECONÔMICA (ANTI-TINTA PRETA) */
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            .header-nav, .stats-bar, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; }
+            .quiz-section { background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
+            .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .error-item { background: #fff !important; border-left: 4px solid #000 !important; border-top: none !important; border-right: none !important; border-bottom: 1px solid #ccc !important; page-break-inside: avoid; margin-bottom: 25px; padding: 10px 0 10px 15px !important; border-radius: 0 !important; }
+            .error-title { color: #000 !important; font-size: 1.1rem !important; }
+            .error-user-ans { color: #555 !important; text-decoration: line-through; }
+            .error-correct-ans { color: #000 !important; font-weight: bold; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 12px; }
+        }
+        .print-header { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="print-header">
+        <h2>PLANO ESTRATÉGICO DE REVISÃO: DIREÇÃO DEFENSIVA</h2>
+        <p>Mapeamento de lacunas críticas e conceitos de risco para correção imediata.</p>
+    </div>
+
     <div class="header-nav">
         <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Voltar</a>
         <h1>Simulado 02 Profissional</h1>
@@ -64,8 +94,8 @@
             <i class="far fa-clock"></i> <span id="timer">30:00</span>
             <span id="pause-tag" class="pause-notice" style="display:none;">PAUSADO PARA ANÁLISE</span>
         </span>
-        <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
-        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+        <span style="color:var(--success)"><i class="fas fa-check"></i> Acertos: <span id="count-correct">0</span></span>
+        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> Erros: <span id="count-wrong">0</span></span>
     </div>
 
     <div class="quiz-section">
@@ -75,8 +105,9 @@
             <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
                 <h3 style="color:#fff; margin-bottom:15px">Módulo: Direção Defensiva Master</h3>
                 • 30 Questões (Fixação + Top 15 Prova)<br>
-                • Tempo: 30 Minutos (Pausa na correção)<br>
-                • Meta: 21 acertos para aprovação
+                • Tempo: 30 Minutos<br>
+                • Meta: 21 acertos para aprovação<br>
+                • O cronômetro realiza pausas táticas após cada verificação para leitura técnica das alternativas.
             </div>
             <button class="btn-action" onclick="startQuiz()">INICIAR TREINAMENTO</button>
         </div>
@@ -86,10 +117,19 @@
         <div id="result-area">
             <h3>Análise de Desempenho</h3>
             <div id="score-text" class="score-box">0/30</div>
-            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 25px;"></p>
+            
+            <div id="pdf-trigger-zone"></div>
+
             <button class="btn-action" onclick="location.reload()">Refazer Simulado</button>
         </div>
     </div>
+
+    <div id="error-report" class="error-report-container">
+        <h3 style="border-bottom: 1px solid #333; padding-bottom: 12px; color: var(--netflix-red); display: flex; align-items: center; gap: 10px;"><i class="fas fa-exclamation-triangle"></i> Mapeamento de Vulnerabilidades para Revisão:</h3>
+        <div id="error-list"></div>
+    </div>
+
     <div class="footer">Confia no processo e executa! 🚦✅</div>
 </div>
 
@@ -104,7 +144,7 @@ const questions = [
     { "q": "Não é efeito direto dos acidentes de trânsito:", "options": ["Danos pessoais e materiais.", "Pagamento de indenização pelo Estado ou pelo particular.", "Morte.", "Pagamento do Seguro Obrigatório."], "correct": 3 },
     { "q": "A velocidade que permite ao condutor reagir diante de um obstáculo, um pedestre ou outro veículo é a:", "options": ["Compatível com as características da via onde está circulando.", "Máxima permitida para a via onde está circulando.", "Máxima de 80 km/h, de acordo com a legislação de trânsito.", "De 30 km/h, em qualquer via."], "correct": 0 },
     { "q": "O cinto de segurança é um equipamento que deve ser usado:", "options": ["Pelo condutor e passageiro do banco dianteiro.", "Pelos passageiros dos bancos traseiros.", "Por todos os ocupantes do veículo.", "Pelos ocupantes do veículo, exceto gestantes e crianças."], "correct": 2 },
-    { "q": "Os retrovisores externos têm por finalidade:", "options": ["Reduzir a possibilidade de 'pontos cegos' ou sem alcance visual.", "Todas as alternativas estão corretas.", "Auxiliar o condutor na execução de manobras.", "Auxiliar no deslocamento lateral."], "correct": 1 },
+    { "q": "Os retrovisores externos têm por finalidade:", "options": ["Reduzir a possibilidade de 'pontos cegos' ou sem alcance visual.", "Todas as alternatives estão corretas.", "Auxiliar o condutor na execução de manobras.", "Auxiliar no deslocamento lateral."], "correct": 1 },
     { "q": "O motociclista circulando em piso molhado ou cheio de areia deve:", "options": ["Utilizar somente o freio dianteiro.", "Utilizar os freios traseiro e dianteiro de forma brusca.", "Utilizar somente o freio traseiro.", "Utilizar os freios dianteiro e traseiro de forma muito suave."], "correct": 3 },
     { "q": "Antes de efetuar uma viagem, o condutor deverá verificar os itens:", "options": ["Nível de óleo lubrificante e água do radiador.", "Palhetas do limpador de parabrisa e funcionamento dos faróis.", "Luzes indicativas de direção e luz de freio.", "Todas as alternativas estão corretas."], "correct": 3 },
     { "q": "No acostamento é proibido:", "options": ["Trafegar com veículos automotores.", "Para ou estacionar o veiculo em situação de emergência.", "Circular pedestres.", "Parar para realizar manobras."], "correct": 0 },
@@ -134,8 +174,9 @@ const questions = [
 ];
 
 let currentQ = 0; let score = 0; let errors = 0; let answered = false;
-let timeLeft = 1800; // 30 Minutos
+let timeLeft = 1800; 
 let timerInterval;
+let userErrorsLog = [];
 
 function startQuiz() {
     document.getElementById('start-screen').style.display = "none";
@@ -183,7 +224,7 @@ function handleButtonClick() {
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
-    if (!selected) return;
+    if (!selected) return alert("Escolha uma opção antes de verificar!");
     
     clearInterval(timerInterval);
     document.getElementById('timer-display').classList.add('timer-paused');
@@ -205,9 +246,17 @@ function checkAnswer() {
         document.getElementById(`opt-${userChoice}`).classList.add('wrong');
         document.getElementById(`opt-${correctChoice}`).classList.add('correct');
         document.getElementById('snd-wrong').play().catch(()=>{});
+
+        // Registro de telemetria de falha para o plano de estudos No-DB
+        userErrorsLog.push({
+            questionNum: currentQ + 1,
+            enunciado: questions[currentQ].q,
+            respostaDoAluno: questions[currentQ].options[userChoice],
+            respostaCorreta: questions[currentQ].options[correctChoice]
+        });
     }
     const btn = document.getElementById('btn-quiz');
-    btn.innerHTML = "Próxima Questão <i class='fas fa-arrow-right'></i>";
+    btn.innerHTML = "Próxima Questão <i class='fas fa-arrow-right' style='font-size:13px; margin-left:5px'></i>";
 }
 
 function nextQuestion() {
@@ -222,8 +271,35 @@ function showFinalResult() {
     document.getElementById('live-stats').style.display = "none";
     document.getElementById('p-cont').style.display = "none";
     document.getElementById('result-area').style.display = "block";
+    
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
     document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Sua percepção de risco está excelente." : "⚠️ QUASE! Direção defensiva exige atenção total. Revise frenagem e condições adversas.";
+
+    // Se houver erros, compila o Plano de Erros dinamicamente
+    if (userErrorsLog.length > 0) {
+        const errorListDiv = document.getElementById('error-list');
+        errorListDiv.innerHTML = "";
+        
+        userErrorsLog.forEach(item => {
+            errorListDiv.innerHTML += `
+                <div class="error-item">
+                    <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
+                    <div class="error-user-ans"><i class="fas fa-times-circle"></i> Sua resposta: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check-circle"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('error-report').style.display = "block";
+
+        // Insere o gatilho de PDF na zona correta de resultados
+        document.getElementById('pdf-trigger-zone').innerHTML = `
+            <button class="btn-action btn-pdf" onclick="window.print()">
+                <i class="fas fa-file-pdf"></i> Salvar Plano de Erros em PDF
+            </button>
+            <p style="font-size: 13px; color: #aaa; margin-top: 8px; margin-bottom: 25px;">Baixe o relatório limpo para focar seus estudos estritamente nos pontos fracos.</p>
+        `;
+    }
 }
 </script>
 </body>
