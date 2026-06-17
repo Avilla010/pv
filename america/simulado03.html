@@ -50,12 +50,44 @@
 
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
+        
+        /* Área do Plano de Correção de Erros */
+        .error-report-container { text-align: left; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; display: none; }
+        .error-item { background: rgba(255,255,255,0.02); border-left: 4px solid var(--netflix-red); padding: 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 15px; color: #eee; }
+        .error-img { display: block; max-width: 220px; height: auto; margin-bottom: 15px; border-radius: 4px; border: 1px solid #444; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 5px 0; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 5px 0; }
+        
+        .btn-pdf { background: #25d366; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #128c7e; color: #fff; }
+
         .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* REGRAS EXCLUSIVAS PARA IMPRESSÃO EM PAPEL (SALVAR PDF) */
+        @media print {
+            body { background: #fff !important; color: #000 !important; padding: 0; }
+            .header-nav, #live-stats, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .quiz-section { background: #fff !important; box-shadow: none !important; padding: 0 !important; }
+            .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .error-item { background: #f9f9f9 !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc; margin-bottom: 15px; padding: 15px !important; }
+            .error-title { color: #000 !important; }
+            .error-img { border: 1px solid #000 !important; max-width: 180px !important; } /* Reduz a imagem no papel para economizar espaço e tinta */
+            .error-user-ans { color: #c00 !important; }
+            .error-correct-ans { color: #080 !important; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        }
+        .print-header { display: none; color: #000; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="print-header">
+        <h2>MÉTODO CNH BLINDADA - PLANO DE CORREÇÃO DE ERROS</h2>
+        <p>Estude este material impresso focado nos seus erros para garantir sua aprovação de primeira.</p>
+    </div>
+
     <div class="header-nav">
         <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
         <h1>Simulado 03 Especial</h1>
@@ -90,8 +122,17 @@
             <h3>Resultado do Teste</h3>
             <div id="score-text" class="score-box">0/30</div>
             <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
-            <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Refazer</button>
+            
+            <div id="pdf-trigger-zone"></div>
+
+            <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Refazer Simulado</button>
         </div>
+
+        <div id="error-report" class="error-report-container">
+            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--netflix-red);"><i class="fas fa-graduation-cap"></i> Questões que você precisa revisar:</h3>
+            <div id="error-list"></div>
+        </div>
+
     </div>
     <div class="footer">CNH Blindada Originals &copy; 2026</div>
 </div>
@@ -101,7 +142,6 @@
 
 <script>
 const questions = [
-    // --- AS 15 ORIGINAIS ---
     { "q": "Considerando a imagem ilustrada, onde uma ambulância se aproxima de um cruzamento não sinalizado, qual deve ser a conduta do condutor do veículo amarelo?", "img": "amb.png", "options": ["Ambulância terá prioridade de passagem.", "O veículo amarelo deve acelerar para liberar o cruzamento o mais rápido possível.", "O veículo amarelo deve deixar livre a passagem, parando ou deslocando-se para a direita da via.", "O veículo amarelo tem a preferência por vir à direita da ambulância."], "correct": 3 },
     { "q": "Em um cruzamento não sinalizado, a preferência de passagem será:", "options": ["Sempre do veículo que estiver em maior velocidade.", "Do veículo que vier pela direita do condutor.", "Do veículo que vier pela esquerda do condutor.", "Sempre do veículo de carga."], "correct": 1 },
     { "q": "Qual a velocidade máxima que pode ser atingida por um veiculo de passeio ou motocicleta nas rodovias brasileiras:", "options": ["120 kmh.", "90 kmh.", "110 kmh.", "80 kmh."], "correct": 2 },
@@ -114,11 +154,9 @@ const questions = [
     { "q": "O condutor de veículo só poderá realizar a ultrapassagem pela direita quando:", "options": ["O veículo à frente for muito lento.", "Houver três faixas de rolamento.", "O veículo à frente sinalizar que vai entrar à esquerda.", "Nunca é permitido ultrapassar pela direita."], "correct": 2 },
     { "q": "Em vias de pista dupla com várias faixas no mesmo sentido, as da esquerda são destinadas à:", "options": ["Veículos lentos e pesados.", "Ultrapassagem e veículos de maior velocidade.", "Circulação de motocicletas apenas.", "Estacionamento de emergência."], "correct": 1 },
     { "q": "Para virar à esquerda em uma via urbana de sentido duplo, o condutor deve:", "options": ["Aproximar-se o máximo possível do bordo direito.", "Aproximar-se o máximo possível do eixo central da via.", "Parar no acostamento e aguardar.", "Cruzar a via direto, sem parar."], "correct": 1 },
-    { "q": "Todo condutor deve, antes de entrar em outra via, certificar-se de que pode fazê-lo sem perigo para:", "options": ["Os passageiros do seu carro apenas.", "Os demais usuários da via que a cruzam.", "Apenas para os pedestres na calçada.", "Os veículos que vêm atrás dele."], "correct": 1 },
+    { "q": "Todo condutor deve, antes de entrar in outra via, certificar-se de que pode fazê-lo sem perigo para:", "options": ["Os passageiros do seu carro apenas.", "Os demais usuários da via que a cruzam.", "Apenas para os pedestres na calçada.", "Os veículos que vêm atrás dele."], "correct": 1 },
     { "q": "É dever do condutor, ao ser ultrapassado:", "options": ["Aumentar a velocidade para dificultar.", "Manter-se à esquerda da via.", "Facilitar a ultrapassagem, não acelerando a marcha.", "Ligar o farol alto."], "correct": 2 },
     { "q": "Os pedestres, ao cruzar a pista de rolamento onde não houver faixa, devem fazê-lo:", "options": ["Em sentido diagonal ao eixo da via.", "Em sentido perpendicular ao eixo da via.", "Correndo para atravessar logo.", "Em qualquer sentido."], "correct": 1 },
-
-    // --- +15 QUESTÕES ADICIONAIS ---
     { "q": "Nas vias urbanas, onde não houver sinalização, a velocidade máxima nas vias de TRÂNSITO RÁPIDO é de:", "options": ["60 km/h", "80 km/h", "40 km/h", "110 km/h"], "correct": 1 },
     { "q": "Ao aproximar-se de um cruzamento com sinal luminoso (semáforo), o condutor observa a luz amarela. Ele deve:", "options": ["Acelerar para passar antes de ficar vermelho.", "Frear bruscamente.", "Diminuir a marcha e parar, salvo se já estiver no cruzamento.", "Buzinar e continuar."], "correct": 2 },
     { "q": "O condutor deve utilizar o pisca-alerta nas seguintes situações:", "options": ["Em imobilizações ou situações de emergência.", "Ao rodar em alta velocidade.", "Para avisar que vai virar à direita.", "Sob chuva fina em movimento."], "correct": 0 },
@@ -140,8 +178,9 @@ let currentQ = 0;
 let score = 0;
 let errors = 0;
 let answered = false;
-let timeLeft = 1800; // 30 minutos
+let timeLeft = 1800; 
 let timerInterval;
+let userErrorsLog = [];
 
 function startQuiz() {
     document.getElementById('start-screen').style.display = "none";
@@ -153,7 +192,6 @@ function startQuiz() {
 }
 
 function startTimer() {
-    // Reseta visual da pausa
     document.getElementById('timer-box').classList.remove('timer-paused');
     document.getElementById('pause-text').style.display = 'none';
 
@@ -193,7 +231,7 @@ function renderQuestion() {
 function handleButtonClick() {
     if (!answered) checkAnswer();
     else {
-        startTimer(); // Retoma o tempo ao ir para a próxima
+        startTimer(); 
         nextQuestion();
     }
 }
@@ -202,7 +240,6 @@ function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
     if (!selected) return;
     
-    // PAUSA O TIMER
     clearInterval(timerInterval);
     document.getElementById('timer-box').classList.add('timer-paused');
     document.getElementById('pause-text').style.display = 'block';
@@ -224,6 +261,17 @@ function checkAnswer() {
         document.getElementById(`opt-${userChoice}`).classList.add('wrong');
         document.getElementById(`opt-${correctChoice}`).classList.add('correct');
         document.getElementById('snd-wrong').play().catch(()=>{});
+
+        // MODIFICAÇÃO CHAVE: MAPEIA SE A QUESTÃO ATUAL POSSUI IMAGEM ATRIBUÍDA
+        let imagemDaQuestao = questions[currentQ].img ? questions[currentQ].img : null;
+
+        userErrorsLog.push({
+            questionNum: currentQ + 1,
+            enunciado: questions[currentQ].q,
+            imagem: imagemDaQuestao, // Salva o nome do arquivo da imagem
+            respostaDoAluno: questions[currentQ].options[userChoice],
+            respostaCorreta: questions[currentQ].options[correctChoice]
+        });
     }
     
     const btn = document.getElementById('btn-quiz');
@@ -248,7 +296,37 @@ function showFinalResult() {
     document.getElementById('result-area').style.display = "block";
     
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Você domina as normas de circulação." : "⚠️ REPROVADO! Revise o conteúdo de regras de preferência e velocidades.";
+    
+    const isAprovado = score >= 21;
+    document.getElementById('feedback-msg').innerHTML = isAprovado ? "🏆 APROVADO! Você domina as normas de circulação." : "⚠️ REPROVADO! Revise o conteúdo de regras de preferência e velocidades.";
+
+    if(userErrorsLog.length > 0) {
+        const errorListDiv = document.getElementById('error-list');
+        errorListDiv.innerHTML = ""; 
+        
+        userErrorsLog.forEach(item => {
+            // MONTA A TAG DE IMAGEM CASO ELA EXISTA NO LOG DE ERRO
+            let renderImgHtml = item.imagem ? `<img src="${item.imagem}" class="error-img">` : '';
+
+            errorListDiv.innerHTML += `
+                <div class="error-item">
+                    <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
+                    ${renderImgHtml}
+                    <div class="error-user-ans"><i class="fas fa-times"></i> Você marcou: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('error-report').style.display = "block";
+
+        document.getElementById('pdf-trigger-zone').innerHTML = `
+            <button class="btn-action btn-pdf" onclick="window.print()">
+                <i class="fab fa-whatsapp"></i> Imprimir Plano de Erros com Imagens (PDF)
+            </button>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O PDF incluirá as imagens e placas das questões que você errou!</p>
+        `;
+    }
 }
 </script>
 </body>
