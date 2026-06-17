@@ -63,7 +63,7 @@
             border-bottom: 2px solid #333;
         }
 
-        .timer-box { color: #fff; }
+        #timer-box { color: #fff; }
         .score-correct { color: var(--success); }
         .score-wrong { color: var(--netflix-red); }
 
@@ -148,22 +148,57 @@
         }
         .btn-action:hover { background: var(--netflix-red); color: #fff; }
         .btn-next-step { background: var(--netflix-red); color: #fff; }
+        
+        /* Estilos da Pausa */
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
 
         /* --- RESULTADO --- */
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
         
+        /* Área do Plano de Correção de Erros */
+        .error-report-container { text-align: left; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; display: none; }
+        .error-item { background: rgba(255,255,255,0.02); border-left: 4px solid var(--netflix-red); padding: 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 15px; color: #eee; }
+        .error-img { display: block; max-width: 150px; height: auto; margin-bottom: 15px; background: #fff; padding: 5px; border-radius: 4px; border: 1px solid #444; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 5px 0; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 5px 0; }
+        
+        .btn-pdf { background: #25d366; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #128c7e; color: #fff; }
+
         .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
 
         @media (max-width: 600px) {
             .quiz-section { padding: 25px 20px; }
             h1 { font-size: 1.2rem; }
         }
+
+        /* REGRAS EXCLUSIVAS PARA IMPRESSÃO EM PAPEL (SALVAR PDF) */
+        @media print {
+            body { background: #fff !important; color: #000 !important; padding: 0; }
+            .header-nav, .stats-bar, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .quiz-section { background: #fff !important; box-shadow: none !important; padding: 0 !important; }
+            .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .error-item { background: #f9f9f9 !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc; margin-bottom: 15px; padding: 15px !important; }
+            .error-title { color: #000 !important; }
+            .error-img { border: 1px solid #000 !important; max-width: 120px !important; background: #fff !important; }
+            .error-user-ans { color: #c00 !important; }
+            .error-correct-ans { color: #080 !important; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        }
+        .print-header { display: none; color: #000; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="print-header">
+        <h2>MÉTODO CNH BLINDADA - PLANO DE CORREÇÃO DE ERROS</h2>
+        <p>Estude este material impresso focado nos seus erros para garantir sua aprovação de primeira.</p>
+    </div>
+
     <div class="header-nav">
         <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
         <h1>Simulado 02</h1>
@@ -171,7 +206,10 @@
     </div>
 
     <div id="live-stats" class="stats-bar">
-        <span class="timer-box"><i class="far fa-clock"></i> <span id="timer">30:00</span></span>
+        <span id="timer-box" style="text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">30:00</span>
+            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
+        </span>
         <span class="score-correct"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
         <span class="score-wrong"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
     </div>
@@ -183,7 +221,7 @@
             <div class="alert">
                 <h3 style="color: #fff; margin-bottom: 15px;">Módulo: Sinalização (Padrão Detran-MG)</h3>
                 • 30 Questões (Múltipla Escolha: A, B, C ou D)<br>
-                • Tempo limite: 30 minutos<br>
+                • Tempo limite: 30 minutes<br>
                 • Meta de aprovação: 21 acertos (70%)<br>
                 • O cronômetro pausa a cada resposta para sua avaliação técnica!
             </div>
@@ -196,9 +234,17 @@
             <h3>Desempenho Final</h3>
             <div id="score-text" class="score-box">0/30</div>
             <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            
+            <div id="pdf-trigger-zone"></div>
+
             <button class="btn-action" style="margin-bottom: 15px;" onclick="location.reload()">Refazer Simulado</button>
             <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color: #fff;">Outros Simulados</a>
         </div>
+    </div>
+
+    <div id="error-report" class="error-report-container">
+        <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--netflix-red);"><i class="fas fa-graduation-cap"></i> Questões que você precisa revisar:</h3>
+        <div id="error-list"></div>
     </div>
 
     <div class="footer">CNH Blindada Originals &copy; 2026</div>
@@ -215,7 +261,7 @@ const questions = [
     { "q": "Esta marcação de sinalização horizontal indica:", "img": "Mudanca.png", "options": ["A) Siga em frente.", "B) Mudança obrigatória de faixa.", "C) Passagem permitida.", "D) Curva acentuada."], "correct": 1 },
     { "q": "A placa de regulamentação abaixo ordena:", "img": "Passagem.png", "options": ["A) Sentido proibido.", "B) Siga em frente ou à direita.", "C) Passagem obrigatória.", "D) Vire à direita."], "correct": 2 },
     { "q": "A placa de sinalização abaixo indica:", "img": "Sentido.png", "options": ["A) Sentido único de circulação.", "B) Siga em frente.", "C) Vire à esquerda.", "D) Sentido duplo."], "correct": 0 },
-    { "q": "A placa de advertência abaixo alerta para:", "img": "Sinuosa.png", "options": ["A) Curva à esquerda.", "B) Pista escorregadia.", "C) Sucessão de curvas, sendo a primeira à esquerda.", "D) Pista sinuosa, sendo a primeira curva à esquerda."], "correct": 3 },
+    { "q": "A placa de advertência abaixo indica:", "img": "Sinuosa.png", "options": ["A) Curva à esquerda.", "B) Pista escorregadia.", "C) Sucessão de curvas, sendo a primeira à esquerda.", "D) Pista sinuosa, sendo a primeira curva à esquerda."], "correct": 3 },
     { "q": "A placa de advertência A-20A corresponde a:", "img": "Declive.png", "options": ["A) Rampa com descida.", "B) Pista escorregadia.", "C) Declive acentuado.", "D) Aclive acentuado."], "correct": 2 },
     { "q": "O gesto do agente de trânsito identificado como GA-01, caracterizado pela palma da mão voltada para frente, indica:", "img": "Guarda.png", "options": ["A) Atenção.", "B) Diminua a velocidade.", "C) Siga.", "D) Parada obrigatória para todos os sentidos."], "correct": 3 },
     { "q": "A placa R-1 indica parada obrigatória. O desrespeito a ela gera:", "options": ["A) Infração grave.", "B) Infração média.", "C) Infração gravíssima.", "D) Infração leve."], "correct": 2 },
@@ -237,7 +283,7 @@ const questions = [
     { "q": "Qual cor deve ser utilizada na sinalização horizontal para delimitar ciclovias ou ciclofaixas e indicar cruzamentos cicloviários?", "options": ["A) Azul.", "B) Amarela.", "C) Vermelha.", "D) Branca."], "correct": 2 },
     { "q": "O ciclista que se encontra desmontado empurrando a sua bicicleta nas vias públicas:", "options": ["A) É considerado um veículo lento e deve circular sempre pela direita.", "B) Equipara-se ao pedestre em direitos e deveres.", "C) Não tem direito à preferência na faixa de pedestres.", "D) Deve obedecer rigorosamente às mesmas regras do ciclista montado."], "correct": 1 },
     { "q": "Quando a linha divisória de fluxos de mesmo sentido for branca e seccionada (pontilhada), o condutor sabe que:", "options": ["A) A mudança de faixa de trânsito é permitida.", "B) É terminantemente proibido mudar de faixa de trânsito.", "C) A via é de sentido duplo de circulação obrigatória.", "D) Existe um cruzamento rodoferroviário logo adiante."], "correct": 0 },
-    { "q": "As linhas e marcações na cor amarela que delimitam o espaço para parada de ônibus e pontos de táxi servem para:", "options": ["A) Permitir o estacionamento de veículos particulares por até 5 minutos.", "B) Indicar proibição de estacionamento e/ou parada de veículos de outros tipos.", "C) Indicar que qualquer veículo pode parar para realizar embarque rápidos.", "D) Organizar exclusivamente o fluxo de pedestres na calçada."], "correct": 1 },
+    { "q": "As linhas e marcações na cor amarela que delimitam o espaço para parada de ônibus e pontos de táxi servem para:", "options": ["A) Permitir o estacionamento de veículos particulares por até 5 minutos.", "B) Indicar proibição de estacionamento e/ou parada de veículos de outros tipos.", "C) Indicar que qualquer veículo pode parar para realizar embarques rápidos.", "D) Organizar exclusivamente o fluxo de pedestres na calçada."], "correct": 1 },
     { "q": "A marcação horizontal constituída por uma série de linhas brancas paralelas ao eixo da via (tipo zebrada) identifica:", "options": ["A) Uma linha de retenção obrigatória.", "B) Uma faixa de travessia de pedestres.", "C) Uma área de estacionamento regulamentado.", "D) Uma ciclovia ou ciclofaixa isolada."], "correct": 1 }
 ];
 
@@ -247,6 +293,7 @@ let errors = 0;
 let answered = false;
 let timeLeft = 1800; 
 let timerInterval;
+let userErrorsLog = [];
 
 function startQuiz() {
     document.getElementById('start-screen').style.display = "none";
@@ -258,6 +305,9 @@ function startQuiz() {
 }
 
 function startTimer() {
+    document.getElementById('timer-box').classList.remove('timer-paused');
+    document.getElementById('pause-text').style.display = 'none';
+    
     timerInterval = setInterval(() => {
         timeLeft--;
         let mins = Math.floor(timeLeft / 60);
@@ -301,6 +351,8 @@ function checkAnswer() {
     if (!selected) return;
     
     clearInterval(timerInterval);
+    document.getElementById('timer-box').classList.add('timer-paused');
+    document.getElementById('pause-text').style.display = 'block';
     
     answered = true;
     const userChoice = parseInt(selected.value);
@@ -319,10 +371,21 @@ function checkAnswer() {
         document.getElementById(`opt-${userChoice}`).classList.add('wrong');
         document.getElementById(`opt-${correctChoice}`).classList.add('correct');
         document.getElementById('snd-wrong').play().catch(()=>{});
+
+        // MAPEIA E SALVA A IMAGEM DA PLACA CASO EXISTA NA PERGUNTA
+        let imagemDaQuestao = questions[currentQ].img ? questions[currentQ].img : null;
+
+        userErrorsLog.push({
+            questionNum: currentQ + 1,
+            enunciado: questions[currentQ].q,
+            imagem: imagemDaQuestao,
+            respostaDoAluno: questions[currentQ].options[userChoice],
+            respostaCorreta: questions[currentQ].options[correctChoice]
+        });
     }
     
     const btn = document.getElementById('btn-quiz');
-    btn.innerHTML = "Próxima Questão";
+    btn.innerHTML = "Próxima Questão <i class='fas fa-chevron-right' style='font-size:0.8rem; margin-left:8px'></i>";
     btn.classList.add('btn-next-step');
 }
 
@@ -344,7 +407,36 @@ function showFinalResult() {
     document.getElementById('result-area').style.display = "block";
     
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Você domina a sinalização e o padrão Detran-MG." : "⚠️ QUASE LÁ! As regras e placas são fundamentais, revise e tente de novo.";
+    
+    const isAprovado = score >= 21;
+    document.getElementById('feedback-msg').innerHTML = isAprovado ? "🏆 APROVADO! Você domina a sinalização e o padrão Detran-MG." : "⚠️ QUASE LÁ! As regras e placas são fundamentais, revise e tente de novo.";
+
+    if(userErrorsLog.length > 0) {
+        const errorListDiv = document.getElementById('error-list');
+        errorListDiv.innerHTML = ""; 
+        
+        userErrorsLog.forEach(item => {
+            let renderImgHtml = item.imagem ? `<img src="${item.imagem}" class="error-img">` : '';
+
+            errorListDiv.innerHTML += `
+                <div class="error-item">
+                    <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
+                    ${renderImgHtml}
+                    <div class="error-user-ans"><i class="fas fa-times"></i> Você marcou: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('error-report').style.display = "block";
+
+        document.getElementById('pdf-trigger-zone').innerHTML = `
+            <button class="btn-action btn-pdf" onclick="window.print()">
+                <i class="fab fa-whatsapp"></i> Imprimir Plano de Erros com Placas (PDF)
+            </button>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O PDF incluirá os gráficos e as placas de sinalização que você errou!</p>
+        `;
+    }
 }
 </script>
 </body>
