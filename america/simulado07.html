@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulado 04 - Meio Ambiente e Cidadania | CNH Blindada</title>
+    <title>Simulado 07 - Meio Ambiente e Cidadania | CNH Blindada</title>
     <link rel="icon" href="favicon.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -61,6 +61,8 @@
             font-weight: bold; 
             border-bottom: 2px solid #333;
         }
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
 
         /* --- QUIZ SECTION --- */
         .quiz-section { 
@@ -89,6 +91,7 @@
             cursor: pointer; 
             transition: 0.2s; 
             background: rgba(255,255,255,0.02);
+            font-size: 1rem;
         }
         .option:hover { background: rgba(255,255,255,0.08); }
         .option input { margin-right: 15px; accent-color: var(--netflix-red); }
@@ -112,17 +115,47 @@
             letter-spacing: 1px;
         }
         .btn-action:hover { background: var(--netflix-red); color: #fff; }
-        .btn-next-step { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: #fff; color: #000; }
+        
+        .btn-pdf { background: #28a745; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #218838; }
+
+        /* Painel Dinâmico de Erros Comportamentais */
+        .error-report-container { text-align: left; margin-top: 35px; border-top: 2px solid #222; padding-top: 25px; display: none; }
+        .error-item { background: rgba(255, 255, 255, 0.01); border-left: 4px solid var(--danger); padding: 20px; margin-bottom: 15px; border-radius: 0 4px 4px 0; border-top: 1px solid #222; border-right: 1px solid #222; border-bottom: 1px solid #222; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 12px; color: #eee; line-height: 1.4; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 6px 0; display: flex; align-items: center; gap: 8px; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 6px 0; display: flex; align-items: center; gap: 8px; }
 
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
         
         .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* ARQUITETURA DE IMPRESSÃO ECO-FRIENDLY */
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            .header-nav, .stats-bar, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio, .btn-action[onclick*="location.reload"] { display: none !important; }
+            .container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; }
+            .quiz-section { background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
+            .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .error-item { background: #fff !important; border-left: 4px solid #000 !important; border-top: none !important; border-right: none !important; border-bottom: 1px solid #ccc !important; page-break-inside: avoid; margin-bottom: 25px; padding: 10px 0 10px 15px !important; border-radius: 0 !important; }
+            .error-title { color: #000 !important; font-size: 1.1rem !important; }
+            .error-user-ans { color: #555 !important; text-decoration: line-through; }
+            .error-correct-ans { color: #000 !important; font-weight: bold; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 12px; }
+        }
+        .print-header { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="print-header">
+        <h2>MAPEAMENTO ESTRATÉGICO DE REVISÃO: MEIO AMBIENTE E CIDADANIA</h2>
+        <p>Direcionamento corretivo focado em legislações do CONAMA, poluentes e conduta cidadã.</p>
+    </div>
+
     <div class="header-nav">
         <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Voltar</a>
         <h1>Simulado 04</h1>
@@ -130,9 +163,12 @@
     </div>
 
     <div id="live-stats" class="stats-bar">
-        <span style="color:#fff"><i class="far fa-clock"></i> <span id="timer">15:00</span></span>
-        <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
-        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+        <span id="timer-display" style="color:#fff; text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">15:00</span>
+            <span id="pause-tag" class="pause-notice" style="display:none;">CRONÔMETRO CONGELADO</span>
+        </span>
+        <span style="color:var(--success)"><i class="fas fa-check"></i> Acertos: <span id="count-correct">0</span></span>
+        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> Erros: <span id="count-wrong">0</span></span>
     </div>
 
     <div class="quiz-section">
@@ -144,7 +180,8 @@
                 • Poluição sonora, atmosférica e hídrica<br>
                 • CONAMA e regulamentação ambiental<br>
                 • Direitos e deveres do cidadão no trânsito<br>
-                • 15 questões | 11 acertos necessários
+                • 15 questões | 11 acertos necessários<br>
+                • O cronômetro realiza pausas táticas automáticas após cada validação para que você estude as alternativas sem pressa.
             </div>
             <button class="btn-action" onclick="startQuiz()">INICIAR TREINAMENTO</button>
         </div>
@@ -154,10 +191,18 @@
         <div id="result-area">
             <h3>Consciência Ambiental</h3>
             <div id="score-text" class="score-box">0/15</div>
-            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 25px;"></p>
+            
+            <div id="pdf-trigger-zone"></div>
+
             <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Refazer Simulado</button>
             <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center; background: transparent; border: 1px solid #333; color:#fff">Concluir Estudos</a>
         </div>
+    </div>
+
+    <div id="error-report" class="error-report-container">
+        <h3 style="border-bottom: 1px solid #333; padding-bottom: 12px; color: var(--netflix-red); display: flex; align-items: center; gap: 10px;"><i class="fas fa-exclamation-triangle"></i> Lacunas Identificadas (Revisão Necessária):</h3>
+        <div id="error-list"></div>
     </div>
 
     <div class="footer">Confia no processo e executa! 🚦✅</div>
@@ -251,6 +296,7 @@ let errors = 0;
 let answered = false;
 let timeLeft = 900; 
 let timerInterval;
+let userErrorsLog = [];
 
 function startQuiz() {
     document.getElementById('start-screen').style.display = "none";
@@ -262,6 +308,8 @@ function startQuiz() {
 }
 
 function startTimer() {
+    document.getElementById('timer-display').classList.remove('timer-paused');
+    document.getElementById('pause-tag').style.display = 'none';
     timerInterval = setInterval(() => {
         timeLeft--;
         let mins = Math.floor(timeLeft / 60);
@@ -295,12 +343,16 @@ function renderQuestion() {
 
 function handleButtonClick() {
     if (!answered) checkAnswer();
-    else nextQuestion();
+    else { startTimer(); nextQuestion(); }
 }
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
-    if (!selected) return;
+    if (!selected) return alert("Por favor, selecione uma resposta para continuar.");
+    
+    clearInterval(timerInterval);
+    document.getElementById('timer-display').classList.add('timer-paused');
+    document.getElementById('pause-tag').style.display = 'block';
     
     answered = true;
     const userChoice = parseInt(selected.value);
@@ -319,10 +371,18 @@ function checkAnswer() {
         document.getElementById(`opt-${userChoice}`).classList.add('wrong');
         document.getElementById(`opt-${correctChoice}`).classList.add('correct');
         document.getElementById('snd-wrong').play().catch(()=>{});
+
+        // Gravação No-DB das falhas estruturais
+        userErrorsLog.push({
+            questionNum: currentQ + 1,
+            enunciado: questions[currentQ].q,
+            respostaDoAluno: questions[currentQ].options[userChoice],
+            respostaCorreta: questions[currentQ].options[correctChoice]
+        });
     }
     
     const btn = document.getElementById('btn-quiz');
-    btn.innerHTML = "Próxima Questão";
+    btn.innerHTML = "Próxima Questão <i class='fas fa-arrow-right' style='font-size:13px; margin-left:5px'></i>";
     btn.classList.add('btn-next-step');
 }
 
@@ -344,6 +404,32 @@ function showFinalResult() {
     
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
     document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 APROVADO! Você demonstra ser um cidadão consciente." : "⚠️ QUASE! Revise as siglas dos órgãos ambientais e os tipos de poluição.";
+
+    // Renderização condicional do Plano Estratégico de Erros
+    if (userErrorsLog.length > 0) {
+        const errorListDiv = document.getElementById('error-list');
+        errorListDiv.innerHTML = "";
+        
+        userErrorsLog.forEach(item => {
+            errorListDiv.innerHTML += `
+                <div class="error-item">
+                    <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
+                    <div class="error-user-ans"><i class="fas fa-times-circle"></i> Sua resposta: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check-circle"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('error-report').style.display = "block";
+
+        // Geração do gatilho para exportação do PDF
+        document.getElementById('pdf-trigger-zone').innerHTML = `
+            <button class="btn-action btn-pdf" onclick="window.print()">
+                <i class="fas fa-file-pdf"></i> Imprimir Plano de Erros para Revisão
+            </button>
+            <p style="font-size: 13px; color: #aaa; margin-top: 8px; margin-bottom: 25px;">Gere um arquivo limpo contendo apenas as falhas cometidas para otimizar sua memorização.</p>
+        `;
+    }
 }
 </script>
 </body>
