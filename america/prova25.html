@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado 25 Especial - Pré-Exame | CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --text: #fff; 
+        }
+        
+        body { font-family: 'Roboto', sans-serif; background: var(--netflix-black); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: transparent; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-voltar { text-decoration: none; color: #a3a3a3; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-voltar:hover { color: #fff; }
+        h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        .stats-bar { display: none; justify-content: space-around; background: var(--netflix-card); padding: 20px; border-radius: 4px; margin-bottom: 25px; font-weight: bold; border-bottom: 2px solid #333; }
+        .quiz-section { background: var(--netflix-card); padding: 40px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .progress-container { height: 4px; background: #333; border-radius: 2px; margin-bottom: 30px; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s; }
+        
+        .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; color: #fff; display: block; line-height: 1.4; }
+
+        .option { display: block; padding: 18px; margin: 12px 0; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
+        .option:hover { background: rgba(255,255,255,0.08); }
+        .option input { margin-right: 15px; accent-color: var(--netflix-red); }
+
+        .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; }
+        .option.disabled { pointer-events: none; }
+
+        .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
+        .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: var(--netflix-red); color: #fff; }
+        
+        /* Estilos da Pausa */
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
+
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
+        
+        /* Área do Plano de Correção de Erros */
+        .error-report-container { text-align: left; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; display: none; }
+        .error-item { background: rgba(255,255,255,0.02); border-left: 4px solid var(--netflix-red); padding: 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 15px; color: #eee; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 5px 0; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 5px 0; }
+        
+        .btn-pdf { background: #25d366; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #128c7e; color: #fff; }
+
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* REGRAS EXCLUSIVAS PARA IMPRESSÃO EM PAPEL (SALVAR PDF) */
+        @media print {
+            body { background: #fff !important; color: #000 !important; padding: 0; }
+            .header-nav, #live-stats, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .quiz-section { background: #fff !important; box-shadow: none !important; padding: 0 !important; }
+            .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .error-item { background: #f9f9f9 !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc; margin-bottom: 15px; padding: 15px !important; }
+            .error-title { color: #000 !important; }
+            .error-user-ans { color: #c00 !important; }
+            .error-correct-ans { color: #080 !important; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        }
+        .print-header { display: none; color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="print-header">
+        <h2>MÉTODO CNH BLINDADA - PLANO DE CORREÇÃO DE ERROS</h2>
+        <p>Estude este material impresso focado nos seus erros para garantir sua aprovação de primeira.</p>
+    </div>
+
+    <div class="header-nav">
+        <a href="simulado.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
+        <h1>Simulado 25 Pré-Exame Especial</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div id="live-stats" class="stats-bar">
+        <span id="timer-box" style="color:#fff; text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">30:00</span>
+            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
+        </span>
+        <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
+        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
+        
+        <div id="start-screen" style="text-align:center">
+            <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
+                <h3 style="color:#fff; margin-bottom:15px">Módulo: Pré - Exame</h3>
+                • 30 Questões Completas<br>
+                • Tempo: 30 Minutos (Pausa na correção)<br>
+                • Meta: 21 acertos para aprovação
+            </div>
+            <button class="btn-action" onclick="startQuiz()">Começar Agora</button>
+        </div>
+
+        <div id="quiz-area"></div>
+
+        <div id="result-area">
+            <h3>Desempenho Final</h3>
+            <div id="score-text" class="score-box">0/30</div>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            
+            <div id="pdf-trigger-zone"></div>
+
+            <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Tentar Novamente</button>
+        </div>
+
+        <div id="error-report" class="error-report-container">
+            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--netflix-red);"><i class="fas fa-graduation-cap"></i> Questões que você precisa revisar:</h3>
+            <div id="error-list"></div>
+        </div>
+    </div>
+    <div class="footer">CNH Blindada Originals &copy; 2026</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+const questions = [
+    { "q": "Para o licenciamento de um veículo em outro Estado deve-se:", "options": ["Obrigatoriamente alterar os caracteres das suas placas.", "Pedir autorização ao Conselho Nacional de Trânsito.", "Dar ciência ao Departamento de Trânsito do Estado de Origem.", "Pedir autorização ao Conselho de Trânsito do Estado De origem."], "correct": 2 },
+    { "q": "A utilização das vias por pessoas, veículos e animais é para fins de:", "options": ["Circulação, parada e estacionamento.", "Circulação e estacionamento.", "Circulação, parada e operação de carga ou descarga.", "Circulação, parada, estacionamento e operação de carga ou descarga."], "correct": 3 },
+    { "q": "O principal objetivo da inspeção de segurança veicular é:", "options": ["Avaliar o desempenho do veículo na via para uma circulação segura.", "Avaliar as reais condições de segurança do veículo.", "Diagnosticar falhas nos diversos sistemas do veículo Recomendando o conserto.", "Fornecer dados sobre o veículo para realização de consertos."], "correct": 1 },
+    { "q": "A Junta Administrativa de Recursos de Infrações é um órgão colegiado componente do:", "options": ["Conselho Estadual de Trânsito.", "Conselho Nacional de Trânsito.", "Sistema Nacional de Trânsito.", "Departamento Nacional de Trânsito."], "correct": 2 },
+    { "q": "Caso o condutor esteja segurando ou manuseando telefone celular, ira cometer uma infração _______, mais ___ pontos na CNH:", "options": ["Gravíssima, 7.", "Media, 4.", "Grave, 5.", "Leve, 3."], "correct": 0 },
+    { "q": "Ao Departamento de Trânsito (DETRAN), cabe, entre outras, a atribuição de:", "options": ["Propor a alteração da sinalização.", "Organizar estatística de trânsito em todo país.", "Vistoriar, registrar e emplacar veículos.", "Emitir carteira internacional."], "correct": 2 },
+    { "q": "Fazem parte dos equipamentos obrigatórios dos veículos:", "options": ["Parachoques, pneus, buzina e faróis.", "Rodas de liga leve e pneus radiais.", "CRLV e DUT", "Cintos de segurança sub-abdominal é quebra mato."], "correct": 0 },
+    { "q": "O infrator que julgar improcedente a penalidade de multa que lhe foi imposta poderá interpor recurso junto:", "options": ["CETRAN.", "DENATRAN.", "CONTRAN.", "JARI."], "correct": 3 },
+    { "q": "RENAVAM é o:", "options": ["Registro Nacional de Veículos Motorizados.", "Registro Nacional de Veículos Automotores.", "Registro Nacional de Veículo Automotivo.", "Registro Nacional de Condutores Motorizados."], "correct": 1 },
+    { "q": "Organizar e manter o Registro Nacional de Carteiras de Habilitação – RENACH, compete ao:", "options": ["CONTRAN.", "DENATRAN.", "DETRAN.", "CETRAN."], "correct": 1 },
+    { "q": "Significa mudança de característica do veículo:", "options": ["O pneu liso.", "A descarga livre.", "A instalação de rádio toca CD.", "O rebaixamento da suspensão e a mudança de cor."], "correct": 3 },
+    { "q": "Os Departamentos de Estradas de Rodagem são órgãos:", "options": ["Normativos do Sistema Nacional de Trânsito.", "Com jurisdição em todo território Nacional.", "Executivos do Sistema Nacional de Trânsito.", "Normativos do CONTRAN."], "correct": 2 },
+    { "q": "De acordo com as regras gerais de circulação, quando um condutor tem preferência de passagem em um cruzamento:", "options": ["Quando cruzar com veículos em missão de urgência.", "Quando for adentrar em uma rodovia.", "Quando em cruzamento não sinalizado e este seguir à direita do outro condutor.", "Todas as alternativas estão erradas."], "correct": 2 },
+    { "q": "É competência da JARI:", "options": ["Cumprir e fazer cumprir a legislação de trânsito e a execução das normas e diretrizes estabelecidas pelo CONTRAN, no âmbito de suas atribuições.", "Administrar o fundo de âmbito Nacional destinado a segurança e educação de trânsito.", "Julgar os recursos interpostos pelos infratores.", "Coletar dados, elaborar estudos sobre acidentes de trânsito e suas causas."], "correct": 2 },
+    { "q": "Quando inexistir uma faixa especial, um veículo em movimento deverá ocupar:", "options": ["A faixa mais à esquerda da pista de rolamento.", "A faixa central da pista de rolamento.", "Qualquer faixa, desde que facilite o trânsito.", "A faixa mais a direita da pista de rolamento."], "correct": 3 },
+    { "q": "Vistoriar, inspecionar quanto as condições de segurança veicular, registrar, emplacar, selar a placa, licenciar veículos, expedindo o Certificado de Registro e Licenciamento Anual, mediante delegação do órgão Federal competente, é de responsabilidade:", "options": ["Órgãos e entidades executivos de trânsito dos Estados e do Distrito Federal, no âmbito de sua circunscrição.", "Órgãos e entidades executivos rodoviários da União e dos Estados, no âmbito de sua circunscrição.", "Policiais Militares dos Estados e do Distrito Federal.", "Departamento Nacional de Infraestrutura de Trânsito."], "correct": 0 },
+    { "q": "Em via de mão dupla, a circulação pela contramão:", "options": ["É possível quando a sinalização permitir.", "É possível quando for ultrapassar outro veículo e, somente pelo espaço necessário para esse fim.", "É possível quando houver pouca movimentação de veículos na via em sentido contrário.", "É sempre proibida."], "correct": 1 },
+    { "q": "A autorização para conduzir veículos de propulsão Humana e de tração animal ficará a cargo do:", "options": ["Estado.", "DETRAN.", "Município.", "DENATRAN."], "correct": 2 },
+    { "q": "É dever de todo condutor de veículo:", "options": ["Transitar em velocidade compatível com a segurança nos cruzamentos sem sinalização.", "Dar passagem pela direita, quando solicitado.", "Manter acesa a luz alta dos faróis nas vias com iluminação pública.", "Usar buzina para chamar alguém."], "correct": 0 },
+    { "q": "Os órgãos técnicos e consultivos, destinam-se a realizar estudos e oferecer sugestões sobre assuntos específicos. É chamado de:", "options": ["Jari.", "DENATRAN.", "CETRAN.", "Câmaras Temáticas."], "correct": 3 },
+    { "q": "A velocidade mínima permitida em uma via de trânsito rápido sem sinalização é de:", "options": ["30 km/h.", "40 km/h.", "50 km/h.", "60 km/h."], "correct": 2 },
+    { "q": "A qual órgão abaixo compete criar Câmaras Temáticas?", "options": ["DENATRAN.", "DETRAN.", "CONTRAN.", "JARI's."], "correct": 2 },
+    { "q": "O condutor deve sinalizar e deslocar com antecedência seu veículo para a faixa mais à esquerda de sua mão de direção para:", "options": ["Entrar à direita.", "Entrar à esquerda.", "Mudar de faixa de tráfego.", "Fazer uma ultrapassagem."], "correct": 1 },
+    { "q": "O Sistema Nacional de Trânsito é integrado por:", "options": ["Órgãos normativos e executivos.", "Órgãos de direção e executivos.", "Órgãos executivos.", "Órgãos colegiados e temáticos."], "correct": 0 },
+    { "q": "A função exercida pela PRF com o objetivo de garantir obediência as normas de trânsito é:", "options": ["Fiscalização.", "Operação.", "Policiamento.", "Patrulhamento."], "correct": 0 },
+    { "q": "Realizar, fiscalizar e controlar o processo de habilitação, aperfeiçoamento, reciclagem e suspensão de condutores, é competência:", "options": ["Dos órgãos executivos de trânsito da União.", "Dos órgãos executivos dos Estados.", "Dos órgãos executivos rodoviários dos Estados.", "Dos órgãos normativos dos Estados."], "correct": 1 },
+    { "q": "A receita arrecadada com a cobrança das multas de Trânsito será aplicada em:", "options": ["Sinalização.", "Engenharia de tráfego.", "Policiamento.", "Todas as afirmativas acima."], "correct": 3 },
+    { "q": "A fiscalização da gestão de trânsito poderá ser Realizada com a utilização de aparelhos que, quanto ao Modo de operação, podem ser classificados em:", "options": ["Automático e não automático.", "Radar e medidor ótico.", "Fixo, estático, móvel e portátil.", "Eletrônico e audiovisual."], "correct": 2 },
+    { "q": "São órgãos recursais:", "options": ["CONTRAN.", "PRF.", "JARI's.", "CETRAN."], "correct": 2 },
+    { "q": "Somente poderão transitar pelas vias terrestres o veículo cujo peso e dimensões atenderem aos limites estabelecidos pelo:", "options": ["DENATRAN.", "CONTRAN.", "DETRAN.", "CONTRANDIFE."], "correct": 1 }
+];
+
+let currentQ = 0;
+let score = 0;
+let errors = 0;
+let answered = false;
+let timeLeft = 1800; 
+let timerInterval;
+let userErrorsLog = [];
+
+function startQuiz() {
+    document.getElementById('start-screen').style.display = "none";
+    document.getElementById('quiz-area').style.display = "block";
+    document.getElementById('live-stats').style.display = "flex";
+    document.getElementById('p-cont').style.display = "block";
+    renderQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    document.getElementById('timer-box').classList.remove('timer-paused');
+    document.getElementById('pause-text').style.display = 'none';
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showFinalResult();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    const q = questions[currentQ];
+
+    area.innerHTML = `
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) checkAnswer();
+    else {
+        startTimer();
+        nextQuestion();
+    }
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) return;
+    
+    clearInterval(timerInterval);
+    document.getElementById('timer-box').classList.add('timer-paused');
+    document.getElementById('pause-text').style.display = 'block';
+
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const correctChoice = questions[currentQ].correct;
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+    
+    if (userChoice === correctChoice) {
+        score++;
+        document.getElementById('count-correct').innerHTML = score;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play().catch(()=>{});
+    } else {
+        errors++;
+        document.getElementById('count-wrong').innerHTML = errors;
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play().catch(()=>{});
+
+        userErrorsLog.push({
+            questionNum: currentQ + 1,
+            enunciado: questions[currentQ].q,
+            respostaDoAluno: questions[currentQ].options[userChoice],
+            respostaCorreta: questions[currentQ].options[correctChoice]
+        });
+    }
+    
+    const btn = document.getElementById('btn-quiz');
+    btn.innerHTML = "Próxima Questão <i class='fas fa-chevron-right' style='font-size:0.8rem; margin-left:8px'></i>";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) renderQuestion();
+    else showFinalResult();
+}
+
+function showFinalResult() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('live-stats').style.display = "none";
+    document.getElementById('p-cont').style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
+    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Você dominou o processo." : "⚠️ QUASE LÁ! Revise a teoria e tente novamente.";
+
+    if(userErrorsLog.length > 0) {
+        const errorListDiv = document.getElementById('error-list');
+        errorListDiv.innerHTML = ""; 
+        
+        userErrorsLog.forEach(item => {
+            errorListDiv.innerHTML += `
+                <div class="error-item">
+                    <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
+                    <div class="error-user-ans"><i class="fas fa-times"></i> Você marcou: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('error-report').style.display = "block";
+
+        document.getElementById('pdf-trigger-zone').innerHTML = `
+            <button class="btn-action btn-pdf" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimir Plano de Erros (PDF)
+            </button>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O PDF incluirá o texto detalhado de todas as questões que você errou!</p>
+        `;
+    }
+}
+</script>
+</body>
+</html>
