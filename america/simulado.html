@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Caixa Preta - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        if (localStorage.getItem('cnh_blindada_logado') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-dark-grey: #181818;
+            --premium-gold: #ffeb3b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Topo */
+        .simulado-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .simulado-header h1 {
+            font-size: 1.8rem;
+            color: var(--premium-gold);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-back {
+            background: #222;
+            color: #aaa;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-back:hover { color: #fff; background: #333; }
+
+        /* Grid de Simulados */
+        .simulado-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .simulado-card {
+            background: var(--netflix-dark-grey);
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 200px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .simulado-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--premium-gold);
+        }
+
+        .simulado-meta h3 {
+            font-size: 1.15rem;
+            color: #fff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .simulado-meta p {
+            font-size: 0.85rem;
+            color: #999;
+            line-height: 1.5;
+        }
+
+        .btn-start {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--netflix-red);
+            color: #fff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .simulado-card:hover .btn-start {
+            background: #b80710;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .simulacao-header { flex-direction: column; gap: 15px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="simulado-header">
+            <div>
+                <h1><i class="fas fa-box-open"></i> Simulado Caixa Preta</h1>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 4px;">Selecione o módulo tático para iniciar seu teste.</p>
+            </div>
+            <a href="membros.html" class="btn-back"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+        </header>
+
+        <main class="simulado-grid">
+
+            <div class="simulado-card">
+                <div class="simulado-meta">
+                    <h3><i class="fas fa-id-card" style="color: #4cd137;"></i> Tático 01 - Habilitação</h3>
+                    <p>Focado em Processo de Habilitação, categorias, requisitos e etapas da PPD. Ideal para travar a base inicial.</p>
+                </div>
+                <a href="prova07.html" class="btn-start"><i class="fas fa-play"></i> Iniciar Teste</a>
+            </div>
+
+            <div class="simulado-card">
+                <div class="simulado-meta">
+                    <h3><i class="fas fa-traffic-light" style="color: #00a8ff;"></i> Tático 02 - Sinalização</h3>
+                    <p>Placas de regulamentação, advertência e sinalização horizontal. Domine as pegadinhas visuais da banca.</p>
+                </div>
+                <a href="prova17.html" class="btn-start"><i class="fas fa-play"></i> Iniciar Teste</a>
+            </div>
+
+            <div class="simulado-card">
+                <div class="simulado-meta">
+                    <h3><i class="fas fa-code-branch" style="color: #e1b12c;"></i> Tático 03 - Circulação</h3>
+                    <p>Normas de preferência, cruzamentos, ultrapassagens e velocidades regulamentares.</p>
+                </div>
+                <a href="prova25.html" class="btn-start"><i class="fas fa-play"></i> Iniciar Teste</a>
+            </div>
+
+            <div class="simulado-card">
+                <div class="simulado-meta">
+                    <h3><i class="fas fa-gavel" style="color: #e84118;"></i> Tático 04 - Infrações</h3>
+                    <p>Penalidades, multas, suspensão e medidas administrativas convertidas em esquemas objetivos.</p>
+                </div>
+                <a href="simulado04.html" class="btn-start"><i class="fas fa-play"></i> Iniciar Teste</a>
+            </div>
+
+            <div class="simulado-card">
+                <div class="simulado-meta">
+                    <h3><i class="fas fa-shield-alt" style="color: #9c88ff;"></i> Tático 05 - Defensiva</h3>
+                    <p>Direção Defensiva, gerenciamento de riscos, condições adversas e como evitar colisões.</p>
+                </div>
+                <a href="simulado05.html" class="btn-start"><i class="fas fa-play"></i> Iniciar Teste</a>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

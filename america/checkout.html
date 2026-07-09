@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Seguro - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-dark-grey: #181818;
+            --premium-gold: #ffeb3b;
+            --mp-blue: #009ee3; /* Azul Oficial Mercado Pago */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .checkout-container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--netflix-dark-grey);
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Topo do Checkout */
+        .checkout-header {
+            text-align: center;
+            border-bottom: 1px solid #222;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .checkout-header h2 {
+            font-size: 1.6rem;
+            color: var(--netflix-red);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .checkout-header h1 {
+            font-size: 1.2rem;
+            color: #fff;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+
+        /* Caixa de Instrução Passo a Passo */
+        .steps-container {
+            margin-bottom: 30px;
+        }
+
+        .step-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: #111;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #222;
+        }
+
+        .step-box.highlight {
+            border-left: 4px solid var(--premium-gold);
+            background: rgba(255, 235, 59, 0.02);
+        }
+
+        .step-number {
+            background: var(--netflix-red);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .step-box.highlight .step-number {
+            background: var(--premium-gold);
+            color: #000;
+        }
+
+        .step-text h3 {
+            font-size: 0.95rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .step-text p {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.4;
+        }
+
+        /* Botões de Ação */
+        .actions-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Botão Mercado Pago */
+        .btn-mp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--mp-blue);
+            color: #fff;
+            text-decoration: none;
+            padding: 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 158, 227, 0.2);
+        }
+
+        .btn-mp:hover {
+            background: #008cd0;
+            transform: scale(1.02);
+        }
+
+        /* Botão do WhatsApp Suporte */
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: transparent;
+            color: #25d366;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            border: 2px solid #25d366;
+        }
+
+        .btn-whatsapp:hover {
+            background: rgba(37, 211, 102, 0.1);
+        }
+
+        /* Rodapé Seguro */
+        .checkout-footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #555;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            border-top: 1px solid #222;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-container">
+        
+        <div class="checkout-header">
+            <h2>CNH BLINDADA</h2>
+            <h1>Garanta sua Aprovação na Prova do DETRAN</h1>
+        </div>
+
+        <!-- FLUXO VISUAL EXPLICATIVO -->
+        <div class="steps-container">
+            
+            <!-- PASSO 1 -->
+            <div class="step-box">
+                <div class="step-number">1</div>
+                <div class="step-text">
+                    <h3>Realize o Pagamento Seguro</h3>
+                    <p>Clique no botão azul abaixo para abrir o Mercado Pago. Você pode pagar via <strong>PIX</strong> ou <strong>Cartão de Crédito</strong>.</p>
+                </div>
+            </div>
+
+            <!-- PASSO 2 -->
+            <div class="step-box">
+                <div class="step-number">2</div>
+                <div class="step-text">
+                    <h3>Guarde o seu Comprovante</h3>
+                    <p>Assim que o pagamento for confirmado, tire um print da tela ou salve o comprovante digital enviado pelo Mercado Pago.</p>
+                </div>
+            </div>
+
+            <!-- PASSO 3 DESTAQUE -->
+            <div class="step-box highlight">
+                <div class="step-number">3</div>
+                <div class="step-text">
+                    <h3 style="color: var(--premium-gold);">Envie no Suporte para Ativação</h3>
+                    <p>Compartilhe o print no nosso WhatsApp de suporte. Nossa equipe liberará os seus produtos imediatamente na sua área de aluno.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <div class="actions-area">
+            
+            <!-- Link do Mercado Pago Injetado Diretamente Aqui -->
+            <a href="https://mpago.la/2G5bm4e" target="_blank" class="btn-mp">
+                <i class="fas fa-credit-card"></i> Pagar via Mercado Pago
+            </a>
+
+            <!-- Botão de suporte configurado com o seu WhatsApp corporativo -->
+            <a href="https://wa.me/5535998781881?text=Olá!%20Fiz%20o%20pagamento%20pelo%20Mercado%20Pago.%20Aqui%20está%20meu%20comprovante%20para%20liberação%20do%20meu%20acesso%20Premium." 
+               target="_blank" 
+               class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Já paguei, quero enviar o comprovante
+            </a>
+
+        </div>
+
+        <div class="checkout-footer">
+            <span><i class="fas fa-shield-alt" style="color: #46d369;"></i> Processado pelo Mercado Pago</span>
+            <span><i class="fas fa-check-circle"></i> Liberação Manual Garantida</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Membros - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        if (localStorage.getItem('cnh_blindada_logado') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-dark-grey: #181818;
+            --premium-gold: #ffeb3b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            padding: 30px;
+        }
+
+        /* Topo da Área de Alunos */
+        .portal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .portal-header h1 {
+            font-size: 1.8rem;
+            color: var(--premium-gold);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-logout {
+            background: #222;
+            color: #aaa;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .btn-logout:hover { color: #fff; background: #333; }
+
+        /* Container de Entrega dos Produtos */
+        .membros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .product-box {
+            background: var(--netflix-dark-grey);
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 240px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .product-box:hover {
+            transform: translateY(-2px);
+            border-color: #444;
+        }
+
+        .product-meta h3 {
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-meta p {
+            font-size: 0.9rem;
+            color: #999;
+            line-height: 1.5;
+        }
+
+        .btn-access {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--netflix-red);
+            color: #fff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .btn-access:hover {
+            background: #b80710;
+        }
+
+        /* Customização de Cores dos Ícones */
+        .color-slides { color: #54b4ff; }
+        .color-simulado { color: var(--premium-gold); }
+
+        /* ==================== ESTILOS OTIIZADOS PARA PDF 1920X1080 (16:9) ==================== */
+        .pdf-modal {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.98);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        /* Barra Superior Ajustada */
+        .pdf-controls {
+            width: 100%;
+            max-width: 1200px;
+            background: #181818;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #333;
+            border-bottom: none;
+        }
+
+        .pdf-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--premium-gold);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 40%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-nav {
+            background: #252525;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background: #333;
+            border-color: #666;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .btn-close-pdf {
+            background: var(--netflix-red);
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Container Travado na Proporção Exata de 1920x1080 (16:9) */
+        .pdf-container {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16 / 9; 
+            max-height: 78vh; 
+            background: #000;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .pdf-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+
+        /* AJUSTES EXCLUSIVOS PARA CELULAR (MOBILE) */
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .portal-header { flex-direction: column; gap: 15px; text-align: center; }
+            
+            .pdf-modal {
+                padding: 0;
+            }
+
+            .pdf-controls {
+                border-radius: 0;
+                padding: 10px;
+            }
+
+            .pdf-title {
+                display: none; 
+            }
+
+            .nav-buttons {
+                width: 70%;
+                justify-content: space-between;
+            }
+
+            .btn-nav {
+                flex: 1;
+                justify-content: center;
+                padding: 8px;
+            }
+
+            .pdf-container {
+                border-radius: 0;
+                height: calc(100vh - 50px);
+                max-height: none;
+                aspect-ratio: auto; 
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .pdf-iframe {
+                height: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="portal-header">
+        <div>
+            <h1><i class="fas fa-user-shield"></i> Área do Aluno - CNH Blindada</h1>
+            <p style="color: #666; font-size: 0.9rem; margin-top: 4px;">Seu passaporte para a aprovação direta.</p>
+        </div>
+        <button class="btn-logout" onclick="fazerLogout()"><i class="fas fa-sign-out-alt"></i> Sair do Painel</button>
+    </header>
+
+    <main class="membros-grid">
+
+        <div class="product-box">
+            <div class="product-meta">
+                <h3><i class="fas fa-file-powerpoint color-slides"></i> Apostila Completa em PDF</h3>
+                <p>Material completo adaptado em alta definição (1080p). Desenvolvido sob medida para leitura prática e revisões dinâmicas.</p>
+            </div>
+            <button onclick="abrirLeitor(0)" class="btn-access">
+                <i class="fas fa-book-open"></i> Abrir e Ler Apostilas
+            </button>
+        </div>
+
+        <div class="product-box" style="border-color: #333;">
+            <div class="product-meta">
+                <h3><i class="fas fa-box-open color-simulado"></i> Simulado Caixa Preta</h3>
+                <p>O simulador tático com questões focadas nas principais pegadinhas aplicadas na banca da nossa região.</p>
+            </div>
+            <a href="simulado.html" class="btn-access" style="background: var(--premium-gold); color: #000;">
+                <i class="fas fa-play"></i> Iniciar Simulado Tático
+            </a>
+        </div>
+
+    </main>
+
+    <div id="leitorModal" class="pdf-modal">
+        <div class="pdf-controls">
+            <div class="pdf-title" id="pdfTitulo">Nome da Apostila</div>
+            <div class="nav-buttons">
+                <button class="btn-nav" id="btnAnterior" onclick="mudarPdf(-1)"><i class="fas fa-chevron-left"></i> Voltar</button>
+                <button class="btn-nav" id="btnProximo" onclick="mudarPdf(1)">Avançar <i class="fas fa-chevron-right"></i></button>
+            </div>
+            <button class="btn-close-pdf" onclick="fecharLeitor()"><i class="fas fa-times"></i> Sair</button>
+        </div>
+        <div class="pdf-container">
+            <iframe id="pdfFrame" class="pdf-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Lista mantendo estritamente a nomenclatura e ordem corretas
+        const listaPdfs = [
+            { titulo: "Módulo 1: Processo de Habilitação", arquivo: "Processo de habilitação.pdf" },
+            { titulo: "Módulo 2: Sinalização de Trânsito", arquivo: "Sinalização de Trânsito.pdf" },
+            { titulo: "Módulo 3: Normas de Circulação", arquivo: "Normas de circulação.pdf" },
+            { titulo: "Módulo 4: Penalidades e Infrações", arquivo: "Penalidades.pdf" },
+            { titulo: "Módulo 5: Direção Defensiva", arquivo: "Direção defensiva.pdf" },
+            { titulo: "Módulo 6: Primeiros Socorros", arquivo: "Primeiros Socorros.pdf" },
+            { titulo: "Módulo 7: Meio Ambiente e Cidadania", arquivo: "Meio ambiente.pdf" },
+            { titulo: "Módulo 8: Mecânica Básica", arquivo: "Aula Mecânica.pdf" }
+        ];
+
+        let indiceAtual = 0;
+
+        function abrirLeitor(indice) {
+            indiceAtual = indice;
+            carregarPdfNoLeitor();
+            document.getElementById('leitorModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function fecharLeitor() {
+            document.getElementById('leitorModal').style.display = 'none';
+            document.getElementById('pdfFrame').src = ""; 
+            document.body.style.overflow = 'auto'; 
+        }
+
+        function carregarPdfNoLeitor() {
+            const pdfItem = listaPdfs[indiceAtual];
+            
+            document.getElementById('pdfTitulo').innerText = pdfItem.titulo;
+            
+            // Força o motor a abrir pré-ajustado em largura cheia para layouts 16:9/1080p
+            document.getElementById('pdfFrame').src = pdfItem.arquivo + "#view=FitW";
+
+            document.getElementById('btnAnterior').disabled = (indiceAtual === 0);
+            document.getElementById('btnProximo').disabled = (indiceAtual === listaPdfs.length - 1);
+        }
+
+        function mudarPdf(direcao) {
+            let novoIndice = indiceAtual + direcao;
+            if (novoIndice >= 0 && novoIndice < listaPdfs.length) {
+                indiceAtual = novoIndice;
+                carregarPdfNoLeitor();
+            }
+        }
+
+        function fazerLogout() {
+            localStorage.removeItem('cnh_blindada_logado');
+            window.location.href = 'login.html';
+        }
+    </script>
+
+</body>
+</html>

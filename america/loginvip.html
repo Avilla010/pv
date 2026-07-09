@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar - CNH Blindada Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-dark-grey: #333333;
+            --premium-gold: #ffeb3b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        
+        body { 
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://assets.nflxext.com/ffe/siteui/vlv3/ab180a27-b661-44d7-a6d9-940cb32f2f4a/7fb2ebb0-5d19-4b6a-99fe-111111111111/BR-pt-20231009-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 8px;
+            padding: 60px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .login-container h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #333;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            background: #444;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: var(--netflix-red);
+            color: #fff;
+            border: none;
+            padding: 16px;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn-login:hover {
+            background: #b80710;
+        }
+
+        .error-message {
+            color: var(--netflix-red);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+        }
+
+        .login-footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #737373;
+        }
+
+        .login-footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 500px) {
+            .login-container { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1 style="color: var(--netflix-red); text-align: center; margin-bottom: 10px; font-size: 1.6rem;">CNH BLINDADA</h1>
+        <h2 style="font-size: 1.5rem; margin-bottom: 25px; font-weight: normal;">Entrar na Área Premium</h2>
+        
+        <form id="loginForm" onsubmit="validarAcesso(event)">
+            <div class="input-group">
+                <input type="text" id="userCpf" placeholder="Digite seu CPF (Apenas números)" required autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="userPassword" placeholder="Senha (Confirme seu CPF)" required>
+            </div>
+
+            <button type="submit" class="btn-login">Acessar Conteúdo</button>
+            
+            <div class="error-message" id="errorMsg">
+                <i class="fas fa-exclamation-triangle"></i> CPF não autorizado ou senha incorreta. Chame o suporte caso tenha pago.
+            </div>
+        </form>
+
+        <div class="login-footer">
+            <p>Esqueceu o acesso? <a href="https://wa.me/5535998781881" target="_blank">Falar com Suporte</a></p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // LISTA DE ALUNOS ATIVOS (ADICIONE OS CPFs AQUI)
+        // ==========================================
+        const cpfsAutorizados = [
+            "12345678901", // Exemplo de CPF de teste 1
+            "98765432100", // Exemplo de CPF de teste 2
+            // Sempre que um aluno novo comprar, adicione o CPF dele aqui entre aspas e separado por vírgula.
+        ];
+
+        function validarAcesso(event) {
+            event.preventDefault();
+            
+            const cpfDigitado = document.getElementById('userCpf').value.trim().replace(/\D/g, ''); // Remove pontos e traços
+            const senhaDigitada = document.getElementById('userPassword').value.trim().replace(/\D/g, '');
+            const errorMsg = document.getElementById('errorMsg');
+
+            // Valida se o CPF está na lista de autorizados e se a senha digitada é idêntica ao CPF dele
+            if (cpfsAutorizados.includes(cpfDigitado) && cpfDigitado === senhaDigitada) {
+                // Salva uma sessão temporária para garantir que ele fez login
+                localStorage.setItem('cnh_blindada_logado', 'true');
+                // Redireciona para a área de membros
+                window.location.href = 'membros.html';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
