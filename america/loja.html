@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja Premium - CNH Blindada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-dark-grey: #181818;
+            --premium-gold: #ffeb3b;
+            --access-green: #25d366; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        /* Título e Topo da Loja */
+        .store-header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .store-header-text h1 {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .store-header-text p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        /* Botão de Login VIP Verde */
+        .btn-entrar-vip {
+            background: transparent;
+            color: var(--access-green);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid var(--access-green);
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+
+        .btn-entrar-vip:hover {
+            background: var(--access-green);
+            color: #000;
+            transform: scale(1.02);
+        }
+
+        /* SEÇÃO DO COMBO ULTRA */
+        .combo-container {
+            background: linear-gradient(135deg, #1f1402, #000, #1f1402);
+            border: 2px dashed var(--premium-gold);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.15);
+        }
+
+        .combo-info h2 {
+            color: var(--premium-gold);
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .combo-info p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .combo-price-box {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .combo-price {
+            text-align: right;
+        }
+
+        .combo-price .current {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--premium-gold);
+            display: block;
+        }
+
+        .btn-combo {
+            background: var(--premium-gold);
+            color: #000;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-combo:hover {
+            background: #e6d235;
+            transform: scale(1.03);
+        }
+
+        /* Grid de Produtos Individuais */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Card de Produto */
+        .product-card {
+            background: var(--netflix-dark-grey);
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #444;
+        }
+
+        .product-card.featured {
+            border: 1px solid var(--netflix-red);
+        }
+
+        /* Badges */
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #333;
+            color: #fff;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 3px;
+            z-index: 2;
+        }
+
+        .product-badge.red {
+            background: var(--netflix-red);
+        }
+
+        /* Banner do Card */
+        .product-image {
+            height: 150px;
+            background: linear-gradient(135deg, #111, #222);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #aaa;
+            border-bottom: 1px solid #222;
+        }
+
+        .product-card.featured .product-image {
+            color: var(--netflix-red);
+            background: linear-gradient(135deg, #1a0204, #111);
+        }
+
+        /* Corpo do Produto */
+        .product-body {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .product-description {
+            color: #999;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        /* Lista de Benefícios */
+        .product-features {
+            list-style: none;
+            margin-bottom: 25px;
+            border-top: 1px solid #222;
+            padding-top: 15px;
+        }
+
+        .product-features li {
+            font-size: 0.85rem;
+            color: #ccc;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-features li i {
+            color: #46d369;
+            font-size: 0.9rem;
+        }
+
+        /* Preços e Botão */
+        .product-price-box {
+            margin-bottom: 20px;
+        }
+
+        .price-current {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .btn-buy {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-buy:hover {
+            background: #444;
+        }
+
+        .product-card.featured .btn-buy {
+            background: var(--netflix-red);
+        }
+
+        .product-card.featured .btn-buy:hover {
+            background: #b80710;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .store-header { flex-direction: column; text-align: center; }
+            .btn-entrar-vip { width: 100%; justify-content: center; }
+            .combo-container { flex-direction: column; text-align: center; padding: 20px; }
+            .combo-price-box { flex-direction: column; gap: 15px; width: 100%; }
+            .combo-price { text-align: center; }
+            .btn-combo { width: 100%; justify-content: center; }
+            .products-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="store-header">
+        <div class="store-header-text">
+            <h1><i class="fas fa-shopping-bag" style="color: var(--netflix-red);"></i> Loja Premium</h1>
+            <p>Escolha o seu acelerador individual ou garanta o Pacote Completo com desconto tático.</p>
+        </div>
+        
+        <a href="loginvip.html" class="btn-entrar-vip">
+            <i class="fas fa-user-lock"></i> Já adquiri (Acessar)
+        </a>
+    </header>
+
+    <!-- BANNER ULTRA COMBO (MANTIDO 19,90 COM OS DOIS PRODUTOS RESTANTES) -->
+    <section class="combo-container">
+        <div class="combo-info">
+            <h2><i class="fas fa-unlock-alt"></i> Combo Blindagem Total (Leve os 2)</h2>
+            <p>Acesso imediato ao Simulado Consulta Pré-Exame + Apostila de Resumos Completos em HD.</p>
+        </div>
+        <div class="combo-price-box">
+            <div class="combo-price">
+                <span style="font-size: 0.8rem; color: #aaa; text-decoration: line-through;">Total Individual: R$ 29,80</span>
+                <span class="current">R$ 19,90</span>
+            </div>
+            <a href="checkout.html" class="btn-combo">
+                <i class="fas fa-crown"></i> Levar os Dois com Desconto
+            </a>
+        </div>
+    </section>
+
+    <main class="products-grid">
+
+        <!-- PRODUTO 1: SLIDES DA AULA / APOSTILA -->
+        <div class="product-card">
+            <span class="product-badge">RETA FINAL</span>
+            <div class="product-image" style="color: #54b4ff;">
+                <i class="fas fa-file-powerpoint"></i>
+            </div>
+            <div class="product-body">
+                <h2 class="product-title">Apostila de bolso em Alta Definição</h2>
+                <p class="product-description">Tenha na palma da mão o material visual idêntico ao das aulas em HD. Vá direto ao ponto estudando apenas os tópicos que mais são cobrados na prova.</p>
+                
+                <ul class="product-features">
+                    <li><i class="fas fa-check-circle"></i> Foco total no que realmente cai</li>
+                    <li><i class="fas fa-check-circle"></i> Imagens e sinalizações nítidas</li>
+                    <li><i class="fas fa-check-circle"></i> Leitura tática e rápida pós-aula</li>
+                </ul>
+
+                <div class="product-price-box">
+                    <span class="price-current">R$ 9,90</span>
+                </div>
+
+                <a href="checkout.html" class="btn-buy">
+                    <i class="fas fa-shopping-cart"></i> Liberar Slides
+                </a>
+            </div>
+        </div>
+
+        <!-- PRODUTO 2: SIMULADO CAIXA PRETA -->
+        <div class="product-card featured">
+            <span class="product-badge red"><i class="fas fa-fire"></i> O MAIS PROCURADO</span>
+            <div class="product-image">
+                <i class="fas fa-box-open"></i>
+            </div>
+            <div class="product-body">
+                <h2 class="product-title">Simulado Pré-Exame + Laudo</h2>
+                <p class="product-description">Treine com o cronômetro, a pressão e as armadilhas táticas idênticas ao dia oficial da nossa região. Erre aqui dentro e veja a correção explicada na hora.</p>
+                
+                <ul class="product-features">
+                    <li><i class="fas fa-check-circle"></i> Questões reais da nossa região</li>
+                    <li><i class="fas fa-check-circle"></i> Laudo Técnico de Erros imediato em Pdf</li>
+                    <li><i class="fas fa-check-circle"></i> Simulador de estresse integrado</li>
+                </ul>
+
+                <div class="product-price-box">
+                    <span class="price-current" style="color: var(--premium-gold);">R$ 19,90</span>
+                </div>
+
+                <a href="checkout.html" class="btn-buy">
+                    <i class="fas fa-bolt"></i> Destravar Caixa Preta
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
