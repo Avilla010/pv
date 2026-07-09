@@ -230,18 +230,28 @@
             background: #000;
         }
 
-        /* AJUSTES EXCLUSIVOS PARA CELULAR (MOBILE) */
+        /* AJUSTES EXCLUSIVOS PARA CELULAR (MOBILE CORRIGIDO) */
         @media (max-width: 768px) {
             body { padding: 15px; }
             .portal-header { flex-direction: column; gap: 15px; text-align: center; }
             
             .pdf-modal {
                 padding: 0;
+                justify-content: flex-start; /* Alinha o conteúdo a partir do topo */
             }
 
+            /* Força os controles a ficarem fixados no topo do celular, acima de tudo */
             .pdf-controls {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1001;
                 border-radius: 0;
-                padding: 10px;
+                padding: 12px 10px;
+                height: 60px;
+                background: #141414;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.8);
             }
 
             .pdf-title {
@@ -259,9 +269,11 @@
                 padding: 8px;
             }
 
+            /* Container do PDF empurrado para baixo para não sumir atrás da barra fixa */
             .pdf-container {
                 border-radius: 0;
-                height: calc(100vh - 50px);
+                margin-top: 60px; 
+                height: calc(100vh - 60px);
                 max-height: none;
                 aspect-ratio: auto; 
                 overflow-y: auto;
@@ -324,7 +336,6 @@
     </div>
 
     <script>
-        // Lista mantendo estritamente a nomenclatura e ordem corretas
         const listaPdfs = [
             { titulo: "Módulo 1: Processo de Habilitação", arquivo: "Processo de habilitação.pdf" },
             { titulo: "Módulo 2: Sinalização de Trânsito", arquivo: "Sinalização de Trânsito.pdf" },
@@ -338,6 +349,7 @@
 
         let indiceAtual = 0;
 
+        // Função modificada para detectar celular e aplicar o Google Docs Viewer se necessário
         function abrirLeitor(indice) {
             indiceAtual = indice;
             carregarPdfNoLeitor();
@@ -353,11 +365,19 @@
 
         function carregarPdfNoLeitor() {
             const pdfItem = listaPdfs[indiceAtual];
-            
             document.getElementById('pdfTitulo').innerText = pdfItem.titulo;
             
-            // Força o motor a abrir pré-ajustado em largura cheia para layouts 16:9/1080p
-            document.getElementById('pdfFrame').src = pdfItem.arquivo + "#view=FitW";
+            // Detecta se é um dispositivo móvel
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // Em celulares, usamos o leitor oficial do Google Drive para embutir perfeitamente o PDF sem abrir nativo
+                const urlAbsoluta = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/' + encodeURIComponent(pdfItem.arquivo);
+                document.getElementById('pdfFrame').src = "https://docs.google.com/gview?url=" + urlAbsoluta + "&embedded=true";
+            } else {
+                // No computador continua o comportamento padrão de alta performance
+                document.getElementById('pdfFrame').src = pdfItem.arquivo + "#view=FitW";
+            }
 
             document.getElementById('btnAnterior').disabled = (indiceAtual === 0);
             document.getElementById('btnProximo').disabled = (indiceAtual === listaPdfs.length - 1);
