@@ -53,6 +53,10 @@
         .nav-item:hover, .nav-item.active { background-color: rgba(255,255,255,0.1); color: #fff; }
         .nav-item.active { border-left: 4px solid var(--netflix-red); padding-left: 11px; }
 
+        /* Destaque para a Loja */
+        .nav-item.store-highlight { color: #ffeb3b; font-weight: bold; }
+        .nav-item.store-highlight:hover { background-color: rgba(255, 235, 59, 0.15); }
+
         /* --- CONTEÚDO PRINCIPAL --- */
         .main-content { margin-left: var(--sidebar-width); width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
 
@@ -95,6 +99,12 @@
             position: absolute; top: 10px; left: 10px; z-index: 5;
         }
 
+        .badge-gold {
+            background: #ffeb3b; color: #000; padding: 2px 8px; 
+            font-size: 0.65rem; font-weight: bold; border-radius: 2px;
+            position: absolute; top: 10px; left: 10px; z-index: 5;
+        }
+
         @media (max-width: 768px) {
             .sidebar { left: -100%; }
             .sidebar.show { left: 0; }
@@ -111,12 +121,16 @@
         <div class="logo-area"><img src="cnh.png" alt="CNH Blindada"></div>
         <nav class="nav-menu">
             <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-home"></i> Início</div>
+            
+            <!-- NOVA ABA DA LOJA PREMIUM ADICIONADA -->
+            <div onclick="loadPage('loja.html')" class="nav-item store-highlight"><i class="fas fa-shopping-bag"></i> Loja Premium</div>
+            
             <div onclick="loadPage('shorts.html')" class="nav-item"><i class="fas fa-bolt"></i> Dicas Rápidas (Shorts)</div>
             <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em Áudio</div>
             <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-list-ul"></i> Meu Plano De Estudos</div>
             <div onclick="loadPage('agendar.html')" class="nav-item"><i class="fas fa-calendar-alt"></i> Agendar Aula Online</div>
             <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item"><i class="fas fa-video"></i> Ao Vivo</div>
-            <div onclick="loadPage('listas_gravadas.html')" class="nav-item"><i class="fas fa-film"></i> Aulas Obrigatórias</div>
+            <div onclick="loadPage('listas_gravadas.html')" class="nav-item"><i class="fas fa-film"></i> Aulas Gravadas</div>
             <div onclick="loadPage('lista-simulados.html')" class="nav-item"><i class="fas fa-check-circle"></i> Simulados</div>
             <div onclick="loadPage('material.html')" class="nav-item"><i class="fas fa-file-alt"></i> Materiais</div>
             <div onclick="loadPage('suporte.html')" class="nav-item"><i class="fas fa-headset"></i> Suporte</div>
@@ -137,6 +151,16 @@
 
         <section id="view-home" class="dashboard-grid">
 
+            <!-- NOVO CARD DA LOJA PREMUM NO TOPO DO GRID -->
+            <div class="card" onclick="loadPage('loja.html')" style="border-bottom: 3px solid #ffeb3b;">
+                <span class="badge-gold"><i class="fas fa-star"></i> ACELERADORES</span>
+                <div class="card-image" style="color: #ffeb3b; background: linear-gradient(135deg, #1f1a00, #3a3202);"><i class="fas fa-shopping-basket"></i></div>
+                <div class="card-body">
+                    <h3 style="color: #ffeb3b;">Loja Premium</h3>
+                    <p>Turbine sua preparação. Simulados secretos, resumos táticos e muito mais.</p>
+                </div>
+            </div>
+
             <div class="card" onclick="loadPage('shorts.html')">
                 <span class="badge-netflix">BOMBANDO</span>
                 <div class="card-image" style="color: #ffeb3b;"><i class="fas fa-bolt"></i></div>
@@ -150,7 +174,7 @@
                 <span class="badge-netflix">CONTINUAR</span>
                 <div class="card-image"><i class="fas fa-play"></i></div>
                 <div class="card-body">
-                    <h3>Aulas Obrigatórias</h3>
+                    <h3>Aulas Gravadas</h3>
                     <p>Assista aos módulos completos de legislação e sinalização.</p>
                 </div>
             </div>
