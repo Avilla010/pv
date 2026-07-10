@@ -63,6 +63,11 @@
             background: #444;
         }
 
+        .mask-password {
+            -webkit-text-security: disc !important;
+            text-security: disc !important;
+        }
+
         .btn-login {
             width: 100%;
             background: var(--netflix-red);
@@ -77,7 +82,12 @@
             transition: background 0.2s;
         }
 
-        .btn-login:hover {
+        .btn-login:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .btn-login:hover:not(:disabled) {
             background: #b80710;
         }
 
@@ -121,7 +131,7 @@
             </div>
             
             <div class="input-group">
-                <input type="password" id="userPassword" placeholder="Senha (Confirme seu CPF)" required>
+                <input type="text" id="userPassword" class="mask-password" placeholder="Senha (Confirme seu CPF)" required autocomplete="off">
             </div>
 
             <button type="submit" class="btn-login">Acessar Conteúdo</button>
@@ -137,30 +147,49 @@
     </div>
 
     <script>
-        // ==========================================
-        // LISTA DE ALUNOS ATIVOS (ADICIONE OS CPFs AQUI)
-        // ==========================================
-        const cpfsAutorizados = [
-            "12345678901", // Exemplo de CPF de teste 1
-            "98765432100", // Exemplo de CPF de teste 2
-            // Sempre que um aluno novo comprar, adicione o CPF dele aqui entre aspas e separado por vírgula.
-        ];
+        // SUA NOVA URL DO GOOGLE APPS SCRIPT ATUALIZADA
+        const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbzZWRallsdKzjyI_4ISiSIXE56CBZJ2jZdD_AyLg6VWT1PDZWadg8y7gElMW959ncK4/exec";
 
-        function validarAcesso(event) {
+        async function validarAcesso(event) {
             event.preventDefault();
             
-            const cpfDigitado = document.getElementById('userCpf').value.trim().replace(/\D/g, ''); // Remove pontos e traços
-            const senhaDigitada = document.getElementById('userPassword').value.trim().replace(/\D/g, '');
             const errorMsg = document.getElementById('errorMsg');
+            const btnLogin = document.querySelector('.btn-login');
+            
+            const cpfDigitado = document.getElementById('userCpf').value.trim().replace(/\D/g, ''); 
+            const senhaDigitada = document.getElementById('userPassword').value.trim().replace(/\D/g, '');
 
-            // Valida se o CPF está na lista de autorizados e se a senha digitada é idêntica ao CPF dele
-            if (cpfsAutorizados.includes(cpfDigitado) && cpfDigitado === senhaDigitada) {
-                // Salva uma sessão temporária para garantir que ele fez login
-                localStorage.setItem('cnh_blindada_logado', 'true');
-                // Redireciona para a área de membros
-                window.location.href = 'membros.html';
-            } else {
+            if (cpfDigitado !== senhaDigitada) {
                 errorMsg.style.display = 'block';
+                return;
+            }
+
+            btnLogin.disabled = true;
+            btnLogin.innerText = "Verificando...";
+            errorMsg.style.display = 'none';
+
+            try {
+                // Envio em texto puro para contornar qualquer barreira de segurança local do navegador (CORS)
+                const resposta = await fetch(URL_PLANILHA, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ cpf: cpfDigitado })
+                });
+
+                const resultado = await resposta.json();
+
+                if (resultado.autorizado) {
+                    localStorage.setItem('cnh_blindada_logado', 'true');
+                    window.location.href = 'membros.html';
+                } else {
+                    errorMsg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Erro na validação:", error);
+                alert("Erro ao conectar ao servidor de alunos. Verifique sua conexão e tente novamente.");
+            } finally {
+                btnLogin.disabled = false;
+                btnLogin.innerText = "Acessar Conteúdo";
             }
         }
     </script>
