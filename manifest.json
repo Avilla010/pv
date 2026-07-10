@@ -1,0 +1,16 @@
+{
+  "name": "B3 Carteira Pro",
+  "short_name": "B3 Pro",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme-color": "#00ff88",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "b3.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
