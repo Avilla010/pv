@@ -1,7 +1,7 @@
 {
   "name": "B3 Carteira Pro",
   "short_name": "B3 Pro",
-  "start_url": "index.html",
+  "start_url": "B3class2.html",
   "display": "standalone",
   "background_color": "#141414",
   "theme-color": "#00ff88",
