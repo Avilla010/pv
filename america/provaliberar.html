@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviso de Liberação | CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --text: #fff; 
+        }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: var(--netflix-black); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 90vh;
+        }
+        
+        .container { 
+            width: 100%; 
+            max-width: 600px; 
+            background: transparent; 
+        }
+        
+        .header-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 30px; 
+        }
+        
+        .btn-voltar { 
+            text-decoration: none; 
+            color: #a3a3a3; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+        }
+        
+        .btn-voltar:hover { 
+            color: #fff; 
+        }
+        
+        h1 { 
+            color: #fff; 
+            font-size: 1.5rem; 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+
+        .notification-card { 
+            background: var(--netflix-card); 
+            padding: 50px 40px; 
+            border-radius: 4px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            text-align: center;
+            border-top: 4px solid var(--netflix-red);
+        }
+
+        .status-icon {
+            font-size: 4rem;
+            color: var(--netflix-red);
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        
+        .notice-title { 
+            font-size: 1.6rem; 
+            font-weight: 700; 
+            margin-bottom: 15px; 
+            color: #fff; 
+            line-height: 1.3; 
+        }
+
+        .notice-text {
+            font-size: 1.05rem;
+            color: #a3a3a3;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .release-timer {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--success);
+            margin-bottom: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action { 
+            display: inline-block;
+            text-decoration: none;
+            width: 100%; 
+            background: #fff; 
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+        
+        .btn-action:hover { 
+            background: var(--netflix-red); 
+            color: #fff; 
+        }
+
+        .footer { 
+            text-align: center; 
+            margin-top: 50px; 
+            font-size: 0.8rem; 
+            color: #555; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <a href="simulado.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Voltar</a>
+        <h1>CNH Blindada</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div class="notification-card">
+        <div class="status-icon">
+            <i class="fa-regular fa-clock"></i>
+        </div>
+        
+        <div class="notice-title">Simulados em Preparação</div>
+        
+        <p class="notice-text">
+            Estamos atualizando nosso banco de questões com as últimas alterações do Contran para garantir que você estude apenas o que realmente cai na prova.
+        </p>
+
+        <div class="release-timer">
+            <i class="fa-solid fa-lock-open"></i> Liberação estimada em: 48 horas
+        </div>
+
+        <a href="simulado.html" class="btn-action">Voltar para o Painel</a>
+    </div>
+
+    <div class="footer">CNH Blindada Originals &copy; 2026</div>
+</div>
+
+</body>
+</html>
