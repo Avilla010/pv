@@ -8,10 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     <script>
-        // URL da sua planilha (Google Apps Script)
+        // URL da sua planilha (Google Apps Script) - SEGURANÇA ATIVA
         const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbzZWRallsdKzjyI_4ISiSIXE56CBZJ2jZdD_AyLg6VWT1PDZWadg8y7gElMW959ncK4/exec";
 
-        // 1. Bloqueio básico local
+        // 1. Bloqueio básico local (Verifica se está logado e manda para loginvip.html se não estiver)
         if (localStorage.getItem('cnh_blindada_logado') !== 'true') {
             window.location.href = 'loginvip.html';
         }
@@ -357,6 +357,7 @@
     </div>
 
     <script>
+        // Lista de PDFs com nomenclatura correta
         const listaPdfs = [
             { titulo: "Módulo 1: Processo de Habilitação", arquivo: "Processo de habilitação.pdf" },
             { titulo: "Módulo 2: Sinalização de Trânsito", arquivo: "Sinalização de Trânsito.pdf" },
@@ -374,19 +375,22 @@
             indiceAtual = indice;
             carregarPdfNoLeitor();
             document.getElementById('leitorModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.overflow = 'hidden'; // Trava o scroll do fundo no celular
         }
 
         function fecharLeitor() {
             document.getElementById('leitorModal').style.display = 'none';
             document.getElementById('pdfFrame').src = ""; 
-            document.body.style.overflow = 'auto'; 
+            document.body.style.overflow = 'auto'; // Devolve o scroll da página
         }
 
         function carregarPdfNoLeitor() {
             const pdfItem = listaPdfs[indiceAtual];
             document.getElementById('pdfTitulo').innerText = pdfItem.titulo;
+            
+            // #view=FitW força o PDF a abrir ajustado à largura da tela tanto no PC quanto Mobile
             document.getElementById('pdfFrame').src = pdfItem.arquivo + "#view=FitW";
+
             document.getElementById('btnAnterior').disabled = (indiceAtual === 0);
             document.getElementById('btnProximo').disabled = (indiceAtual === listaPdfs.length - 1);
         }
@@ -399,6 +403,7 @@
             }
         }
 
+        // Função de Logout Segura - Remove tudo e redireciona para o login vip
         function fazerLogout() {
             localStorage.removeItem('cnh_blindada_logado');
             localStorage.removeItem('cnh_blindada_cpf');
