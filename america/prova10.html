@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado 10 Especial - Pré-Exame | CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --text: #fff; 
+        }
+        
+        body { font-family: 'Roboto', sans-serif; background: var(--netflix-black); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: transparent; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-voltar { text-decoration: none; color: #a3a3a3; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-voltar:hover { color: #fff; }
+        h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        .stats-bar { display: none; justify-content: space-around; background: var(--netflix-card); padding: 20px; border-radius: 4px; margin-bottom: 25px; font-weight: bold; border-bottom: 2px solid #333; }
+        .quiz-section { background: var(--netflix-card); padding: 40px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .progress-container { height: 4px; background: #333; border-radius: 2px; margin-bottom: 30px; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s; }
+        
+        .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; color: #fff; display: block; line-height: 1.4; }
+        .quiz-img { display: block; margin: 0 auto 25px; max-width: 220px; height: auto; border-radius: 8px; border: 2px solid #333; }
+
+        .option { display: block; padding: 18px; margin: 12px 0; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
+        .option:hover { background: rgba(255,255,255,0.08); }
+        .option input { margin-right: 15px; accent-color: var(--netflix-red); }
+
+        .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; }
+        .option.disabled { pointer-events: none; }
+
+        .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
+        .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: var(--netflix-red); color: #fff; }
+        
+        /* Estilos da Pausa */
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
+
+        #result-area { text-align: center; display: none; padding: 20px; }
+        .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
+        
+        /* Área do Plano de Correção de Erros */
+        .error-report-container { text-align: left; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; display: none; }
+        .error-item { background: rgba(255,255,255,0.02); border-left: 4px solid var(--netflix-red); padding: 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 15px; color: #eee; }
+        .error-img { display: block; max-width: 180px; height: auto; margin-bottom: 15px; border-radius: 4px; border: 1px solid #444; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 5px 0; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 5px 0; }
+        
+        .btn-pdf { background: #25d366; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #128c7e; color: #fff; }
+
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* REGRAS EXCLUSIVAS PARA IMPRESSÃO EM PAPEL (SALVAR PDF) */
+        @media print {
+            body { background: #fff !important; color: #000 !important; padding: 0; }
+            .header-nav, #live-stats, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .quiz-section { background: #fff !important; box-shadow: none !important; padding: 0 !important; }
+            .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .error-item { background: #f9f9f9 !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc; margin-bottom: 15px; padding: 15px !important; }
+            .error-title { color: #000 !important; }
+            .error-img { border: 1px solid #000 !important; max-width: 150px !important; }
+            .error-user-ans { color: #c00 !important; }
+            .error-correct-ans { color: #080 !important; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        }
+        .print-header { display: none; color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="print-header">
+        <h2>MÉTODO CNH BLINDADA - PLANO DE CORREÇÃO DE ERROS</h2>
+        <p>Estude este material impresso focado nos seus erros para garantir sua aprovação de primeira.</p>
+    </div>
+
+    <div class="header-nav">
+        <a href="simulado.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
+        <h1>Simulado 10 Pré-Exame Especial</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div id="live-stats" class="stats-bar">
+        <span id="timer-box" style="color:#fff; text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">60:00</span>
+            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
+        </span>
+        <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
+        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
+        
+        <div id="start-screen" style="text-align:center">
+            <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
+                <h3 style="color:#fff; margin-bottom:15px">👑 Módulo: Simulado VIP</h3>
+                • 30 Questões Completas<br>
+                • Tempo: 60 Minutos (Pausa na correção)<br>
+                • Meta: 21 acertos para aprovação
+            </div>
+            <button class="btn-action" onclick="startQuiz()">Começar Agora</button>
+        </div>
+
+        <div id="quiz-area"></div>
+
+        <div id="result-area">
+            <h3>Desempenho Final</h3>
+            <div id="score-text" class="score-box">0/30</div>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+            
+            <div id="pdf-trigger-zone"></div>
+
+            <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Tentar Novamente</button>
+        </div>
+
+        <div id="error-report" class="error-report-container">
+            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--netflix-red);"><i class="fas fa-graduation-cap"></i> Questões que você precisa revisar:</h3>
+            <div id="error-list"></div>
+        </div>
+    </div>
+    <div class="footer">CNH Blindada Originals &copy; 2026</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+const questions = [
+    { "q": "Poderá ocorrer a suspensão da Licença de Aprendizagem de Direção Veicular (LADV) quando:", "options": ["Estiver sendo acompanhado pelo instrutor e mais dois acompanhantes.", "Estiver treinando fora da área pré-estabelecida.", "O candidato for encontrado conduzindo desacompanhado do respectivo instrutor.", "Envolver em acidente de trânsito."], "correct": 2 },
+    { "q": "É considerado veículo de carga:", "options": ["Todas as alternativas abaixo.", "Caminhão.", "Carrinho de mão.", "Carroça."], "correct": 0 },
+    { "q": "Assinale a alternativa que completa a questão: A categoria ______ habilita o condutor a dirigir veículo com combinação, cuja unidade tratora se enquadra nas categorias B, C ou D e cuja unidade acoplada, reboque, semi-reboque ou articulado, tenha 6.000 kg ou mais de peso bruto total.", "options": ["D.", "E.", "B.", "C."], "correct": 1 },
+    { "q": "São equipamentos obrigatórios do reboque e semi-reboque:", "options": ["Extintor de incêndio.", "Buzina.", "Protetores das rodas traseiras.", "Velocímetro."], "correct": 2 },
+    { "q": "Ao ser ultrapassado, o condutor deve:", "options": ["Reduzir bastante a velocidade.", "Não se preocupar, porque a responsabilidade é de quem ultrapassa.", "Deslocar-se obrigatoriamente para o acostamento, para que o veículo possa efetuar a ultrapassagem com segurança.", "Desviar para a direita, reduzir ou manter a velocidade."], "correct": 3 },
+    { "q": "É velocidade máxima permitida quando não houver placas de regulamentação:", "options": ["80 km/h nas estradas.", "40 km/h nas coletoras.", "110 km/h nas rodovias para automóveis e motocicletas.", "20 km/h nas vias locais."], "correct": 1 },
+    { "q": "Quando uma via comportar duas ou mais faixas de trânsito e a da direita for destinada ao uso exclusivo de outro tipo de veículo, os ciclomotores deverão circular pela faixa:", "options": ["Adjacente a da direita.", "Da esquerda.", "Adjacente a da esquerda.", "Da direita."], "correct": 0 },
+    { "q": "É classificação dos veículos:", "options": ["Misto.", "Particular, aluguel, aprendizagem, oficial, missão diplomática.", "Tração, espécie e categoria.", "Especial, misto passageiros, carga, tração e coleção."], "correct": 2 },
+    { "q": "Quando, por motivo de força maior, um veículo estiver impedido de ser removido da pista de rolamento ou tenha que permanecer no acostamento, o condutor deve, obrigatoriamente:", "options": ["Colocar-se de modo a ser visto para o socorro.", "Pedir ajuda aos demais condutores.", "Levantar a tampa do motor do veículo.", "Colocar sinalização, na forma estabelecida pelo CONTRAN, prevenindo os demais condutores."], "correct": 3 },
+    { "q": "Qual veículo não tem preferência?", "options": ["O veículo 1 pois está circulando em linha reta.", "O veículo 2, pois antes de convergir à esquerda deverá aguardar os veículos que vem em sentido contrário.", "O veículo 2, pois não sinalizou a intenção de convergir.", "O veículo 1 pois está à esquerda do veículo 2."], "correct": 1, "img": "esquerda.png" },
+    { "q": "O condutor que estiver circulando pela faixa da esquerda, ao perceber que outro que o segue tem o propósito de ultrapassá-lo, deverá:", "options": ["Deslocar-se para a faixa da direita, sem acelerar a marcha.", "Não deixar ultrapassar.", "Deslocar-se para a faixa da direita, acelerando a marcha.", "Nenhuma das respostas está correta."], "correct": 0 },
+    { "q": "Com relação às preferências de passagem, é correto afirmar que:", "options": ["Os veículos que transitam por uma via asfaltada têm sempre a preferência sobre aqueles que trafegam numa via não pavimentada.", "Nos cruzamentos desprovidos de sinalização disciplinadora específica, terá preferência de passagem o veículo que vier pela direita.", "Um veículo trafegando por uma via em aclive terá sempre a preferência de passagem, em relação a outro veículo que transita por uma via plana.", "Os veículos destinados ao transporte de escolares gozam de preferência de passagem sobre os veículos de carga."], "correct": 1 },
+    { "q": "Com exceção das placas A-41, A-26a, A-26b, são placas que tem formato quadrado, cor amarela e símbolo preto:", "options": ["Placas de indicação.", "Placas de regulamentação.", "Placas de Advertência.", "Placas de sentido obrigatório."], "correct": 2 },
+    { "q": "A placa de forma triangular é característica da sinalização de:", "options": ["Sentido proibido.", "Proibido estacionar.", "Parada obrigatória.", "Dê a preferência."], "correct": 3 },
+    { "q": "O que aplica TIT-09 (Locais para atividades de interesse turístico) indica:", "options": ["Zoológico.", "Exposição Agropecuária.", "Matadouro.", "Rodeio."], "correct": 1, "img": "TIT-09.png" },
+    { "q": "A placa R-10 indica o condutor a proibição de:", "options": ["Trânsito de veículos automotores.", "Estacionar.", "Ultrapassar.", "Sentido proibido."], "correct": 0, "img": "R-10.png" },
+    { "q": "Onde existir a placa R-28 significa:", "options": ["Diminuir a marcha e seguir.", "Parada obrigatória.", "Diminuir a marcha para entrar na via de mão dupla.", "A via passa a ser de mão dupla a partir da placa."], "correct": 3, "img": "R-28.png" },
+    { "q": "Onde houver marca longitudinal representada pela letra ML-01, a ultrapassagem é:", "options": ["Permitida para os dois sentidos.", "Proibida para um dos sentidos.", "Permitida para um dos sentidos.", "Proibida para os dois sentidos."], "correct": 3, "img": "ML-01.png" },
+    { "q": "Para evitar uma colisão, deve-se manter uma distância adequada em relação ao veículo que trafega à frente. Em direção defensiva, isto é conhecido como distância de:", "options": ["Seguimento.", "Reação.", "Parada.", "Frenagem."], "correct": 0 },
+    { "q": "Não está relacionado ao ato inseguro:", "options": ["Desobedecer ao sinal fechado.", "Desobedecer a parada obrigatória.", "Sinalização precária.", "Excesso de velocidade."], "correct": 2 },
+    { "q": "Direção defensiva que é considerada de alto risco:", "options": ["Preventiva.", "Corretiva.", "Normal.", "Defensiva."], "correct": 1 },
+    { "q": "O atrito entre os pneus e o solo é responsável pela frenagem:", "options": ["Do veículo.", "Do tambor.", "Das Rodas.", "Da sapata."], "correct": 0 },
+    { "q": "O atrito entre os freios e a roda é responsável pela frenagem:", "options": ["Da motocicleta.", "Do conjunto rodas e motocicleta.", "Das rodas.", "Nenhuma das alternativas."], "correct": 2 },
+    { "q": "Uma pessoa cuja respiração parou, morrerá, caso a mesma não seja restabelecida em:", "options": ["3 a 4 minutos.", "3 a 10 minutos.", "3 a 8 minutos.", "3 a 5 minutos."], "correct": 3 },
+    { "q": "Indique abaixo uma das técnicas que podem ser adotadas para conter uma hemorragia externa quando não for possível a presença do resgate:", "options": ["Aplicar torniquete.", "Fazer compressão no ferimento, utilizando gaze ou pano limpo.", "Movimentar a vítima imediatamente.", "Fazer compressão utilizando as mãos diretamente no ferimento."], "correct": 1 },
+    { "q": "Não constitui sinal de estado de choque:", "options": ["Pulso lento.", "Pele fria e pegajosa.", "Suor abundante.", "Respiração irregular."], "correct": 0 },
+    { "q": "O órgão normativo responsável pela regulamentação dos padrões de qualidade do ar é:", "options": ["O programa de Controle da Poluição do Ar por Veículos Automotores - PROCONVE.", "A Secretaria de Estado do Meio Ambiente.", "O Conselho Nacional do Meio Ambiente - CONAMA.", "O Ministério da Saúde."], "correct": 2 },
+    { "q": "Sobre emissão sonora é falso afirmar:", "options": ["O ruído máximo tolerável é de 100 decibéis.", "Quando o ruído ultrapassa a 120 decibéis causa danos irreversíveis.", "As turbinas dos aviões são uma das maiores fontes de poluição sonora.", "Pode trazer como consequência surdez prematura."], "correct": 0 },
+    { "q": "A força motriz é conduzida até as rodas por meio do sistema de:", "options": ["Suspensão.", "Direção.", "Amortecedor.", "Transmissão."], "correct": 3 },
+    { "q": "O sistema de freios desgasta com o uso do veículo e tem sua eficiência reduzida. Indique as principais razões de perda de eficiência:", "options": ["Nível de fluido baixo ou vazamento.", "Lonas gastas.", "Discos e pastilhas gastos.", "Todas as respostas estão corretas."], "correct": 3 }
+];
+
+let currentQ = 0;
+let score = 0;
+let errors = 0;
+let answered = false;
+let timeLeft = 3600; // 60 minutos definidos aqui
+let timerInterval;
+let userErrorsLog = [];
+
+function startQuiz() {
+    document.getElementById('start-screen').style.display = "none";
+    document.getElementById('quiz-area').style.display = "block";
+    document.getElementById('live-stats').style.display = "flex";
+    document.getElementById('p-cont').style.display = "block";
+    renderQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    document.getElementById('timer-box').classList.remove('timer-paused');
+    document.getElementById('pause-text').style.display = 'none';
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showFinalResult();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    const q = questions[currentQ];
+    const imgHtml = q.img ? `<img src="${q.img}" class="quiz-img">` : '';
+
+    area.innerHTML = `
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        ${imgHtml}
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) checkAnswer();
+    else {
+        startTimer();
+        nextQuestion();
+    }
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) return;
+    
+    clearInterval(timerInterval);
+    document.getElementById('timer-box').classList.add('timer-paused');
+    document.getElementById('pause-text').style.display = 'block';
+
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const correctChoice = questions[currentQ].correct;
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+    
+    if (userChoice === correctChoice) {
+        score++;
+        document.getElementById('count-correct').innerHTML = score;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play().catch(()=>{});
+    } else {
+        errors++;
+        document.getElementById('count-wrong').innerHTML = errors;
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play().catch(()=>{});
+
+        let imagemDaQuestao = questions[currentQ].img ? questions[currentQ].img : null;
+
+        userErrorsLog.push({
+            questionNum: currentQ + 1,
+            enunciado: questions[currentQ].q,
+            imagem: imagemDaQuestao,
+            respostaDoAluno: questions[currentQ].options[userChoice],
+            respostaCorreta: questions[currentQ].options[correctChoice]
+        });
+    }
+    
+    const btn = document.getElementById('btn-quiz');
+    btn.innerHTML = "Próxima Questão <i class='fas fa-chevron-right' style='font-size:0.8rem; margin-left:8px'></i>";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) renderQuestion();
+    else showFinalResult();
+}
+
+function showFinalResult() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('live-stats').style.display = "none";
+    document.getElementById('p-cont').style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
+    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Você dominou o processo." : "⚠️ QUASE LÁ! Revise a teoria e tente novamente.";
+
+    if(userErrorsLog.length > 0) {
+        const errorListDiv = document.getElementById('error-list');
+        errorListDiv.innerHTML = ""; 
+        
+        userErrorsLog.forEach(item => {
+            let renderImgHtml = item.imagem ? `<img src="${item.imagem}" class="error-img">` : '';
+
+            errorListDiv.innerHTML += `
+                <div class="error-item">
+                    <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
+                    ${renderImgHtml}
+                    <div class="error-user-ans"><i class="fas fa-times"></i> Você marcou: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('error-report').style.display = "block";
+
+        document.getElementById('pdf-trigger-zone').innerHTML = `
+            <button class="btn-action btn-pdf" onclick="window.print()">
+                <i class="fab fa-whatsapp"></i> Imprimir Plano de Erros com Imagens (PDF)
+            </button>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O PDF incluirá as imagens e placas das questões que você errou!</p>
+        `;
+    }
+}
+</script>
+</body>
+</html>
