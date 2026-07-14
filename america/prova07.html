@@ -44,10 +44,6 @@
         .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
         .btn-action:hover { background: var(--netflix-red); color: #fff; }
         .btn-next-step { background: var(--netflix-red); color: #fff; }
-        
-        /* Estilos da Pausa */
-        .timer-paused { color: #555 !important; opacity: 0.6; }
-        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
 
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
@@ -97,8 +93,7 @@
 
     <div id="live-stats" class="stats-bar">
         <span id="timer-box" style="color:#fff; text-align: center;">
-            <i class="far fa-clock"></i> <span id="timer">30:00</span>
-            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
+            <i class="far fa-clock"></i> <span id="timer">60:00</span>
         </span>
         <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
         <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
@@ -109,9 +104,9 @@
         
         <div id="start-screen" style="text-align:center">
             <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
-                <h3 style="color:#fff; margin-bottom:15px">Módulo: Pré - Exame</h3>
+                <h3 style="color:#fff; margin-bottom:15px">👑 Módulo: Simulado VIP</h3>
                 • 30 Questões Completas<br>
-                • Tempo: 30 Minutos (Pausa na correção)<br>
+                • Tempo: 60 Minutos<br>
                 • Meta: 21 acertos para aprovação
             </div>
             <button class="btn-action" onclick="startQuiz()">Começar Agora</button>
@@ -149,7 +144,7 @@ const questions = [
     { "q": "São penalidades aplicadas aos infratores:", "options": ["Advertência por escrito.", "Multa.", "Suspensão do direito de dirigir.", "Todas as afirmativas acima estão corretas."], "correct": 3 },
     { "q": "Aplicada a penalidade será expedida ao infrator:", "options": ["A intimação.", "A citação.", "A notificação da infração.", "O extrato de multa."], "correct": 2 },
     { "q": "O infrator contumaz, se apanhado, será submetido:", "options": ["A teste de alcoolemia.", "Ao exame de direção veicular.", "A renovação dos exames médico e psicológico.", "A freqüência obrigatória em curso de reciclagem."], "correct": 3 },
-    { "q": "Assinale a alternativa correta:", "options": ["Todo veículo em movimento deve ocupar a faixa mais à direita da pista de rolamento, quando não houver faixa especial a ele destinada.", "A ultrapassagem de outro veículo em movimento deve ser feita pela direita.", "Todo veículo em movimento deve ocupar a faixa mais à esquerda da pista de rolamento, when não houver faixa especial a ele destinada.", "Para dobrar à esquerda numa via de mão única, o motorista deve atingir, primeiramente, a zona central do cruzamento."], "correct": 0 },
+    { "q": "Assinale a alternativa correta:", "options": ["Todo veículo em movimento deve ocupar a faixa mais à direita da pista de rolamento, quando não houver faixa especial a ele destinada.", "A ultrapassagem de outro veículo em movimento deve ser feita pela direita.", "Todo veículo em movimento deve ocupar a faixa mais à esquerda da pista de rolamento, quando não houver faixa especial a ele destinada.", "Para dobrar à esquerda numa via de mão única, o motorista deve atingir, primeiramente, a zona central do cruzamento."], "correct": 0 },
     { "q": "A via caracterizada por acesso especial e trânsito livre, cuja velocidade máxima permitida é de 80 km/h é considerada como via:", "options": ["Coletora.", "Trânsito rápido.", "Arterial.", "Estrada."], "correct": 1 },
     { "q": "Marque a resposta certa. A faixa contínua amarela, separando a pista indica que:", "options": ["É permitido ultrapassar.", "A pista é de mão única.", "É proibido ultrapassar.", "Todas as respostas estão corretas."], "correct": 2 },
     { "q": "O condutor estando em uma via urbana com iluminação pública deve:", "options": ["Usar o farol baixo desde o pôr do Sol até o amanhecer.", "Manter as luzes do veículo apagadas para facilitar a visão dos outros condutores.", "Manter acesas apenas as luzes dos faroletes para facilitar a visão dos outros condutores.", "Usar o farol alto no período noturno e, opcionalmente, no diurno."], "correct": 0 },
@@ -178,7 +173,7 @@ let currentQ = 0;
 let score = 0;
 let errors = 0;
 let answered = false;
-let timeLeft = 1800; 
+let timeLeft = 3600; 
 let timerInterval;
 let userErrorsLog = [];
 
@@ -192,8 +187,6 @@ function startQuiz() {
 }
 
 function startTimer() {
-    document.getElementById('timer-box').classList.remove('timer-paused');
-    document.getElementById('pause-text').style.display = 'none';
     timerInterval = setInterval(() => {
         timeLeft--;
         let mins = Math.floor(timeLeft / 60);
@@ -229,19 +222,12 @@ function renderQuestion() {
 
 function handleButtonClick() {
     if (!answered) checkAnswer();
-    else {
-        startTimer();
-        nextQuestion();
-    }
+    else nextQuestion();
 }
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
     if (!selected) return;
-    
-    clearInterval(timerInterval);
-    document.getElementById('timer-box').classList.add('timer-paused');
-    document.getElementById('pause-text').style.display = 'block';
 
     answered = true;
     const userChoice = parseInt(selected.value);
@@ -313,7 +299,7 @@ function showFinalResult() {
 
         document.getElementById('pdf-trigger-zone').innerHTML = `
             <button class="btn-action btn-pdf" onclick="window.print()">
-                <i class="fab fa-whatsapp"></i> Imprimir Plano de Erros com Imagens (PDF)
+                <i class="fas fa-print"></i> Imprimir Plano de Erros com Imagens (PDF)
             </button>
             <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O PDF incluirá as imagens e placas das questões que você errou!</p>
         `;
