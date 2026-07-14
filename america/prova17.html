@@ -44,10 +44,6 @@
         .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
         .btn-action:hover { background: var(--netflix-red); color: #fff; }
         .btn-next-step { background: var(--netflix-red); color: #fff; }
-        
-        /* Estilos da Pausa */
-        .timer-paused { color: #555 !important; opacity: 0.6; }
-        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
 
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
@@ -97,8 +93,7 @@
 
     <div id="live-stats" class="stats-bar">
         <span id="timer-box" style="color:#fff; text-align: center;">
-            <i class="far fa-clock"></i> <span id="timer">30:00</span>
-            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
+            <i class="far fa-clock"></i> <span id="timer">60:00</span>
         </span>
         <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
         <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
@@ -109,9 +104,9 @@
         
         <div id="start-screen" style="text-align:center">
             <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
-                <h3 style="color:#fff; margin-bottom:15px">Módulo: Pré - Exame</h3>
+                <h3 style="color:#fff; margin-bottom:15px">👑 Módulo: Simulado VIP</h3>
                 • 30 Questões Completas<br>
-                • Tempo: 30 Minutos (Pausa na correção)<br>
+                • Tempo: 60 Minutos<br>
                 • Meta: 21 acertos para aprovação
             </div>
             <button class="btn-action" onclick="startQuiz()">Começar Agora</button>
@@ -152,7 +147,7 @@ const questions = [
     { "q": "Como se classificam as categorias?", "options": ["Especiais, piloto de teste.", "Especiais, A, C, D e B.", "A, B, C, D e E.", "Deficiente físico, carreteiro."], "correct": 2 },
     { "q": "As bicicletas deverão ser dotadas dos seguintes equipamentos obrigatórios:", "options": ["Campainha, sinalização noturna dianteira, traseira, lateral e nos pedais e espelho retrovisor do lado esquerdo.", "Campainha e espelho retrovisor do lado esquerdo e do lado direito.", "Campainha e sinalização noturna.", "Cinto de segurança."], "correct": 0 },
     { "q": "Conduzir veículo com falta de equipamento obrigatório, acarreta:", "options": ["Multa e remoção do veículo.", "Multa e retenção do veículo.", "Advertência por escrito, cassação do documento de habilitação.", "Retenção e apreensão do veículo."], "correct": 1 },
-    { "q": "Como se classificam as infrações?", "options": ["Leve, grave, pesada e gravíssima.", "Gravíssima, grave e média.", "Grave, leve, média e gravíssima.", "Gravíssima, pesada, grave e média."], "correct": 2 },
+    { "q": "Como se classificam as infrações?", "options": ["Leve, grave, pesada e gravíssima.", "Gravíssima, grave and média.", "Grave, leve, média e gravíssima.", "Gravíssima, pesada, grave e média."], "correct": 2 },
     { "q": "Veículos destinados à formação de condutores são classificados quanto à categoria em:", "options": ["De aluguel.", "Particular.", "Oficial.", "De Aprendizagem."], "correct": 3 },
     { "q": "Quais as placas que se destinam a estabelecer as obrigações, autorizações e proibições ao uso da via?", "options": ["Advertência.", "Regulamentação.", "Indicativa.", "Serviços auxiliares."], "correct": 1 },
     { "q": "Diante da placa A-28, qual atitude deverá o condutor tomar?", "options": ["Ficar atento.", "Parar o veículo.", "Diminuir a velocidade.", "Nenhuma das alternativas."], "correct": 2, "img": "A28.png" },
@@ -178,7 +173,7 @@ let currentQ = 0;
 let score = 0;
 let errors = 0;
 let answered = false;
-let timeLeft = 1800; 
+let timeLeft = 3600; 
 let timerInterval;
 let userErrorsLog = [];
 
@@ -192,8 +187,6 @@ function startQuiz() {
 }
 
 function startTimer() {
-    document.getElementById('timer-box').classList.remove('timer-paused');
-    document.getElementById('pause-text').style.display = 'none';
     timerInterval = setInterval(() => {
         timeLeft--;
         let mins = Math.floor(timeLeft / 60);
@@ -229,19 +222,12 @@ function renderQuestion() {
 
 function handleButtonClick() {
     if (!answered) checkAnswer();
-    else {
-        startTimer();
-        nextQuestion();
-    }
+    else nextQuestion();
 }
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
     if (!selected) return;
-    
-    clearInterval(timerInterval);
-    document.getElementById('timer-box').classList.add('timer-paused');
-    document.getElementById('pause-text').style.display = 'block';
 
     answered = true;
     const userChoice = parseInt(selected.value);
@@ -313,7 +299,7 @@ function showFinalResult() {
 
         document.getElementById('pdf-trigger-zone').innerHTML = `
             <button class="btn-action btn-pdf" onclick="window.print()">
-                <i class="fab fa-whatsapp"></i> Imprimir Plano de Erros com Imagens (PDF)
+                <i class="fas fa-print"></i> Imprimir Plano de Erros com Imagens (PDF)
             </button>
             <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O PDF incluirá as imagens e placas das questões que você errou!</p>
         `;
