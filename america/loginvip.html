@@ -184,7 +184,9 @@
                 const resultado = await resposta.json();
 
                 if (resultado.autorizado) {
+                    // Guarda o estado de login e o CPF para validações futuras em "membros.html"
                     localStorage.setItem('cnh_blindada_logado', 'true');
+                    localStorage.setItem('cnh_blindada_cpf', cpfDigitado);
                     window.location.href = 'membros.html';
                 } else {
                     errorMsg.style.display = 'block';
