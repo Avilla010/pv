@@ -11,7 +11,7 @@
         // URL da sua planilha (Google Apps Script) - SEGURANÇA ATIVA
         const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbzZWRallsdKzjyI_4ISiSIXE56CBZJ2jZdD_AyLg6VWT1PDZWadg8y7gElMW959ncK4/exec";
 
-        // 1. Bloqueio básico local imediato (Evita carregar a página se não tiver a chave)
+        // 1. Bloqueio básico local imediato (Evita carregar a página se não tiver a chave de login)
         if (localStorage.getItem('cnh_blindada_logado') !== 'true') {
             window.location.href = 'loginvip.html';
         }
@@ -32,18 +32,18 @@
                 });
                 const resultado = await resposta.json();
 
-                // SÓ desloga se o servidor responder explicitamente que NÃO está autorizado
+                // SÓ desloga se o servidor responder explicitamente que NÃO está autorizado (ou seja, foi removido ou não existe)
                 if (resultado && resultado.autorizado === false) {
                     alert("Seu acesso expirou ou foi revogado.");
                     fazerLogout();
                 }
             } catch (error) {
-                // Se der erro de rede (offline, instabilidade no Android), NÃO desloga o usuário.
+                // Se der erro de rede (offline, instabilidade), NÃO desloga o usuário para evitar falso positivo
                 console.error("Erro de conexão ao validar sessão. Mantendo acesso local offline:", error);
             }
         }
 
-        // Executa a validação de segurança ao carregar a página
+        // Executa a validação de segurança imediatamente ao carregar a página
         validarSessaoAtiva();
     </script>
 
@@ -373,14 +373,13 @@
         let indiceAtual = 0;
 
         // --- SISTEMA ANTI-FECHAMENTO COM BOTÃO VOLTAR DO ANDROID ---
-        // Empurra um estado falso no histórico para podermos interceptar o botão voltar do celular
         function abrirLeitor(indice) {
             indiceAtual = indice;
             carregarPdfNoLeitor();
             document.getElementById('leitorModal').style.display = 'flex';
             document.body.style.overflow = 'hidden'; 
             
-            // Cria um marco histórico artificial. Quando o usuário clica em voltar, o navegador "volta" dele, mas não sai da página.
+            // Cria um marco histórico artificial.
             window.history.pushState({ modalAberto: true }, "");
         }
 
@@ -389,7 +388,7 @@
             document.getElementById('pdfFrame').src = ""; 
             document.body.style.overflow = 'auto'; 
 
-            // Se o usuário fechou clicando no botão "Sair" (e não usando o voltar do Android), limpamos o histórico artificial
+            // Se o usuário fechou clicando no botão "Sair" (e não usando o voltar do Android)
             if (!origemHistorico) {
                 if (window.history.state && window.history.state.modalAberto) {
                     window.history.back();
@@ -401,7 +400,6 @@
         window.addEventListener('popstate', function (event) {
             const modal = document.getElementById('leitorModal');
             if (modal.style.display === 'flex') {
-                // Se o modal estiver aberto, fecha o modal em vez de voltar a página
                 fecharLeitor(true);
             }
         });
@@ -411,8 +409,6 @@
             const pdfItem = listaPdfs[indiceAtual];
             
             document.getElementById('pdfTitulo').innerText = pdfItem.titulo;
-            
-            // MANTIDO: O leitor direto que já estava a funcionar
             document.getElementById('pdfFrame').src = pdfItem.arquivo + "#view=FitW";
 
             document.getElementById('btnAnterior').disabled = (indiceAtual === 0);
@@ -427,7 +423,7 @@
             }
         }
 
-        // ALTERADO: Limpa o login, remove o CPF e redireciona para a tela correta (loginvip.html)
+        // Limpa o login, remove o CPF e redireciona para a tela de login
         function fazerLogout() {
             localStorage.removeItem('cnh_blindada_logado');
             localStorage.removeItem('cnh_blindada_cpf');
