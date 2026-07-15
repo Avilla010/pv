@@ -388,8 +388,9 @@
             
             document.getElementById('pdfTitulo').innerText = pdfItem.titulo;
             
-            // MANTIDO: O leitor direto que já estava a funcionar
-            document.getElementById('pdfFrame').src = pdfItem.arquivo + "#view=FitW";
+            // Cria a URL absoluta do PDF hospedado no GitHub Pages e passa pelo leitor do Google
+            const urlCompletaDoPdf = window.location.origin + "/" + pdfItem.arquivo;
+            document.getElementById('pdfFrame').src = "https://docs.google.com/gview?embedded=true&url=" + encodeURIComponent(urlCompletaDoPdf);
 
             document.getElementById('btnAnterior').disabled = (indiceAtual === 0);
             document.getElementById('btnProximo').disabled = (indiceAtual === listaPdfs.length - 1);
