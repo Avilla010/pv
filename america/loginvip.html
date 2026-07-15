@@ -7,13 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-    <script>
-        // REDIRECIONAMENTO AUTOMÁTICO: Se o usuário já estiver logado, manda direto para a área de membros
-        if (localStorage.getItem('cnh_blindada_logado') === 'true') {
-            window.location.href = 'membros.html';
-        }
-    </script>
-
     <style>
         :root {
             --netflix-red: #E50914;
@@ -154,7 +147,12 @@
     </div>
 
     <script>
-        // URL DO GOOGLE APPS SCRIPT ATUALIZADA
+        // Se já estiver logado, redireciona diretamente para a área de membros sem carregar a tela
+        if (localStorage.getItem('cnh_blindada_logado') === 'true') {
+            window.location.href = 'membros.html';
+        }
+
+        // SUA NOVA URL DO GOOGLE APPS SCRIPT ATUALIZADA
         const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbzZWRallsdKzjyI_4ISiSIXE56CBZJ2jZdD_AyLg6VWT1PDZWadg8y7gElMW959ncK4/exec";
 
         async function validarAcesso(event) {
@@ -186,10 +184,7 @@
                 const resultado = await resposta.json();
 
                 if (resultado.autorizado) {
-                    // ALTERADO: Além de salvar que está logado, agora o CPF também é salvo para manter a sessão ativa na página membros.html
                     localStorage.setItem('cnh_blindada_logado', 'true');
-                    localStorage.setItem('cnh_blindada_cpf', cpfDigitado);
-                    
                     window.location.href = 'membros.html';
                 } else {
                     errorMsg.style.display = 'block';
