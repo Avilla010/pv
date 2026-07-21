@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja Premium | Rodolfo Gameplay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary-green: #00ff66;
+            --bg-dark: #050505;
+            --card-bg: #141414;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: #fff; 
+            font-family: 'Roboto', sans-serif; 
+            padding: 30px;
+        }
+
+        /* --- TÍTULO DA PÁGINA --- */
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header h1 i {
+            color: var(--primary-green);
+        }
+
+        .page-header p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        /* GRID DA LOJA */
+        .shop-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .product-card {
+            background: var(--card-bg); 
+            border-radius: 8px; 
+            border: 1px solid #222;
+            padding: 25px; 
+            transition: 0.4s; 
+            border-bottom: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover { 
+            transform: translateY(-8px); 
+            border-bottom-color: var(--primary-green); 
+            box-shadow: 0 10px 20px rgba(0, 255, 102, 0.08);
+        }
+
+        .product-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .product-card h3 i { color: var(--primary-green); }
+        .product-card p { color: #aaa; font-size: 0.95rem; line-height: 1.5; }
+        .price { color: var(--primary-green); font-size: 1.2rem; font-weight: bold; margin: 20px 0 15px 0; display: block; }
+
+        .btn-buy { 
+            background: var(--primary-green); 
+            color: #000; 
+            padding: 12px; 
+            text-align: center; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border-radius: 6px; 
+            display: block; 
+            transition: 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-buy:hover { filter: brightness(1.1); }
+
+        /* --- RESPONSIVIDADE (MOBILE / ANDROID) --- */
+        @media (max-width: 768px) {
+            body { padding: 20px 15px; }
+            .shop-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <div class="page-header">
+        <h1><i class="fas fa-shopping-bag"></i> Loja Premium & Equipamentos</h1>
+        <p>Acessórios testados, consultoria VIP e equipamentos recomendados para seu PS2.</p>
+    </div>
+
+    <!-- GRID DE PRODUTOS -->
+    <div class="shop-grid">
+        
+        <!-- PRODUTO 1: ADAPTADOR HDMI -->
+        <div class="product-card">
+            <div>
+                <h3><i class="fas fa-tv"></i> Adaptador PS2 to HDMI</h3>
+                <p>Jogue seu PS2 em Smart TVs modernas com imagem limpa, digital e sem atrasos (input lag). O item mais vendido do canal.</p>
+            </div>
+            <div>
+                <span class="price">A partir de R$ 25,00</span>
+                <a href="SEU_LINK_DE_AFILIADO_SHOPEE_OU_AMAZON" target="_blank" class="btn-buy">Ver na Loja Parceira</a>
+            </div>
+        </div>
+
+        <!-- PRODUTO 2: CONTROLE SEM FIO -->
+        <div class="product-card">
+            <div>
+                <h3><i class="fas fa-gamepad"></i> Controle Sem Fio PS2 (2.4G)</h3>
+                <p>Controle sem fio de alta precisão e sem travamentos. Ideal para jogar no sofá com total conforto.</p>
+            </div>
+            <div>
+                <span class="price">A partir de R$ 45,00</span>
+                <a href="SEU_LINK_DE_AFILIADO_SHOPEE_OU_AMAZON" target="_blank" class="btn-buy">Ver na Loja Parceira</a>
+            </div>
+        </div>
+
+        <!-- PRODUTO 3: PENDRIVES E HDs EXTERNOS -->
+        <div class="product-card">
+            <div>
+                <h3><i class="fas fa-hdd"></i> HDs Externos e Pendrives OPL</h3>
+                <p>Lista de pendrives SanDisk/Kingston e HDs externos testados para carregar jogos via OPL na velocidade máxima.</p>
+            </div>
+            <div>
+                <span class="price">A partir de R$ 35,00</span>
+                <a href="SEU_LINK_DE_AFILIADO_SHOPEE_OU_AMAZON" target="_blank" class="btn-buy">Ver na Loja Parceira</a>
+            </div>
+        </div>
+
+        <!-- PRODUTO 4: MEMORY CARD COM FMCB / OPL -->
+        <div class="product-card">
+            <div>
+                <h3><i class="fas fa-microchip"></i> Memory Card Fortuna / FMCB</h3>
+                <p>Memory Card já com OPL instalado e configurado de fábrica para desbloquear qualquer modelo de PS2.</p>
+            </div>
+            <div>
+                <span class="price">A partir de R$ 30,00</span>
+                <a href="SEU_LINK_DE_AFILIADO_SHOPEE_OU_AMAZON" target="_blank" class="btn-buy">Ver na Loja Parceira</a>
+            </div>
+        </div>
+
+        <!-- PRODUTO 5: CONSULTORIA VIP / SUPORTE REMOTO -->
+        <div class="product-card">
+            <div>
+                <h3><i class="fas fa-headset"></i> Suporte VIP / Consultoria OPL</h3>
+                <p>Atendimento 1-a-1 via WhatsApp para configurar seu pendrive, artes, capas e corrigir erros no seu PS2.</p>
+            </div>
+            <div>
+                <span class="price">Atendimento Personalizado</span>
+                <a href="https://wa.me/5500000000000?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria%20VIP%20de%20PS2" target="_blank" class="btn-buy">Agendar no WhatsApp</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

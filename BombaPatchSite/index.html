@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rodolfo Gameplay - Central Premium</title>
+
+    <!-- Ícone da Aba (Favicon) -->
+    <link rel="icon" type="image/jpeg" href="rodolfogameplay.png">
+
+    <meta name="theme-color" content="#00ff66">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-green: #00ff66;
+            --bg-dark: #050505;
+            --card-bg: #141414;
+            --sidebar-width: 260px;
+        }
+
+        /* Reset e Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg-dark); display: flex; color: #fff; overflow-x: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width); height: 100vh; 
+            background-color: #000;
+            position: fixed; transition: all 0.3s ease;
+            z-index: 1001; display: flex; flex-direction: column;
+            border-right: 1px solid #222; 
+        }
+
+        .sidebar-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1000;
+        }
+
+        .logo-area { padding: 30px 20px; text-align: center; }
+        .logo-avatar { 
+            width: 100px; height: 100px; border-radius: 50%; 
+            border: 3px solid var(--primary-green); object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .logo-area h2 { font-size: 1rem; color: #fff; letter-spacing: 1px; }
+
+        .nav-menu { flex-grow: 1; padding: 10px; overflow-y: auto; }
+        
+        .nav-item {
+            display: flex; align-items: center; padding: 12px 15px; margin-bottom: 5px;
+            color: #b3b3b3; text-decoration: none; border-radius: 4px; transition: 0.2s; 
+            font-weight: 400; cursor: pointer; font-size: 0.9rem;
+        }
+        
+        .nav-item i { margin-right: 15px; font-size: 1.1rem; width: 20px; text-align: center; }
+        .nav-item:hover, .nav-item.active { background-color: rgba(0, 255, 102, 0.1); color: var(--primary-green); }
+        .nav-item.active { border-left: 4px solid var(--primary-green); padding-left: 11px; }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        .main-content { margin-left: var(--sidebar-width); width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+
+        header {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(20, 20, 20, 0.8);
+            height: 70px; padding: 0 30px; display: flex;
+            align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 900;
+            border-bottom: 1px solid #222;
+        }
+
+        .btn-mobile { display: none; font-size: 1.5rem; cursor: pointer; color: #fff; }
+
+        #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 70px); background: #000; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* GRID DE CARDS */
+        .dashboard-grid { padding: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+
+        .card {
+            background: var(--card-bg); border-radius: 6px; overflow: hidden;
+            transition: 0.4s; cursor: pointer; position: relative;
+            border: 1px solid #222; border-bottom: 3px solid transparent; padding-bottom: 10px;
+        }
+
+        .card:hover { transform: translateY(-5px); z-index: 10; box-shadow: 0 10px 20px rgba(0,255,102,0.1); border-bottom-color: var(--primary-green); }
+
+        .card-image {
+            height: 140px; background: linear-gradient(135deg, #111, #222);
+            display: flex; align-items: center; justify-content: center; font-size: 2.8rem; color: var(--primary-green);
+        }
+
+        .card-body { padding: 15px; }
+        .card h3 { margin-bottom: 6px; font-size: 1.1rem; color: #fff; }
+        .card p { color: #808080; font-size: 0.85rem; line-height: 1.4; }
+
+        .badge-green {
+            background: var(--primary-green); color: #000; padding: 2px 8px; 
+            font-size: 0.65rem; font-weight: bold; border-radius: 2px;
+            position: absolute; top: 10px; left: 10px; z-index: 5; text-transform: uppercase;
+        }
+
+        .badge-telegram {
+            background: #0088cc; color: #fff; padding: 2px 8px; 
+            font-size: 0.65rem; font-weight: bold; border-radius: 2px;
+            position: absolute; top: 10px; left: 10px; z-index: 5; text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { left: -100%; }
+            .sidebar.show { left: 0; }
+            .sidebar.show + .sidebar-overlay { display: block; }
+            .main-content { margin-left: 0; }
+            .btn-mobile { display: block; }
+            .dashboard-grid { grid-template-columns: 1fr; padding: 20px; }
+        }
+    </style>
+</head>
+<body onclick="closeSidebarOnMobile()">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <img src="rodolfogameplay.png" alt="Rodolfo Gameplay" class="logo-avatar">
+            <h2>RODOLFO GAMEPLAY</h2>
+        </div>
+        <nav class="nav-menu">
+            <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-home"></i> Início</div>
+            <div onclick="loadPage('downloadgratis.html')" class="nav-item"><i class="fas fa-download"></i> Downloads Grátis</div>
+            <div onclick="loadPage('lojalink.html')" class="nav-item"><i class="fas fa-shopping-bag"></i> Loja Premium</div>
+            <div onclick="loadPage('aulasedicas.html')" class="nav-item"><i class="fas fa-video"></i> Aulas e Dicas</div>
+            <a href="https://t.me/rodolfogameplay608" target="_blank" class="nav-item"><i class="fab fa-telegram-plane"></i> Grupo Telegram</a>
+        </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+        <header>
+            <div class="btn-mobile" onclick="event.stopPropagation(); toggleSidebar();">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="user-profile">
+                <span style="font-size: 0.9rem;">Central de Conteúdos <strong style="color: var(--primary-green);">PS2 & OPL</strong></span>
+            </div>
+        </header>
+
+        <!-- GRID DE CARDS NA HOME -->
+        <section id="view-home" class="dashboard-grid">
+
+            <div class="card" onclick="loadPage('downloadgratis.html')">
+                <span class="badge-green"><i class="fas fa-star"></i> Destaque</span>
+                <div class="card-image"><i class="fas fa-download"></i></div>
+                <div class="card-body">
+                    <h3>Downloads Grátis</h3>
+                    <p>Baixe ISOs, patches em português, atualizações do OPL e utilitários.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="loadPage('lojalink.html')">
+                <span class="badge-green">Recomendado</span>
+                <div class="card-image" style="color: #ffeb3b;"><i class="fas fa-shopping-bag"></i></div>
+                <div class="card-body">
+                    <h3>Loja Premium</h3>
+                    <p>Acessórios, pendrives configurados e adaptadores HDMI testados.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="loadPage('aulasedicas.html')">
+                <div class="card-image" style="color: #54b4ff;"><i class="fas fa-video"></i></div>
+                <div class="card-body">
+                    <h3>Aulas e Dicas</h3>
+                    <p>Aprenda a configurar seu OPL, colocar capas e formatar pendrives sem erro.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="window.open('https://t.me/rodolfogameplay608', '_blank')">
+                <span class="badge-telegram">Comunidade</span>
+                <div class="card-image" style="color: #0088cc;"><i class="fab fa-telegram-plane"></i></div>
+                <div class="card-body">
+                    <h3>Grupo Telegram</h3>
+                    <p>Entre na nossa comunidade para suporte, avisos e conteúdos exclusivos.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CONTAINER QUE CARREGA OS OUTROS .HTML SEM RECARREGAR A SIDEBAR -->
+        <div id="content-frame-container">
+            <iframe src="" id="main-frame" title="Conteúdo"></iframe>
+        </div>
+    </main>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('show');
+        }
+
+        function closeSidebarOnMobile() {
+            if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+            }
+        }
+
+        /* Carrega arquivos externos (.html) dentro do iframe */
+        function loadPage(url) {
+            const home = document.getElementById('view-home');
+            const frameContainer = document.getElementById('content-frame-container');
+            const frame = document.getElementById('main-frame');
+
+            home.style.display = 'none';
+            frameContainer.style.display = 'block';
+            frame.src = url; 
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            navItems.forEach(item => {
+                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(url)) {
+                    item.classList.add('active');
+                }
+            });
+
+            closeSidebarOnMobile();
+        }
+
+        /* Volta para a tela principal (Cards da Home) */
+        function openHome() {
+            const home = document.getElementById('view-home');
+            const frameContainer = document.getElementById('content-frame-container');
+            const frame = document.getElementById('main-frame');
+
+            home.style.display = 'grid';
+            frameContainer.style.display = 'none';
+            frame.src = "about:blank"; 
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('menu-painel').classList.add('active');
+            
+            closeSidebarOnMobile();
+        }
+    </script>
+</body>
+</html>

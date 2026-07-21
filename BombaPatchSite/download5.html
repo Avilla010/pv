@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Liberado - Rodolfo Gameplay</title>
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --primary-hover: #cc0000;
+            --success-color: #28a745;
+            --success-hover: #218838;
+            --bg-color: #0b0b0c;
+            --card-bg: #141416;
+            --text-color: #ffffff;
+            --text-secondary: #aaaaaa;
+            --accent-color: #00ff66;
+            --warning-color: #ffcc00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at center, #1f1f23 0%, #0b0b0c 100%);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid #2d2d30;
+        }
+
+        .badge {
+            background-color: var(--accent-color);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 900;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        h1 span {
+            color: var(--accent-color);
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .appeal-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .appeal-box strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Botões */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Botão YouTube */
+        .btn-yt {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn-yt:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Botão de Confirmação Intermediária */
+        .btn-verify {
+            background-color: var(--warning-color);
+            color: #000;
+            display: none; /* Escondido por padrão */
+        }
+
+        .btn-verify:hover {
+            background-color: #e6b800;
+            transform: translateY(-2px);
+        }
+
+        /* Botão Download Bloqueado/Liberado */
+        .btn-download {
+            background-color: #222225;
+            color: #55555a;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-download.unlocked {
+            background-color: var(--success-color);
+            color: white;
+            cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        .btn-download.unlocked:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-2px);
+        }
+
+        .icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Caixa de Progresso Visual */
+        .progress-container {
+            width: 100%;
+            background-color: #222225;
+            border-radius: 8px;
+            overflow: hidden;
+            display: none; /* Escondido por padrão */
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 8px;
+            background-color: var(--warning-color);
+            transition: width 1s linear;
+        }
+
+        /* Mensagem de status */
+        .status-msg {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="badge">Acesso Exclusivo</div>
+    <h1>Download Liberado!</h1>
+    <p>Pegue o arquivo do patch testado e aprovado no canal!</p>
+
+    <div class="appeal-box">
+        <strong>🎮 Fortaleça a comunidade de WE10/Bomba Patch!</strong>
+        Eu busco os melhores patches, faço os testes de compatibilidade, gravo as gameplays de demonstração e ainda trago as melhores dicas de táticas e formações para você detonar nas partidas. Sua inscrição no <strong>Rodolfo Gameplay</strong> garante que eu continue trazendo novos conteúdos e os links mais seguros de graça. Se inscreve aí para somar e não tira depois, beleza? Tamo junto!
+    </div>
+
+    <div class="step">
+        <!-- PASSO 1: INSCREVER-SE -->
+        <a href="https://www.youtube.com/@rodolfogameplay6420?sub_confirmation=1" 
+           target="_blank" 
+           id="btn-subscribe" 
+           class="btn btn-yt">
+            <span class="icon">🔴</span> 1. Inscrever-se no Canal
+        </a>
+
+        <!-- BARRA DE PROGRESSO -->
+        <div class="progress-container" id="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- PASSO 1.5: BOTÃO DE CONFIRMAÇÃO -->
+        <button id="btn-verify" class="btn btn-verify">
+            <span class="icon">🔄</span> Confirmar Inscrição
+        </button>
+
+        <!-- PASSO 2: DOWNLOAD (target="_blank" ADICIONADO PARA ABRIR MEDIAFIRE EM NOVA ABA) -->
+        <a href="https://www.mediafire.com/file/9y3hi8ceeoa967e/Need+for+Speed+Underground+2.rar/file" 
+           target="_blank"
+           id="btn-download" 
+           class="btn btn-download">
+            <span class="icon">⬇️</span> 2. Baixar Arquivo
+        </a>
+    </div>
+
+    <div id="status" class="status-msg">Aguardando você se inscrever...</div>
+</div>
+
+<script>
+    const btnSubscribe = document.getElementById('btn-subscribe');
+    const btnVerify = document.getElementById('btn-verify');
+    const btnDownload = document.getElementById('btn-download');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const statusMsg = document.getElementById('status');
+
+    let tempoRestante = 10;
+    let timerInterval;
+
+    btnSubscribe.addEventListener('click', () => {
+        btnSubscribe.style.pointerEvents = "none";
+        btnSubscribe.style.opacity = "0.5";
+        
+        progressContainer.style.display = "block";
+        statusMsg.style.color = "var(--warning-color)";
+        statusMsg.innerText = `Aguardando inscrição na aba que se abriu... (${tempoRestante}s)`;
+
+        progressBar.style.width = "100%";
+        
+        timerInterval = setInterval(() => {
+            tempoRestante--;
+            statusMsg.innerText = `Aguardando inscrição na aba que se abriu... (${tempoRestante}s)`;
+
+            if (tempoRestante <= 0) {
+                clearInterval(timerInterval);
+                
+                progressContainer.style.display = "none";
+                btnVerify.style.display = "inline-flex";
+                
+                statusMsg.style.color = "var(--warning-color)";
+                statusMsg.innerText = "Por favor, clique em 'Confirmar Inscrição' para liberar o download.";
+            }
+        }, 1000);
+    });
+
+    btnVerify.addEventListener('click', () => {
+        btnVerify.style.display = "none";
+        statusMsg.style.color = "var(--warning-color)";
+        statusMsg.innerText = "Validando dados de inscrição com o YouTube... Aguarde.";
+
+        setTimeout(() => {
+            btnDownload.classList.add('unlocked');
+            btnDownload.innerHTML = '<span class="icon">🎮</span> 2. Baixar Arquivo Liberado!';
+            
+            btnSubscribe.style.pointerEvents = "auto";
+            btnSubscribe.style.opacity = "1";
+            
+            statusMsg.style.color = "var(--accent-color)";
+            statusMsg.innerText = "Inscrição validada! Obrigado por apoiar o canal! ❤️";
+        }, 3000);
+    });
+</script>
+
+</body>
+</html>

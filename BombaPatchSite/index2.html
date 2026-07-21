@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rodolfo Gameplay | Premium Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary-green: #00ff66;
+            --bg-dark: #050505;
+            --card-bg: #141414;
+            --sidebar-width: 280px;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: #fff; 
+            font-family: 'Roboto', sans-serif; 
+            display: flex; 
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR LATERAL --- */
+        .sidebar {
+            width: var(--sidebar-width); 
+            height: 100vh; 
+            background: #000;
+            border-right: 1px solid #222; 
+            position: fixed; 
+            padding: 40px 20px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            z-index: 100;
+        }
+        .logo-avatar { 
+            width: 120px; 
+            height: 120px; 
+            border-radius: 50%; 
+            border: 3px solid var(--primary-green); 
+            margin-bottom: 20px; 
+            object-fit: cover;
+        }
+        .sidebar h2 { font-size: 1.2rem; text-align: center; margin-bottom: 30px; letter-spacing: 1px; }
+        
+        .nav-item { 
+            color: #b3b3b3; 
+            padding: 15px; 
+            width: 100%; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+        .nav-item:hover, .nav-item.active { 
+            background: rgba(0, 255, 102, 0.1); 
+            color: var(--primary-green); 
+        }
+
+        /* --- CONTEÚDO À DIREITA --- */
+        .main-content { 
+            margin-left: var(--sidebar-width); 
+            padding: 40px; 
+            width: 100%; 
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .shop-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+        }
+
+        .product-card {
+            background: var(--card-bg); 
+            border-radius: 8px; 
+            border: 1px solid #222;
+            padding: 25px; 
+            transition: 0.4s; 
+            border-bottom: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-card:hover { 
+            transform: translateY(-8px); 
+            border-bottom-color: var(--primary-green); 
+            box-shadow: 0 10px 20px rgba(0,255,102,0.08);
+        }
+        .product-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+        .product-card h3 i { color: var(--primary-green); }
+        .product-card p { color: #aaa; font-size: 0.95rem; line-height: 1.5; }
+        .price { color: var(--primary-green); font-size: 1.2rem; font-weight: bold; margin: 20px 0 15px 0; display: block; }
+
+        .btn-buy { 
+            background: var(--primary-green); 
+            color: #000; 
+            padding: 12px; 
+            text-align: center; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border-radius: 6px; 
+            display: block; 
+            transition: 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-buy:hover { filter: brightness(1.1); }
+
+        /* --- RESPONSIVIDADE (MOBILE) --- */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                position: relative; 
+                padding: 20px; 
+                border-right: none; 
+                border-bottom: 1px solid #222;
+            }
+            .main-content { margin-left: 0; padding: 20px; }
+            .logo-avatar { width: 80px; height: 80px; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <img src="rodolfogameplay.jpg" class="logo-avatar" alt="Rodolfo Gameplay">
+        <h2>RODOLFO GAMEPLAY</h2>
+        <div class="nav-item active" onclick="switchTab('loja', event)"><i class="fas fa-shopping-bag"></i> Recomendações</div>
+        <a href="downloadgratis.html" class="nav-item"><i class="fas fa-download"></i> Downloads Grátis</a>
+        <div class="nav-item" onclick="switchTab('aulas', event)"><i class="fas fa-video"></i> Aulas e Dicas</div>
+        <div class="nav-item" onclick="switchTab('suporte', event)"><i class="fas fa-headset"></i> Suporte</div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+        
+        <!-- ABA: RECOMENDAÇÕES (AFILIADOS & SERVIÇOS) -->
+        <section id="loja" class="tab-content active">
+            <h1 style="margin-bottom: 10px;">Equipamentos e Serviços</h1>
+            <p style="color: #aaa; margin-bottom: 30px;">Kits testados e aprovados para extrair o máximo do seu PS2.</p>
+            
+            <div class="shop-grid">
+                
+                <!-- PRODUTO AFILIADO 1 -->
+                <div class="product-card">
+                    <div>
+                        <h3><i class="fas fa-usb"></i> Pendrives Recomendados</h3>
+                        <p>Lista de pendrives SanDisk e Kingston testados para alta velocidade de leitura no OPL sem travamentos.</p>
+                    </div>
+                    <div>
+                        <span class="price">A partir de R$ 35,00</span>
+                        <a href="SEU_LINK_DE_AFILIADO_SHOPEE_OU_AMAZON" target="_blank" class="btn-buy">Ver na Loja Parceira</a>
+                    </div>
+                </div>
+
+                <!-- PRODUTO AFILIADO 2 -->
+                <div class="product-card">
+                    <div>
+                        <h3><i class="fas fa-tv"></i> Adaptador PS2 to HDMI</h3>
+                        <p>Jogue seu PS2 em Smart TVs modernas com imagem limpa e digital. Excelente custo-benefício.</p>
+                    </div>
+                    <div>
+                        <span class="price">A partir de R$ 25,00</span>
+                        <a href="SEU_LINK_DE_AFILIADO_SHOPEE_OU_AMAZON" target="_blank" class="btn-buy">Ver na Loja Parceira</a>
+                    </div>
+                </div>
+
+                <!-- SERVIÇO DE CONSULTORIA -->
+                <div class="product-card">
+                    <div>
+                        <h3><i class="fas fa-headset"></i> Suporte VIP / Suporte OPL</h3>
+                        <p>Ajuda remota passo a passo para configurar pendrive, OPL, capas e artes no seu PS2 via WhatsApp.</p>
+                    </div>
+                    <div>
+                        <span class="price">Atendimento Personalizado</span>
+                        <a href="https://wa.me/5500000000000?text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria%20de%20PS2" target="_blank" class="btn-buy">Agendar no WhatsApp</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ABA: AULAS E DICAS -->
+        <section id="aulas" class="tab-content">
+            <h1 style="margin-bottom: 30px;">Aulas e Conteúdos</h1>
+            <p style="color: #aaa;">Confira os vídeos recentes do canal com tutoriais e gameplays de PS2 e Bomba Patch.</p>
+        </section>
+
+        <!-- ABA: SUPORTE -->
+        <section id="suporte" class="tab-content">
+            <h1 style="margin-bottom: 30px;">Atendimento e Suporte</h1>
+            <p style="color: #aaa; margin-bottom: 20px;">Dúvidas gerais sobre os tutoriais ou downloads?</p>
+            <a href="https://wa.me/5500000000000" target="_blank" class="btn-buy" style="max-width: 250px;">
+                <i class="fab fa-whatsapp"></i> Chamar no WhatsApp
+            </a>
+        </section>
+
+    </main>
+
+    <script>
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            if(event) {
+                event.currentTarget.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>

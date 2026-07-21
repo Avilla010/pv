@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads Grátis | Rodolfo Gameplay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary-green: #00ff66;
+            --bg-dark: #050505;
+            --card-bg: #141414;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: #fff; 
+            font-family: 'Roboto', sans-serif; 
+            padding: 30px;
+        }
+
+        /* --- TÍTULO DA PÁGINA --- */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header h1 i {
+            color: var(--primary-green);
+        }
+
+        .page-header p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        /* --- GRID DE PRODUTOS/JOGOS --- */
+        .shop-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .product-card {
+            background: var(--card-bg); 
+            border-radius: 8px; 
+            border: 1px solid #222;
+            padding: 20px; 
+            transition: 0.4s; 
+            border-bottom: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .product-card:hover { 
+            transform: translateY(-6px); 
+            border-bottom-color: var(--primary-green); 
+            box-shadow: 0 10px 20px rgba(0,255,102,0.08);
+        }
+
+        /* --- ESTILO DAS CAPAS (PROPORÇÃO PS2) --- */
+        .game-cover-wrapper {
+            width: 100%;
+            max-width: 160px; 
+            aspect-ratio: 3 / 4; 
+            margin: 0 auto 15px auto;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #0d0d0d;
+            border: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .game-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .game-cover {
+            transform: scale(1.05);
+        }
+
+        .product-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .product-card h3 i { color: var(--primary-green); }
+        .product-card p { color: #aaa; font-size: 0.9rem; line-height: 1.4; }
+        .price { color: var(--primary-green); font-size: 1rem; font-weight: bold; margin: 15px 0 10px 0; display: block; }
+        
+        .badge-free {
+            display: inline-block;
+            background: rgba(0, 255, 102, 0.15);
+            color: var(--primary-green);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border: 1px solid var(--primary-green);
+            width: fit-content;
+        }
+
+        .btn-buy { 
+            background: #1e1e1e;
+            color: var(--primary-green);
+            border: 1px solid var(--primary-green);
+            padding: 10px; 
+            text-align: center; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border-radius: 6px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-buy:hover {
+            background: var(--primary-green);
+            color: #000;
+        }
+
+        /* --- RESPONSIVIDADE (MOBILE / ANDROID) --- */
+        @media (max-width: 768px) {
+            body { padding: 20px 15px; }
+            .shop-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+            .product-card { padding: 15px; }
+            .game-cover-wrapper { max-width: 130px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO DA PÁGINA -->
+    <div class="page-header">
+        <h1><i class="fas fa-download"></i> Downloads Grátis</h1>
+        <p>Baixe ISOs, patches e utilitários selecionados para o seu PS2 sem pagar nada.</p>
+    </div>
+    
+    <!-- GRID DE JOGOS -->
+    <div class="shop-grid">
+
+        <!-- JOGO 1 -->
+        <div class="product-card">
+            <div>
+                <div class="game-cover-wrapper">
+                    <img src="jogo1.jpg" alt="Super Bomba Patch 2026" class="game-cover">
+                </div>
+                <span class="badge-free">GRÁTIS</span>
+                <h3><i class="fas fa-gamepad"></i> Super Bomba Patch 2026</h3>
+                <p>O clássico inigualável! Elencos atualizados, narração brasileira e menus estilizados para PS2.</p>
+            </div>
+            <div>
+                <span class="price">Tamanho: 2.4 GB</span>
+                <a href="download1.html" class="btn-buy">
+                    <i class="fas fa-download"></i> Baixar ISO
+                </a>
+            </div>
+        </div>
+
+        <!-- JOGO 2 -->
+        <div class="product-card">
+            <div>
+                <div class="game-cover-wrapper">
+                    <img src="jogo2.jpg" alt="Resident Evil 4" class="game-cover">
+                </div>
+                <span class="badge-free">GRÁTIS</span>
+                <h3><i class="fas fa-gamepad"></i> Resident evil 4</h3>
+                <p>Versão pura e dublada do RE4. A melhor jogabilidade da saga e o melhor Resident Evil já feito foi no PS2.</p>
+            </div>
+            <div>
+                <span class="price">Tamanho: 1.8 GB</span>
+                <a href="download2.html" class="btn-buy">
+                    <i class="fas fa-download"></i> Baixar ISO
+                </a>
+            </div>
+        </div>
+
+        <!-- JOGO 3 -->
+        <div class="product-card">
+            <div>
+                <div class="game-cover-wrapper">
+                    <img src="jogo3.jpg" alt="GTA San Andreas BR" class="game-cover">
+                </div>
+                <span class="badge-free">GRÁTIS</span>
+                <h3><i class="fas fa-gamepad"></i> GTA San Andreas BR</h3>
+                <p>GTA San Andreas legendado em português com carros e rádios nacionais pré-configurados.</p>
+            </div>
+            <div>
+                <span class="price">Tamanho: 4.1 GB</span>
+                <a href="lojalink.html" class="btn-buy">
+                    <i class="fas fa-download"></i> Baixar ISO
+                </a>
+            </div>
+        </div>
+
+        <!-- JOGO 4 -->
+        <div class="product-card">
+            <div>
+                <div class="game-cover-wrapper">
+                    <img src="jogo4.jpg" alt="God of War II BR" class="game-cover">
+                </div>
+                <span class="badge-free">GRÁTIS</span>
+                <h3><i class="fas fa-gamepad"></i> God of War II BR</h3>
+                <p>A saga lendária de Kratos com legendas em PT-BR ativadas e otimizado para rodar liso no OPL.</p>
+            </div>
+            <div>
+                <span class="price">Tamanho: 4.3 GB</span>
+                <a href="lojalink.html" class="btn-buy">
+                    <i class="fas fa-download"></i> Baixar ISO
+                </a>
+            </div>
+        </div>
+
+        <!-- JOGO 5 -->
+        <div class="product-card">
+            <div>
+                <div class="game-cover-wrapper">
+                    <img src="jogo5.jpg" alt="Need For Speed UG2" class="game-cover">
+                </div>
+                <span class="badge-free">GRÁTIS</span>
+                <h3><i class="fas fa-gamepad"></i> Need For Speed UG2</h3>
+                <p>O rei do tuning no PS2! Save game com tudo liberado e carros customizados inclusos.</p>
+            </div>
+            <div>
+                <span class="price">Tamanho: 1.33 GB</span>
+                <a href="download5.html" class="btn-buy">
+                    <i class="fas fa-download"></i> Baixar ISO
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

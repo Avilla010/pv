@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aulas e Dicas | Rodolfo Gameplay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary-green: #00ff66;
+            --bg-dark: #050505;
+            --card-bg: #141414;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: #fff; 
+            font-family: 'Roboto', sans-serif; 
+            padding: 30px;
+        }
+
+        /* --- TÍTULO DA PÁGINA --- */
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header h1 i {
+            color: var(--primary-green);
+        }
+
+        .page-header p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+
+        /* HEADER DE INSCRIÇÃO */
+        .channel-banner {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            border: 1px solid #222;
+            border-left: 4px solid var(--primary-green);
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .channel-info h2 { font-size: 1.3rem; margin-bottom: 5px; }
+        .channel-info p { color: #aaa; font-size: 0.95rem; }
+
+        .btn-youtube {
+            background: #ff0000;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-youtube:hover {
+            background: #cc0000;
+            transform: scale(1.03);
+        }
+
+        /* GRID DE VÍDEOS */
+        .video-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .video-card {
+            background: var(--card-bg); 
+            border-radius: 8px; 
+            border: 1px solid #222;
+            overflow: hidden;
+            transition: 0.4s; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card:hover { 
+            transform: translateY(-6px); 
+            border-color: var(--primary-green); 
+            box-shadow: 0 8px 20px rgba(0,255,102,0.1);
+        }
+
+        /* CONTAINER DO YOUTUBE (RESPONSIVO 16:9) */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; 
+            height: 0;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .video-tag {
+            background: rgba(0, 255, 102, 0.1);
+            color: var(--primary-green);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            width: fit-content;
+            margin-bottom: 10px;
+            border: 1px solid rgba(0, 255, 102, 0.3);
+        }
+
+        .video-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .video-details p {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* --- RESPONSIVIDADE (MOBILE / ANDROID) --- */
+        @media (max-width: 768px) {
+            body { padding: 20px 15px; }
+            .channel-banner { flex-direction: column; align-items: flex-start; }
+            .btn-youtube { width: 100%; justify-content: center; }
+            .video-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <div class="page-header">
+        <h1><i class="fas fa-video"></i> Aulas & Táticas de PS2</h1>
+        <p>Aprenda as melhores formações, truques de ataque/defesa e tutoriais do OPL e WE10.</p>
+    </div>
+    
+    <!-- BANNER DO CANAL -->
+    <div class="channel-banner">
+        <div class="channel-info">
+            <h2><i class="fab fa-youtube" style="color: #ff0000;"></i> Canal Rodolfo Gameplay</h2>
+            <p>Inscreva-se para não perder os novos tutoriais e táticas diárias.</p>
+        </div>
+        <a href="https://www.youtube.com/@rodolfogameplay6420?sub_confirmation=1" target="_blank" class="btn-youtube">
+            <i class="fab fa-youtube"></i> Inscrever-se no Canal
+        </a>
+    </div>
+
+    <!-- GRID DE VÍDEOS -->
+    <div class="video-grid">
+
+        <!-- VÍDEO 1 -->
+        <div class="video-card">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tática Imbatível WE10" allowfullscreen></iframe>
+            </div>
+            <div class="video-details">
+                <div>
+                    <span class="video-tag">FORMAÇÃO & TÁTICA</span>
+                    <h3>A Melhor Formação Defensiva do Winning Eleven 10</h3>
+                    <p>Aprenda a montar um 4-4-2 blindado no WE10 e evite levar gols de lançamento de longa distância.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VÍDEO 2 -->
+        <div class="video-card">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Como Chutar Cruzado" allowfullscreen></iframe>
+            </div>
+            <div class="video-details">
+                <div>
+                    <span class="video-tag">GAMEPLAY / GUIA</span>
+                    <h3>Como Fazer Gol Cruzado sem Errar no Bomba Patch</h3>
+                    <p>Tutorial definitivo de finalização. Descubra o tempo certo do botão para enganar o goleiro no PS2.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VÍDEO 3 -->
+        <div class="video-card">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tutorial OPL" allowfullscreen></iframe>
+            </div>
+            <div class="video-details">
+                <div>
+                    <span class="video-tag">TUTORIAL OPL</span>
+                    <h3>Como Colocar Capas e Temas no OPL do Pen Drive</h3>
+                    <p>Passo a passo simples de como organizar as artes do seus jogos e deixar o visual do OPL incrível.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VÍDEO 4 -->
+        <div class="video-card">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Dribles Secretos" allowfullscreen></iframe>
+            </div>
+            <div class="video-details">
+                <div>
+                    <span class="video-tag">DRIBLES & MANOBRAS</span>
+                    <h3>Os 5 Dribles Mais Apagados do Winning Eleven</h3>
+                    <p>Aprenda a dar pedalada, elástico e cortar a zaga adversária usando apenas os botões analógicos.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
