@@ -53,6 +53,16 @@
             border-color: #E50914;
         }
 
+        /* Estilo para Card em Destaque */
+        .card-simulado.card-destaque {
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+        .card-simulado.card-destaque:hover {
+            border-color: #ffd700;
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.5);
+        }
+
         .thumbnail-placeholder {
             width: 100%;
             height: 150px;
@@ -62,6 +72,11 @@
             justify-content: center;
             font-size: 3rem;
             color: #E50914;
+        }
+
+        .card-destaque .thumbnail-placeholder {
+            background: linear-gradient(45deg, #2b2600, #4a4000);
+            color: #ffd700;
         }
 
         .card-content { padding: 15px; }
@@ -77,6 +92,7 @@
         
         .status-pendente { border: 1px solid #555; color: #aaa; } 
         .status-concluido { background: #46d369; color: #fff; } /* Verde Netflix para sucesso */
+        .status-destaque { background: #ffd700; color: #000; }
 
         .btn-start {
             display: block; width: 100%; padding: 10px; background: #fff; color: #000;
@@ -84,6 +100,13 @@
             border-radius: 4px; transition: 0.2s; border: none;
         }
         .btn-start:hover { background: #E50914; color: #fff; }
+
+        .btn-start-destaque {
+            background: #ffd700; color: #000;
+        }
+        .btn-start-destaque:hover {
+            background: #ffae00; color: #000;
+        }
 
         .btn-reset { 
             background: transparent; color: #555; border: 1px solid #555; 
@@ -113,8 +136,9 @@
 
     <script>
         const simulados = [
+            { id: 'sim17', titulo: 'Pré-Exame Oficial', questoes: 30, link: 'prova17.html', desc: 'Simulado final preparatório para o exame oficial.', icon: 'fa-crown', destaque: true },
             { id: 'sim01', titulo: 'Habilitação: A Estreia', questoes: 30, link: 'simulado01.html', desc: 'O início de tudo. O processo completo de habilitação.', icon: 'fa-id-card' },
-            { id: 'sim02', titulo: 'Sinalização: O Código', questoes: 15, link: 'simulado02.html', desc: 'Decifre todas as placas de regulamentação.', icon: 'fa-traffic-light' }, // ÍCONE CORRIGIDO AQUI
+            { id: 'sim02', titulo: 'Sinalização: O Código', questoes: 15, link: 'simulado02.html', desc: 'Decifre todas as placas de regulamentação.', icon: 'fa-traffic-light' },
             { id: 'sim03', titulo: 'Normas de Conduta', questoes: 15, link: 'simulado03.html', desc: 'As regras de ouro da circulação e ultrapassagem.', icon: 'fa-road' },
             { id: 'sim04', titulo: 'Infrações e Multas', questoes: 10, link: 'simulado04.html', desc: 'O que não fazer. Penalidades e medidas.', icon: 'fa-gavel' },
             { id: 'sim05', titulo: 'Direção Defensiva', questoes: 15, link: 'simulado05.html', desc: 'A arte de prever perigos e evitar acidentes.', icon: 'fa-shield-halved' },
@@ -144,12 +168,17 @@
                         texto = `Score: ${Math.round((ultimaNota/sim.questoes)*100)}%`;
                     }
                     badgeHTML = `<span class="score-badge status-concluido">${texto}</span>`;
+                } else if (sim.destaque) {
+                    badgeHTML = `<span class="score-badge status-destaque">Destaque / Pré-Exame</span>`;
                 } else {
                     badgeHTML = `<span class="score-badge status-pendente">Novo Simulado</span>`;
                 }
 
+                const destaqueClass = sim.destaque ? 'card-destaque' : '';
+                const btnDestaqueClass = sim.destaque ? 'btn-start-destaque' : '';
+
                 container.innerHTML += `
-                    <div class="card-simulado" onclick="marcarComoFeito('${sim.id}', '${sim.link}')">
+                    <div class="card-simulado ${destaqueClass}" onclick="marcarComoFeito('${sim.id}', '${sim.link}')">
                         <div class="thumbnail-placeholder">
                             <i class="fas ${sim.icon}"></i>
                         </div>
@@ -159,7 +188,7 @@
                                 <h3>${sim.titulo}</h3>
                                 <p>${sim.desc}</p>
                             </div>
-                            <button class="btn-start">Assistir (Iniciar)</button>
+                            <button class="btn-start ${btnDestaqueClass}">Assistir (Iniciar)</button>
                         </div>
                     </div>
                 `;
