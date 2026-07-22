@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários de Aula - Auto escola Digital</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #E50914; /* Vermelho Netflix */
+            --accent: #ffffff;  
+            --bg: #141414;      /* Preto Netflix */
+            --card-bg: #181818; /* Cinza Dark */
+            --input-bg: #2a2a2a;
+        }
+
+        body {
+            background-color: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .login-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .logo-login img { max-width: 150px; margin-bottom: 15px; }
+        h2 { color: #fff; margin-bottom: 20px; font-size: 1.3rem; font-weight: 700; }
+        
+        .horarios-alert {
+            background-color: #2e260a;
+            border: 1px solid #5e4d10;
+            color: #fbbf24;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .tabela-horarios {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .tabela-horarios th, .tabela-horarios td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #333;
+        }
+
+        .tabela-horarios th {
+            background-color: #222;
+            color: var(--primary);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .tabela-horarios td {
+            color: #ccc;
+        }
+
+        .tabela-horarios tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        .badge-presencial {
+            background-color: #2a0a0a;
+            color: #ff9494;
+            border: 1px solid #4a1010;
+        }
+
+        .badge-online {
+            background-color: #0a2a12;
+            color: #94ffb0;
+            border: 1px solid #104a20;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo-login">
+            <img src="digital.png" alt="Auto escola Digital">
+        </div>
+        
+        <h2>Cronograma de Horários Disponíveis</h2>
+
+        <div class="horarios-alert">
+            <i class="fas fa-info-circle"></i> Confira abaixo os horários e modalidades das aulas disponíveis para cada dia da semana.
+        </div>
+
+        <table class="tabela-horarios">
+            <thead>
+                <tr>
+                    <th>DIA</th>
+                    <th>MANHÃ</th>
+                    <th>TARDE/NOITE</th>
+                    <th>MODALIDADE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SEGUNDA</strong></td>
+                    <td>07:00 ÀS 12:00</td>
+                    <td>17:00 ÀS 19:30</td>
+                    <td><span class="badge badge-presencial">PRESENCIAL</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TERÇAS</strong></td>
+                    <td>07:00 ÀS 12:00</td>
+                    <td>17:30 ÀS 19:00</td>
+                    <td><span class="badge badge-online">ONLINE</span></td>
+                </tr>
+                <tr>
+                    <td><strong>QUARTA</strong></td>
+                    <td>07:00 ÀS 12:00</td>
+                    <td>17:00 ÀS 19:30</td>
+                    <td><span class="badge badge-presencial">PRESENCIAL</span></td>
+                </tr>
+                <tr>
+                    <td><strong>QUINTA</strong></td>
+                    <td>07:00 ÀS 12:00</td>
+                    <td>17:30 ÀS 19:00</td>
+                    <td><span class="badge badge-online">ONLINE</span></td>
+                </tr>
+                <tr>
+                    <td><strong>SEXTA</strong></td>
+                    <td>07:00 ÀS 12:00</td>
+                    <td>17:00 ÀS 19:30</td>
+                    <td><span class="badge badge-presencial">PRESENCIAL</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
