@@ -16,6 +16,7 @@
             --success: #46d369; 
             --danger: #e50914; 
             --text: #fff; 
+            --premium-gold: #ffeb3b;
         }
         
         body { font-family: 'Roboto', sans-serif; background: var(--netflix-black); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
@@ -48,6 +49,50 @@
         #result-area { text-align: center; display: none; padding: 20px; }
         .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
         
+        /* CARD DE MARKETING PARA A LOJA VIP */
+        .marketing-card {
+            background: linear-gradient(135deg, #1f1402, #0d0d0d, #1f1402);
+            border: 2px dashed var(--premium-gold);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0 20px 0;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.15);
+        }
+        .marketing-card h4 {
+            color: var(--premium-gold);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .marketing-card p {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .btn-loja-marketing {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--premium-gold);
+            color: #000;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            transition: transform 0.2s, background 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn-loja-marketing:hover {
+            background: #e6d235;
+            transform: scale(1.02);
+        }
+
         /* Área do Plano de Correção de Erros */
         .error-report-container { text-align: left; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; display: none; }
         .error-item { background: rgba(255,255,255,0.02); border-left: 4px solid var(--netflix-red); padding: 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
@@ -64,7 +109,7 @@
         /* REGRAS EXCLUSIVAS PARA IMPRESSÃO EM PAPEL (SALVAR PDF) */
         @media print {
             body { background: #fff !important; color: #000 !important; padding: 0; }
-            .header-nav, #live-stats, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .header-nav, #live-stats, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio, .marketing-card { display: none !important; }
             .quiz-section { background: #fff !important; box-shadow: none !important; padding: 0 !important; }
             .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
             .error-item { background: #f9f9f9 !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc; margin-bottom: 15px; padding: 15px !important; }
@@ -121,6 +166,15 @@
             
             <div id="pdf-trigger-zone"></div>
 
+            <!-- CARD BANNER DE MARKETING (DIRECIONAMENTO PARA LOJA.HTML) -->
+            <div class="marketing-card">
+                <h4><i class="fas fa-crown"></i> Acelere sua Aprovação Oficial</h4>
+                <p id="marketing-text">Quer garantir sua aprovação sem riscos? Acesse nossa Loja Premium e garanta a Apostila Tática em HD + Caixa Preta de Questões da nossa região.</p>
+                <a href="loja.html" class="btn-loja-marketing">
+                    <i class="fas fa-shopping-bag"></i> Acessar Loja Premium CNH
+                </a>
+            </div>
+
             <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Tentar Novamente</button>
         </div>
 
@@ -150,7 +204,7 @@ const questions = [
     { "q": "Como se classificam as infrações?", "options": ["Leve, grave, pesada e gravíssima.", "Gravíssima, grave and média.", "Grave, leve, média e gravíssima.", "Gravíssima, pesada, grave e média."], "correct": 2 },
     { "q": "Veículos destinados à formação de condutores são classificados quanto à categoria em:", "options": ["De aluguel.", "Particular.", "Oficial.", "De Aprendizagem."], "correct": 3 },
     { "q": "Quais as placas que se destinam a estabelecer as obrigações, autorizações e proibições ao uso da via?", "options": ["Advertência.", "Regulamentação.", "Indicativa.", "Serviços auxiliares."], "correct": 1 },
-    { "q": "Diante da placa A-28, qual atitude deverá o condutor tomar?", "options": ["Ficar atento.", "Parar o veículo.", "Diminuir a velocidade.", "Nenhuma das alternativas."], "correct": 2, "img": "A28.png" },
+    { "q": "Diante da placa A-28, qual atitude deverá o condutor tomar?", "options": ["Ficar atento.", "Parar o veículo.", "Diminuir a velocidade.", "Nenhuma das alternatives."], "correct": 2, "img": "A28.png" },
     { "q": "Diante da placa A-8, o condutor deve entender que:", "options": ["Existe uma interseção com término de via.", "Existe uma rua sem saída.", "Existe uma interseção em nível.", "Existe uma via lateral à frente."], "correct": 0, "img": "t.png" },
     { "q": "A placa A-15, adverte:", "options": ["Pare.", "Parada obrigatória à frente.", "Dê a preferência.", "Parada obrigatória."], "correct": 1, "img": "A15.png" },
     { "q": "As marcas que separam fluxos opostos e proibem ao condutor ultrapassar outro veículo em movimento são:", "options": ["Interrompidas ou seccionadas.", "Amarelas e interrompidas.", "Contínuas e brancas.", "Contínuas e amarelas."], "correct": 3 },
@@ -276,7 +330,15 @@ function showFinalResult() {
     document.getElementById('result-area').style.display = "block";
     
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 21 ? "🏆 APROVADO! Você dominou o processo." : "⚠️ QUASE LÁ! Revise a teoria e tente novamente.";
+    
+    // MENSAGEM DINÂMICA DE MARKETING DE ACORDO COM O RESULTADO
+    if (score >= 21) {
+        document.getElementById('feedback-msg').innerHTML = "🏆 APROVADO! Você dominou o processo.";
+        document.getElementById('marketing-text').innerHTML = "Parabéns pelo resultado! Para garantir que nada dê errado no exame real, desbloqueie a Apostila Tática de Resumos em HD na nossa Loja VIP.";
+    } else {
+        document.getElementById('feedback-msg').innerHTML = "⚠️ QUASE LÁ! Revise a teoria e tente novamente.";
+        document.getElementById('marketing-text').innerHTML = "Não corra riscos no dia da prova! Garanta a Apostila de Bolso e o Combo Pré-Exame da nossa Loja VIP para eliminar todos os seus pontos fracos.";
+    }
 
     if(userErrorsLog.length > 0) {
         const errorListDiv = document.getElementById('error-list');
