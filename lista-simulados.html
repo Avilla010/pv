@@ -1,94 +1,150 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <script>
-        if (localStorage.getItem('acesso_cnh') !== 'true') {
-            // Se não estiver logado, manda para o login que está na pasta anterior ou raiz
-            window.location.href = 'login.html'; 
-        }
-    </script>    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulados - CNH Blindada</title>
+    <title>CNH Blindada - Originals</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon.jpg" type="image/jpeg">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: #f8fafc; padding: 20px; color: #1e293b; }
+        /* Estética Netflix: Fundo escuro e fontes robustas */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
         
-        .header-section { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        body { 
+            background-color: #141414; /* Preto Netflix */
+            color: #fff; 
+            padding: 40px 4%; 
+            overflow-x: hidden;
+        }
+
+        .header-section { 
+            margin-bottom: 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end;
+        }
+
+        h2 { font-size: 2rem; color: #E50914; text-transform: uppercase; letter-spacing: 1px; }
+        .header-section p { color: #a3a3a3; font-size: 1rem; margin-top: 5px; }
         
+        /* Grid estilo 'Trending Now' */
         .grid-simulados { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 20px; 
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 40px 20px; 
         }
 
         .card-simulado { 
-            background: #fff; 
-            border-radius: 12px; 
-            padding: 20px; 
-            border: 1px solid #e2e8f0; 
-            display: flex; 
-            flex-direction: column; 
-            transition: 0.3s;
+            background: #181818; 
+            border-radius: 4px; 
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
+            position: relative;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
         }
         
-        .card-simulado:hover { transform: translateY(-5px); border-color: #2563eb; }
-
-        .icon-area { 
-            width: 50px; height: 50px; background: #eff6ff; color: #2563eb; 
-            border-radius: 10px; display: flex; align-items: center; justify-content: center; 
-            font-size: 1.5rem; margin-bottom: 15px; 
+        /* Efeito de Zoom clássico da Netflix */
+        .card-simulado:hover { 
+            transform: scale(1.1); 
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            border-color: #E50914;
         }
 
-        .simulado-info h3 { font-size: 1.1rem; margin-bottom: 5px; color: #0f172a; }
-        .simulado-info p { font-size: 0.85rem; color: #64748b; margin-bottom: 15px; }
+        /* Estilo para Card em Destaque */
+        .card-simulado.card-destaque {
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+        .card-simulado.card-destaque:hover {
+            border-color: #ffd700;
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.5);
+        }
 
-        /* Estilos das Badges */
+        .thumbnail-placeholder {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(45deg, #222, #333);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #E50914;
+        }
+
+        .card-destaque .thumbnail-placeholder {
+            background: linear-gradient(45deg, #2b2600, #4a4000);
+            color: #ffd700;
+        }
+
+        .card-content { padding: 15px; }
+
+        .simulado-info h3 { font-size: 1rem; margin-bottom: 8px; color: #fff; }
+        .simulado-info p { font-size: 0.75rem; color: #808080; line-height: 1.4; margin-bottom: 12px; height: 34px; overflow: hidden; }
+
+        /* Badges Minimalistas */
         .score-badge {
-            font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-            display: inline-block; margin-bottom: 15px;
+            font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 2px;
+            display: inline-block; margin-bottom: 10px; text-transform: uppercase;
         }
         
-        /* Cores solicitadas */
-        .status-pendente { background: #fee2e2; color: #ef4444; } /* Vermelho */
-        .status-concluido { background: #dcfce7; color: #10b981; } /* Verde */
+        .status-pendente { border: 1px solid #555; color: #aaa; } 
+        .status-concluido { background: #46d369; color: #fff; } /* Verde Netflix para sucesso */
+        .status-destaque { background: #ffd700; color: #000; }
 
         .btn-start {
-            display: block; width: 100%; padding: 12px; background: #0f172a; color: #fff;
-            text-align: center; text-decoration: none; font-size: 0.9rem; font-weight: 600;
-            border-radius: 8px; transition: 0.3s; border: none; cursor: pointer;
+            display: block; width: 100%; padding: 10px; background: #fff; color: #000;
+            text-align: center; text-decoration: none; font-size: 0.85rem; font-weight: 700;
+            border-radius: 4px; transition: 0.2s; border: none;
         }
-        .btn-start:hover { background: #2563eb; }
+        .btn-start:hover { background: #E50914; color: #fff; }
 
-        .btn-reset { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .btn-start-destaque {
+            background: #ffd700; color: #000;
+        }
+        .btn-start-destaque:hover {
+            background: #ffae00; color: #000;
+        }
+
+        .btn-reset { 
+            background: transparent; color: #555; border: 1px solid #555; 
+            padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; 
+            transition: 0.3s;
+        }
+        .btn-reset:hover { border-color: #fff; color: #fff; }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .grid-simulados { grid-template-columns: 1fr 1fr; }
+            h2 { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
 
     <div class="header-section">
         <div>
-            <h2>Centro de Simulados</h2>
-            <p>Teste seus conhecimentos com questões oficiais.</p>
+            <h2>SIMULADO <span style="font-weight: 400; color: #fff;">GAMER</span></h2>
+            <p>Escolha sua próxima fase e vença o desafio da aprovação.</p>
         </div>
-        <button class="btn-reset" onclick="resetSimulados()">Limpar Histórico</button>
+        <button class="btn-reset" onclick="resetSimulados()">Resetar Histórico</button>
     </div>
 
     <div class="grid-simulados" id="lista-simulados"></div>
 
     <script>
         const simulados = [
-            { id: 'sim01', titulo: 'Simulado 01: Processo de habilitação', questoes: 30, link: 'simulado01.html', desc: 'Abrange todo o processo de habilitação.' },
-            { id: 'sim02', titulo: 'Simulado 02: Sinalização', questoes: 15, link: 'simulado02.html', desc: 'Foco em placas de regulamentação e advertência.' },
-            { id: 'sim03', titulo: 'Simulado 03: Normas de circulação', questoes: 15, link: 'simulado03.html', desc: 'Regras de preferência, ultrapassagem e conduta.' },
-            { id: 'sim04', titulo: 'Simulado 04: Penalidades', questoes: 10, link: 'simulado04.html', desc: 'Infrações, multas e medidas administrativas.' },
-            // NOVOS SIMULADOS ADICIONADOS ABAIXO
-            { id: 'sim05', titulo: 'Simulado 05: Direção Defensiva', questoes: 15, link: 'simulado05.html', desc: 'Como evitar acidentes e agir em condições adversas.' },
-            { id: 'sim06', titulo: 'Simulado 06: Primeiros Socorros', questoes: 10, link: 'simulado06.html', desc: 'Procedimentos iniciais em caso de acidentes de trânsito.' },
-            { id: 'sim07', titulo: 'Simulado 07: Meio Ambiente e Cidadania', questoes: 10, link: 'simulado07.html', desc: 'O convívio social e o impacto ambiental no trânsito.' },
-            { id: 'sim08', titulo: 'Simulado 08: Mecânica Básica', questoes: 10, link: 'simulado08.html', desc: 'Conhecimentos fundamentais sobre o funcionamento do veículo.' }
+            { id: 'sim17', titulo: 'Pré-Exame Oficial', questoes: 30, link: 'prova17.html', desc: 'Simulado final preparatório para o exame oficial.', icon: 'fa-crown', destaque: true },
+            { id: 'sim01', titulo: 'Habilitação: A Estreia', questoes: 30, link: 'simulado01.html', desc: 'O início de tudo. O processo completo de habilitação.', icon: 'fa-id-card' },
+            { id: 'sim02', titulo: 'Sinalização: O Código', questoes: 15, link: 'simulado02.html', desc: 'Decifre todas as placas de regulamentação.', icon: 'fa-traffic-light' },
+            { id: 'sim03', titulo: 'Normas de Conduta', questoes: 15, link: 'simulado03.html', desc: 'As regras de ouro da circulação e ultrapassagem.', icon: 'fa-road' },
+            { id: 'sim04', titulo: 'Infrações e Multas', questoes: 10, link: 'simulado04.html', desc: 'O que não fazer. Penalidades e medidas.', icon: 'fa-gavel' },
+            { id: 'sim05', titulo: 'Direção Defensiva', questoes: 15, link: 'simulado05.html', desc: 'A arte de prever perigos e evitar acidentes.', icon: 'fa-shield-halved' },
+            { id: 'sim06', titulo: 'Primeiros Socorros', questoes: 10, link: 'simulado06.html', desc: 'Ação imediata. Procedimentos que salvam vidas.', icon: 'fa-kit-medical' },
+            { id: 'sim07', titulo: 'Meio Ambiente', questoes: 10, link: 'simulado07.html', desc: 'Cidadania e impacto ambiental no trânsito.', icon: 'fa-leaf' },
+            { id: 'sim08', titulo: 'Mecânica: O Motor', questoes: 10, link: 'simulado08.html', desc: 'Conheça o coração do seu veículo.', icon: 'fa-gears' }
         ];
 
         function marcarComoFeito(id, link) {
@@ -106,34 +162,41 @@
                 
                 let badgeHTML = '';
 
-                // Lógica de cores (Verde se feito/nota, Vermelho se pendente)
                 if (ultimaNota !== null || jaClicou === 'true') {
                     let texto = "Concluído";
                     if(ultimaNota !== null) {
-                        texto = `Último Resultado: ${ultimaNota}/${sim.questoes}`;
+                        texto = `Score: ${Math.round((ultimaNota/sim.questoes)*100)}%`;
                     }
-                    badgeHTML = `<span class="score-badge status-concluido"><i class="fas fa-check"></i> ${texto}</span>`;
-                } 
-                else {
-                    badgeHTML = `<span class="score-badge status-pendente">Ainda não realizado</span>`;
+                    badgeHTML = `<span class="score-badge status-concluido">${texto}</span>`;
+                } else if (sim.destaque) {
+                    badgeHTML = `<span class="score-badge status-destaque">Destaque / Pré-Exame</span>`;
+                } else {
+                    badgeHTML = `<span class="score-badge status-pendente">Novo Simulado</span>`;
                 }
 
+                const destaqueClass = sim.destaque ? 'card-destaque' : '';
+                const btnDestaqueClass = sim.destaque ? 'btn-start-destaque' : '';
+
                 container.innerHTML += `
-                    <div class="card-simulado">
-                        <div class="icon-area"><i class="fas fa-file-alt"></i></div>
-                        <div class="simulado-info">
-                            <h3>${sim.titulo}</h3>
-                            <p>${sim.desc}</p>
-                            ${badgeHTML}
+                    <div class="card-simulado ${destaqueClass}" onclick="marcarComoFeito('${sim.id}', '${sim.link}')">
+                        <div class="thumbnail-placeholder">
+                            <i class="fas ${sim.icon}"></i>
                         </div>
-                        <a href="javascript:void(0)" onclick="marcarComoFeito('${sim.id}', '${sim.link}')" class="btn-start">Iniciar Simulado</a>
+                        <div class="card-content">
+                            <div class="simulado-info">
+                                ${badgeHTML}
+                                <h3>${sim.titulo}</h3>
+                                <p>${sim.desc}</p>
+                            </div>
+                            <button class="btn-start ${btnDestaqueClass}">Assistir (Iniciar)</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
         function resetSimulados() {
-            if(confirm("Deseja apagar todos os resultados e marcações?")) {
+            if(confirm("Deseja apagar sua lista de 'Já assistidos'?")) {
                 simulados.forEach(sim => {
                     localStorage.removeItem(`nota_${sim.id}`);
                     localStorage.removeItem(`feito_${sim.id}`);
