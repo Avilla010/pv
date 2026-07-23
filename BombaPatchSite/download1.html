@@ -203,17 +203,17 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="main-container">
     <div class="badge">Acesso Exclusivo</div>
     <h1>Download Liberado!</h1>
     <p>Pegue o arquivo do patch testado e aprovado no canal!</p>
 
-    <div class="appeal-box">
+    <div class="appeal-box" id="appeal-box">
         <strong>🎮 Fortaleça a comunidade de WE10/Bomba Patch!</strong>
         Eu busco os melhores patches, faço os testes de compatibilidade, gravo as gameplays de demonstração e ainda trago as melhores dicas de táticas e formações para você detonar nas partidas. Sua inscrição no <strong>Rodolfo Gameplay</strong> garante que eu continue trazendo novos conteúdos e os links mais seguros de graça. Se inscreve aí para somar e não tira depois, beleza? Tamo junto!
     </div>
 
-    <div class="step">
+    <div class="step" id="steps-wrapper">
         <!-- PASSO 1: INSCREVER-SE -->
         <a href="https://www.youtube.com/@rodolfogameplay6420?sub_confirmation=1" 
            target="_blank" 
@@ -232,7 +232,7 @@
             <span class="icon">🔄</span> Confirmar Inscrição
         </button>
 
-        <!-- PASSO 2: DOWNLOAD (target="_blank" ADICIONADO PARA ABRIR MEDIAFIRE EM NOVA ABA) -->
+        <!-- PASSO 2: DOWNLOAD -->
         <a href="https://www.mediafire.com/file/64aj6s2z3nf8qbz/Bomba+Patch+By+Leandro+Copa+do+Mundo+Junho+2026.rar/file" 
            target="_blank"
            id="btn-download" 
@@ -251,9 +251,24 @@
     const progressContainer = document.getElementById('progress-container');
     const progressBar = document.getElementById('progress-bar');
     const statusMsg = document.getElementById('status');
+    const stepsWrapper = document.getElementById('steps-wrapper');
+    const appealBox = document.getElementById('appeal-box');
 
     let tempoRestante = 10;
     let timerInterval;
+
+    // VERIFICA SE O USUÁRIO JÁ SE INSCREVEU ANTERIORMENTE NO NAVEGADOR
+    if (localStorage.getItem('rodolfo_inscrito') === 'true') {
+        // Oculta o passo de inscrição e a caixa de apelo opcional se preferir limpar a tela
+        btnSubscribe.style.display = 'none';
+        
+        // Libera o botão de download direto
+        btnDownload.classList.add('unlocked');
+        btnDownload.innerHTML = '<span class="icon">🎮</span> Baixar Arquivo Liberado!';
+        
+        statusMsg.style.color = "var(--accent-color)";
+        statusMsg.innerText = "Inscrição já reconhecida! Aproveite o arquivo. ❤️";
+    }
 
     btnSubscribe.addEventListener('click', () => {
         btnSubscribe.style.pointerEvents = "none";
@@ -287,6 +302,9 @@
         statusMsg.innerText = "Validando dados de inscrição com o YouTube... Aguarde.";
 
         setTimeout(() => {
+            // SALVA O STATUS NO NAVEGADOR PARA OS PRÓXIMOS JOGOS
+            localStorage.setItem('rodolfo_inscrito', 'true');
+
             btnDownload.classList.add('unlocked');
             btnDownload.innerHTML = '<span class="icon">🎮</span> 2. Baixar Arquivo Liberado!';
             
@@ -294,7 +312,7 @@
             btnSubscribe.style.opacity = "1";
             
             statusMsg.style.color = "var(--accent-color)";
-            statusMsg.innerText = "Inscrição validada! Obrigado por apoiar o canal! ❤️";
+            statusMsg.innerText = "Inscrição validada e salva! Obrigado por apoiar o canal! ❤️";
         }, 3000);
     });
 </script>
