@@ -232,7 +232,7 @@
             <span class="icon">🔄</span> Confirmar Inscrição
         </button>
 
-        <!-- PASSO 2: DOWNLOAD (target="_blank" ADICIONADO PARA ABRIR MEDIAFIRE EM NOVA ABA) -->
+        <!-- PASSO 2: DOWNLOAD -->
         <a href="https://www.mediafire.com/file/9y3hi8ceeoa967e/Need+for+Speed+Underground+2.rar/file" 
            target="_blank"
            id="btn-download" 
@@ -254,6 +254,14 @@
 
     let tempoRestante = 10;
     let timerInterval;
+
+    if (localStorage.getItem('rodolfo_inscrito') === 'true') {
+        btnSubscribe.style.display = 'none';
+        btnDownload.classList.add('unlocked');
+        btnDownload.innerHTML = '<span class="icon">🎮</span> Baixar Arquivo Liberado!';
+        statusMsg.style.color = "var(--accent-color)";
+        statusMsg.innerText = "Inscrição já reconhecida! Aproveite o arquivo. ❤️";
+    }
 
     btnSubscribe.addEventListener('click', () => {
         btnSubscribe.style.pointerEvents = "none";
@@ -287,6 +295,8 @@
         statusMsg.innerText = "Validando dados de inscrição com o YouTube... Aguarde.";
 
         setTimeout(() => {
+            localStorage.setItem('rodolfo_inscrito', 'true');
+
             btnDownload.classList.add('unlocked');
             btnDownload.innerHTML = '<span class="icon">🎮</span> 2. Baixar Arquivo Liberado!';
             
@@ -294,7 +304,7 @@
             btnSubscribe.style.opacity = "1";
             
             statusMsg.style.color = "var(--accent-color)";
-            statusMsg.innerText = "Inscrição validada! Obrigado por apoiar o canal! ❤️";
+            statusMsg.innerText = "Inscrição validada e salva! Obrigado por apoiar o canal! ❤️";
         }, 3000);
     });
 </script>
