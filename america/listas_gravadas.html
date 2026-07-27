@@ -87,6 +87,18 @@
             color: #fff;
             height: 40px;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* NÚMERO DA AULA EM DESTAQUE VERMELHO NEON */
+        .aula-numero {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #E50914;
+            text-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
         }
 
         /* BARRA DE PROGRESSO VERMELHA (ESTILO "CONTINUAR ASSISTINDO") */
@@ -111,7 +123,7 @@
             margin-bottom: 12px;
         }
         .text-pendente { color: #808080; }
-        .text-concluido { color: #46d369; } /* Verde para concluído, mantém o padrão de sucesso */
+        .text-concluido { color: #46d369; } /* Verde para concluído */
 
         .btn-play { 
             width: 100%; 
@@ -160,6 +172,7 @@
             .thumbnail i { font-size: 1.5rem; }
             .video-info { padding: 8px; }
             .video-title { font-size: 0.7rem; height: 28px; margin-bottom: 4px; line-height: 1.2; }
+            .aula-numero { font-size: 1rem; }
             .progress-text { font-size: 0.55rem; margin-bottom: 6px; }
             .btn-play { padding: 5px; font-size: 0.65rem; }
             .btn-reset { padding: 4px 8px; font-size: 0.6rem; }
@@ -198,6 +211,11 @@
                 const thumbnailUrl = `https://img.youtube.com/vi/${a.yt}/maxresdefault.jpg`;
                 const videoUrl = `assistir.html?id=${a.yt}&aula=${a.id}&title=${encodeURIComponent(a.titulo)}&simulado=${a.simulado || ''}`;
 
+                // Separa o número do resto do texto do título automaticamente
+                const partes = a.titulo.split(' - ');
+                const num = partes[0];
+                const resto = partes.slice(1).join(' - ');
+
                 grid.innerHTML += `
                     <div class="video-card" onclick="window.location.href='${videoUrl}'">
                         <div class="thumbnail" style="background-image: url('${thumbnailUrl}')">
@@ -211,7 +229,7 @@
                             <span class="progress-text ${feito ? 'text-concluido' : 'text-pendente'}">
                                 ${feito ? '● Finalizado' : 'Continuar'}
                             </span>
-                            <h3 class="video-title">${a.titulo}</h3>
+                            <h3 class="video-title"><span class="aula-numero">${num}</span> - ${resto}</h3>
                             <div class="btn-play">Assistir</div>
                         </div>
                     </div>
