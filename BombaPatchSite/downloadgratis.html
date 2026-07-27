@@ -63,8 +63,10 @@
             border-bottom: 3px solid transparent;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
         }
 
         .product-card:hover { 
@@ -78,7 +80,7 @@
             width: 100%;
             max-width: 160px; 
             aspect-ratio: 3 / 4; 
-            margin: 0 auto 15px auto;
+            margin: 0 auto 12px auto;
             border-radius: 6px;
             overflow: hidden;
             background-color: #0d0d0d;
@@ -100,18 +102,53 @@
             transform: scale(1.05);
         }
 
+        /* --- ÁREA DO BOTÃO E TAMANHO (LOGO ABAIXO DA CAPA) --- */
+        .download-action-area {
+            margin-bottom: 15px;
+        }
+
+        .price { 
+            color: var(--primary-green); 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            margin-bottom: 8px; 
+            display: block;
+            text-align: center;
+        }
+
+        .btn-buy { 
+            background: #1e1e1e;
+            color: var(--primary-green);
+            border: 1px solid var(--primary-green);
+            padding: 10px; 
+            text-align: center; 
+            font-weight: bold; 
+            border-radius: 6px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .product-card:hover .btn-buy {
+            background: var(--primary-green);
+            color: #000;
+        }
+
+        /* --- INFORMAÇÕES DO JOGO --- */
         .product-card h3 {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             font-size: 1.1rem;
         }
 
         .product-card h3 i { color: var(--primary-green); }
         .product-card p { color: #aaa; font-size: 0.9rem; line-height: 1.4; }
-        .price { color: var(--primary-green); font-size: 1rem; font-weight: bold; margin: 15px 0 10px 0; display: block; }
-        
+
         .badge-free {
             display: inline-block;
             background: rgba(0, 255, 102, 0.15);
@@ -125,35 +162,22 @@
             width: fit-content;
         }
 
-        .btn-buy { 
-            background: #1e1e1e;
-            color: var(--primary-green);
-            border: 1px solid var(--primary-green);
-            padding: 10px; 
-            text-align: center; 
-            text-decoration: none; 
-            font-weight: bold; 
-            border-radius: 6px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: 0.2s;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .btn-buy:hover {
-            background: var(--primary-green);
-            color: #000;
-        }
-
         /* --- RESPONSIVIDADE (MOBILE / ANDROID) --- */
         @media (max-width: 768px) {
             body { padding: 20px 15px; }
             .shop-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
             .product-card { padding: 15px; }
-            .game-cover-wrapper { max-width: 130px; }
+            .game-cover-wrapper { max-width: 130px; margin-bottom: 10px; }
+
+            /* Texto de explicação limitado a apenas 1 linha no mobile */
+            .product-card p {
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+            }
         }
     </style>
 </head>
@@ -169,94 +193,112 @@
     <div class="shop-grid">
 
         <!-- JOGO 1 -->
-        <div class="product-card">
-            <div>
-                <div class="game-cover-wrapper">
-                    <img src="jogo1.jpg" alt="Super Bomba Patch 2026" class="game-cover">
-                </div>
-                <span class="badge-free">GRÁTIS</span>
-                <h3><i class="fas fa-gamepad"></i> Super Bomba Patch 2026</h3>
-                <p>O clássico inigualável! Elencos atualizados, narração brasileira e menus estilizados para PS2.</p>
+        <a href="download1.html" class="product-card">
+            <div class="game-cover-wrapper">
+                <img src="jogo1.jpg" alt="Super Bomba Patch 2026" class="game-cover">
             </div>
-            <div>
+            
+            <div class="download-action-area">
                 <span class="price">Tamanho: 2.4 GB</span>
-                <a href="download1.html" class="btn-buy">
+                <div class="btn-buy">
                     <i class="fas fa-download"></i> Baixar ISO
-                </a>
+                </div>
             </div>
-        </div>
+
+            <span class="badge-free">GRÁTIS</span>
+            <h3><i class="fas fa-gamepad"></i> Super Bomba Patch 2026</h3>
+            <p>O clássico inigualável! Elencos atualizados, narração brasileira e menus estilizados para PS2.</p>
+        </a>
 
         <!-- JOGO 2 -->
-        <div class="product-card">
-            <div>
-                <div class="game-cover-wrapper">
-                    <img src="jogo2.jpg" alt="Resident Evil 4" class="game-cover">
-                </div>
-                <span class="badge-free">GRÁTIS</span>
-                <h3><i class="fas fa-gamepad"></i> Resident evil 4</h3>
-                <p>Versão pura e dublada do RE4. A melhor jogabilidade da saga e o melhor Resident Evil já feito foi no PS2.</p>
+        <a href="download2.html" class="product-card">
+            <div class="game-cover-wrapper">
+                <img src="jogo2.jpg" alt="Resident Evil 4" class="game-cover">
             </div>
-            <div>
+
+            <div class="download-action-area">
                 <span class="price">Tamanho: 1.8 GB</span>
-                <a href="download2.html" class="btn-buy">
+                <div class="btn-buy">
                     <i class="fas fa-download"></i> Baixar ISO
-                </a>
+                </div>
             </div>
-        </div>
+
+            <span class="badge-free">GRÁTIS</span>
+            <h3><i class="fas fa-gamepad"></i> Resident evil 4</h3>
+            <p>Versão pura e dublada do RE4. A melhor jogabilidade da saga e o melhor Resident Evil já feito foi no PS2.</p>
+        </a>
 
         <!-- JOGO 3 -->
-        <div class="product-card">
-            <div>
-                <div class="game-cover-wrapper">
-                    <img src="jogo3.jpg" alt="GTA San Andreas BR" class="game-cover">
-                </div>
-                <span class="badge-free">GRÁTIS</span>
-                <h3><i class="fas fa-gamepad"></i> GTA San Andreas BR</h3>
-                <p>GTA San Andreas legendado em português com carros e rádios nacionais pré-configurados.</p>
+        <a href="download3.html" class="product-card">
+            <div class="game-cover-wrapper">
+                <img src="jogo3.jpg" alt="GTA San Andreas BR" class="game-cover">
             </div>
-            <div>
+
+            <div class="download-action-area">
                 <span class="price">Tamanho: 4.1 GB</span>
-                <a href="download3.html" class="btn-buy">
+                <div class="btn-buy">
                     <i class="fas fa-download"></i> Baixar ISO
-                </a>
+                </div>
             </div>
-        </div>
+
+            <span class="badge-free">GRÁTIS</span>
+            <h3><i class="fas fa-gamepad"></i> GTA San Andreas BR</h3>
+            <p>GTA San Andreas legendado em português com carros e rádios nacionais pré-configurados.</p>
+        </a>
 
         <!-- JOGO 4 -->
-        <div class="product-card">
-            <div>
-                <div class="game-cover-wrapper">
-                    <img src="jogo4.jpg" alt="God of War II BR" class="game-cover">
-                </div>
-                <span class="badge-free">GRÁTIS</span>
-                <h3><i class="fas fa-gamepad"></i> God of War II BR</h3>
-                <p>A saga lendária de Kratos com legendas em PT-BR ativadas e otimizado para rodar liso no OPL.</p>
+        <a href="lojalink.html" class="product-card">
+            <div class="game-cover-wrapper">
+                <img src="jogo4.jpg" alt="God of War II BR" class="game-cover">
             </div>
-            <div>
+
+            <div class="download-action-area">
                 <span class="price">Tamanho: 4.3 GB</span>
-                <a href="lojalink.html" class="btn-buy">
+                <div class="btn-buy">
                     <i class="fas fa-download"></i> Baixar ISO
-                </a>
+                </div>
             </div>
-        </div>
+
+            <span class="badge-free">GRÁTIS</span>
+            <h3><i class="fas fa-gamepad"></i> God of War II BR</h3>
+            <p>A saga lendária de Kratos com legendas em PT-BR ativadas e otimizado para rodar liso no OPL.</p>
+        </a>
 
         <!-- JOGO 5 -->
-        <div class="product-card">
-            <div>
-                <div class="game-cover-wrapper">
-                    <img src="jogo5.jpg" alt="Need For Speed UG2" class="game-cover">
-                </div>
-                <span class="badge-free">GRÁTIS</span>
-                <h3><i class="fas fa-gamepad"></i> Need For Speed UG2</h3>
-                <p>O rei do tuning no PS2! Save game com tudo liberado e carros customizados inclusos.</p>
+        <a href="download5.html" class="product-card">
+            <div class="game-cover-wrapper">
+                <img src="jogo5.jpg" alt="Need For Speed UG2" class="game-cover">
             </div>
-            <div>
+
+            <div class="download-action-area">
                 <span class="price">Tamanho: 1.33 GB</span>
-                <a href="download5.html" class="btn-buy">
+                <div class="btn-buy">
                     <i class="fas fa-download"></i> Baixar ISO
-                </a>
+                </div>
             </div>
-        </div>
+
+            <span class="badge-free">GRÁTIS</span>
+            <h3><i class="fas fa-gamepad"></i> Need For Speed UG2</h3>
+            <p>O rei do tuning no PS2! Save game com tudo liberado e carros customizados inclusos.</p>
+        </a>
+
+        <!-- JOGO 6 -->
+        <a href="download6.html" class="product-card">
+            <div class="game-cover-wrapper">
+                <img src="jogo6.jpg" alt="Shadow Of Rome" class="game-cover">
+            </div>
+
+            <div class="download-action-area">
+                <span class="price">Tamanho: 3.8 GB</span>
+                <div class="btn-buy">
+                    <i class="fas fa-download"></i> Baixar ISO
+                </div>
+            </div>
+
+            <span class="badge-free">GRÁTIS</span>
+            <h3><i class="fas fa-gamepad"></i> Shadow Of Rome</h3>
+            <p>Combate brutal de gladiadores e stealth na Roma Antiga. Um dos melhores clássicos da Capcom para PS2.</p>
+        </a>
 
     </div>
 
