@@ -19,7 +19,7 @@
         }
 
         .header-section { 
-            margin-bottom: 40px; 
+            margin-bottom: 30px; 
             display: flex; 
             justify-content: space-between; 
             align-items: flex-end;
@@ -32,7 +32,7 @@
         .video-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 40px 20px; 
+            gap: 30px 20px; 
         }
 
         .video-card { 
@@ -141,10 +141,28 @@
         }
         .btn-reset:hover { border-color: #fff; color: #fff; }
 
+        /* AJUSTE MOBILE PERFEITO: 2 colunas e 4 linhas exatas (grid-template-rows) */
         @media (max-width: 768px) {
-            .video-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
-            .header-section h2 { font-size: 1.4rem; }
-            .thumbnail { height: 120px; }
+            body { padding: 10px 2%; }
+            .header-section { margin-bottom: 12px; flex-direction: column; align-items: flex-start; gap: 6px; }
+            .header-section h2 { font-size: 1rem; }
+            .header-section p { font-size: 0.7rem; }
+            
+            /* Trava em 2 colunas e 4 linhas perfeitamente proporcionadas para a tela do celular */
+            .video-grid { 
+                display: grid;
+                grid-template-columns: repeat(2, 1fr); 
+                grid-template-rows: repeat(4, auto);
+                gap: 8px; 
+            }
+            
+            .thumbnail { height: 75px; }
+            .thumbnail i { font-size: 1.5rem; }
+            .video-info { padding: 8px; }
+            .video-title { font-size: 0.7rem; height: 28px; margin-bottom: 4px; line-height: 1.2; }
+            .progress-text { font-size: 0.55rem; margin-bottom: 6px; }
+            .btn-play { padding: 5px; font-size: 0.65rem; }
+            .btn-reset { padding: 4px 8px; font-size: 0.6rem; }
         }
     </style>
 </head>
@@ -191,7 +209,7 @@
                         </div>
                         <div class="video-info">
                             <span class="progress-text ${feito ? 'text-concluido' : 'text-pendente'}">
-                                ${feito ? '● Finalizado' : 'Continuar Assistindo'}
+                                ${feito ? '● Finalizado' : 'Continuar'}
                             </span>
                             <h3 class="video-title">${a.titulo}</h3>
                             <div class="btn-play">Assistir</div>
