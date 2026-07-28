@@ -161,16 +161,16 @@
         /* --- 4. EFEITO DE LUZ SHIMMER NOS CARDS --- */
         .dashboard {
             display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 15px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
         .card {
             flex: 1;
-            min-width: 220px;
+            min-width: 200px;
             background: var(--bg-card);
-            padding: 20px;
+            padding: 16px 20px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             border-left: 5px solid #555;
@@ -200,39 +200,85 @@
         .card.positivo { border-left-color: var(--positive); }
         .card.negativo { border-left-color: var(--negative); }
         .card.tempo { border-left-color: #00b4d8; }
+        .card.dividendo { border-left-color: #ffb703; }
         
         .card h3 { 
-            margin-bottom: 10px; 
+            margin-bottom: 8px; 
             color: var(--text-muted); 
             font-size: 0.85rem; 
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
         
         .card .valor { 
-            font-size: 1.8rem; 
+            font-size: 1.6rem; 
             font-weight: bold; 
             transition: color 0.3s ease;
         }
+
+        /* --- 5. NAVEGAÇÃO POR ABAS --- */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.90rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: #121212;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
         
         .busca-container {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             gap: 10px;
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             flex: 1;
-            padding: 12px 20px;
+            padding: 10px 14px;
             background: var(--bg-card);
             border: 1px solid #333;
             border-radius: 4px;
             color: white;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
         }
 
-        input[type="text"]:focus {
+        input[type="text"]:focus, input[type="number"]:focus {
             border-color: var(--accent-color);
         }
 
@@ -240,11 +286,11 @@
             background: var(--accent-color);
             color: #121212;
             border: none;
-            padding: 0 24px;
+            padding: 0 18px;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: background 0.2s;
             display: flex;
             align-items: center;
@@ -260,6 +306,7 @@
             overflow-x: auto;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             border-radius: 8px;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -270,10 +317,11 @@
         }
 
         th, td {
-            padding: 15px;
+            padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
             transition: background-color 0.4s ease;
+            white-space: nowrap;
         }
 
         th {
@@ -281,7 +329,7 @@
             color: var(--accent-color);
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.80rem;
             letter-spacing: 0.5px;
         }
 
@@ -301,9 +349,9 @@
         }
 
         .badge-categoria {
-            padding: 3px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.70rem;
             font-weight: 600;
             text-transform: uppercase;
             display: inline-block;
@@ -316,14 +364,14 @@
         .badge-campeao {
             background: linear-gradient(45deg, #ff6f00, #ffab00);
             color: #fff;
-            font-size: 0.70rem;
-            padding: 2px 6px;
+            font-size: 0.65rem;
+            padding: 2px 5px;
             border-radius: 3px;
-            margin-left: 6px;
+            margin-left: 4px;
             font-weight: bold;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             box-shadow: 0 2px 5px rgba(255, 111, 0, 0.4);
             animation: pulse 1.5s infinite;
         }
@@ -336,12 +384,111 @@
 
         #loading {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--accent-color);
-            padding: 50px;
+            padding: 40px 20px;
             background: var(--bg-card);
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .simulador-box {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .simulador-box label {
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 0.90rem;
+        }
+
+        /* --- 6. AJUSTES ESPECÍFICOS PARA SMARTPHONES (MOBILE) --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 8px;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+                margin-bottom: 10px;
+            }
+
+            .quote-banner {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+                min-height: 48px;
+                margin-bottom: 15px;
+            }
+
+            .meta-container {
+                padding: 10px 14px;
+                margin-bottom: 15px;
+            }
+
+            .dashboard {
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .card {
+                padding: 10px 12px;
+                min-width: 140px;
+                border-left-width: 4px;
+            }
+
+            .card h3 {
+                font-size: 0.70rem;
+                margin-bottom: 4px;
+            }
+
+            .card .valor {
+                font-size: 1.25rem;
+            }
+
+            .nav-tabs {
+                gap: 6px;
+                margin-bottom: 15px;
+                padding-bottom: 6px;
+            }
+
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 0.80rem;
+            }
+
+            th, td {
+                padding: 8px 6px !important;
+                font-size: 0.80rem !important;
+            }
+
+            th {
+                font-size: 0.72rem !important;
+            }
+
+            .badge-categoria {
+                padding: 2px 4px;
+                font-size: 0.65rem;
+            }
+
+            .simulador-box {
+                padding: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .simulador-box input {
+                width: 100%;
+                max-width: 100% !important;
+            }
         }
     </style>
 </head>
@@ -354,11 +501,11 @@
                 <span class="ticker-item"><i class="fas fa-chart-line"></i> B3 CARTEIRA PRO</span>
                 <span class="ticker-item"><i class="fas fa-sync-alt fa-spin"></i> ATUALIZAÇÃO EM TEMPO REAL</span>
                 <span class="ticker-item"><i class="fas fa-bullseye"></i> META: R$ 20.000</span>
-                <span class="ticker-item"><i class="fas fa-rocket"></i> APORTES CONSTANTES</span>
+                <span class="ticker-item"><i class="fas fa-coins"></i> BOLA DE NEVE ATIVADA</span>
             </div>
         </div>
 
-        <h1><i class="fas fa-chart-line"></i> Carteira B3 Pro</h1>
+        <h1><i class="fas fa-chart-line"></i> Minha Carteira B3 Pro</h1>
         
         <!-- Frase Motivacional com digitação ao vivo -->
         <div class="quote-banner">
@@ -390,37 +537,104 @@
                 <h3>Rentabilidade Total</h3>
                 <div class="valor" id="cardRentabilidade">0,00%</div>
             </div>
+            <div class="card dividendo">
+                <h3>Renda Mensal Estimada</h3>
+                <div class="valor" id="cardRendaMensal" style="color: #ffb703;">R$ 97,87</div>
+            </div>
             <div class="card tempo">
                 <h3>Tempo de Carteira</h3>
                 <div class="valor" id="cardTempoJornada">0 dias</div>
             </div>
         </div>
 
-        <div class="busca-container">
-            <input type="text" id="inputBusca" placeholder="Buscar ativo pelo ticker... (Ex: BBAS3)" oninput="filtrarTabela()">
-            <button onclick="carregarCarteira()"><i class="fas fa-sync-alt"></i> Atualizar</button>
+        <!-- NAVEGAÇÃO DE ABAS -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="trocarAba('tabCarteira', this)">
+                <i class="fas fa-wallet"></i> Carteira Principal
+            </button>
+            <button class="tab-btn" onclick="trocarAba('tabDividendos', this)">
+                <i class="fas fa-hand-holding-usd"></i> Dividend Yield & Proventos
+            </button>
+            <button class="tab-btn" onclick="trocarAba('tabReinvestimento', this)">
+                <i class="fas fa-chart-line"></i> Evolução & Reinvestimento
+            </button>
         </div>
 
         <div id="loading">
             <i class="fas fa-spinner fa-spin"></i> Buscando ativos da planilha e cotações em tempo real...
         </div>
-        
-        <div class="table-responsive" id="tabelaContainer" style="display: none;">
-            <table id="tabelaAtivos">
-                <thead>
-                    <tr>
-                        <th>Ativo</th>
-                        <th>Quantidade</th>
-                        <th>Preço Médio</th>
-                        <th>Preço Atual (Real-time)</th>
-                        <th>Valor Atual</th>
-                        <th>Valorização</th>
-                        <th>Categoria</th>
-                    </tr>
-                </thead>
-                <tbody id="corpoTabela"></tbody>
-            </table>
+
+        <!-- ABA 1: CARTEIRA PRINCIPAL -->
+        <div id="tabCarteira" class="tab-content active">
+            <div class="busca-container">
+                <input type="text" id="inputBusca" placeholder="Buscar ativo pelo ticker... (Ex: BBAS3)" oninput="filtrarTabela()">
+                <button onclick="carregarCarteira()"><i class="fas fa-sync-alt"></i> Atualizar</button>
+            </div>
+
+            <div class="table-responsive" id="tabelaContainer" style="display: none;">
+                <table id="tabelaAtivos">
+                    <thead>
+                        <tr>
+                            <th>Ativo</th>
+                            <th>Qtd</th>
+                            <th>P. Médio</th>
+                            <th>P. Atual</th>
+                            <th>Valor Total</th>
+                            <th>Valoriz.</th>
+                            <th>Cat.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabela"></tbody>
+                </table>
+            </div>
         </div>
+
+        <!-- ABA 2: DIVIDEND YIELD & PROVENTOS ESPERADOS -->
+        <div id="tabDividendos" class="tab-content">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ativo</th>
+                            <th>Cat.</th>
+                            <th>Qtd</th>
+                            <th>DY (a.a.)</th>
+                            <th>Mês (Próx)</th>
+                            <th>Ano (Próx)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabelaDY">
+                        <!-- Gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ABA 3: EVOLUÇÃO E REINVESTIMENTO DE PROVENTOS -->
+        <div id="tabReinvestimento" class="tab-content">
+            <div class="simulador-box">
+                <label for="inputAporteMensal"><i class="fas fa-plus-circle" style="color:var(--accent-color)"></i> Aporte Extra Mensal (R$):</label>
+                <input type="number" id="inputAporteMensal" value="0" min="0" step="100" style="max-width: 200px;" oninput="calcularEvolucaoCarteira()">
+                <small style="color: var(--text-muted);">Altere para ver a velocidade do efeito Bola de Neve!</small>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tempo</th>
+                            <th>Patrimônio</th>
+                            <th>Renda Mensal</th>
+                            <th>Renda Anual</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabelaEvolucao">
+                        <!-- Gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -430,13 +644,36 @@
         const DATA_PRIMEIRO_APORTE = new Date(2026, 4, 27); // 27/05/2026
         const META_VALOR = 20000;
 
+        // Tabela de Proventos Pesquisados/Estimados por ativo
+        const DADOS_PROVENTOS = {
+            'ITSA4':  { dy: 7.65,  rendMes: 0.085 },
+            'TAEE11': { dy: 9.12,  rendMes: 0.300 },
+            'BTLG11': { dy: 9.50,  rendMes: 0.810 },
+            'KNCR11': { dy: 12.54, rendMes: 1.100 },
+            'BBSE3':  { dy: 9.43,  rendMes: 0.275 },
+            'BBAS3':  { dy: 9.20,  rendMes: 0.150 },
+            'ITUB4':  { dy: 7.38,  rendMes: 0.250 },
+            'CSMG3':  { dy: 7.46,  rendMes: 0.360 },
+            'ALUP11': { dy: 7.00,  rendMes: 0.187 },
+            'CPLE3':  { dy: 6.48,  rendMes: 0.080 }
+        };
+
         let todosOsDados = [];
-        let timerOscilacao = null; // Controle da oscilação de centavos
-        let custoTotalCarteira = 0; // Armazena o custo total investido para recalcular lucro e rentabilidade
+        let timerOscilacao = null; 
+        let custoTotalCarteira = 0; 
+        let totalInvestidoGlobal = 12695.80; 
 
         // Efeito de Digitação da Frase Motivacional
         const fraseTexto = "O tempo vai passar de qualquer jeito. Daqui a alguns anos, você pode estar vivendo o seu sonho ou colecionando desculpas.";
         let indexTexto = 0;
+
+        function trocarAba(abaId, elementoBotao) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(abaId).classList.add('active');
+            elementoBotao.classList.add('active');
+        }
 
         function digitarFrase() {
             if (indexTexto < fraseTexto.length) {
@@ -501,7 +738,7 @@
         }
 
         async function carregarCarteira() {
-            if (timerOscilacao) clearInterval(timerOscilacao); // Para oscilação antiga ao recarregar
+            if (timerOscilacao) clearInterval(timerOscilacao); 
             
             document.getElementById('loading').style.display = 'block';
             document.getElementById('tabelaContainer').style.display = 'none';
@@ -542,22 +779,28 @@
 
                 todosOsDados = dados.ativos;
                 
-                // Calcula custo total investido para sincronizar a oscilação dos cards
                 const totalAtualNum = parseFloat(dados.total_carteira.replace(/[^\d,-]/g, '').replace(',', '.'));
                 const lucroNum = parseFloat(dados.lucro_prejuizo.replace(/[^\d,-]/g, '').replace(',', '.'));
                 custoTotalCarteira = isNaN(totalAtualNum - lucroNum) ? 0 : (totalAtualNum - lucroNum);
+                totalInvestidoGlobal = totalAtualNum > 0 ? totalAtualNum : 12695.80;
 
                 montarTabela(todosOsDados);
+                montarTabelaDY(todosOsDados);
+                calcularEvolucaoCarteira();
                 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('tabelaContainer').style.display = 'block';
 
-                // INICIA A LEVE OSCILAÇÃO DE CENTAVOS CONTINUA NA TABELA E NOS CARDS
                 iniciarOscilacaoCentavos();
                 
             } catch (error) {
                 console.error(error);
-                document.getElementById('loading').innerHTML = "<i class='fas fa-exclamation-triangle' style='color:#dc3545'></i> Erro ao conectar com o servidor da B3 ou ler a planilha.<br><small style='color:#777; font-size:0.8rem;'>Certifique-se de que a implantação está configurada para acesso de 'Todos'.</small>";
+                document.getElementById('loading').innerHTML = "<i class='fas fa-exclamation-triangle' style='color:#dc3545'></i> Erro ao conectar com a planilha.<br><small style='color:#777; font-size:0.8rem;'>Exibindo dados locais pré-carregados.</small>";
+                
+                montarTabelaDYFallback();
+                calcularEvolucaoCarteira();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('tabelaContainer').style.display = 'block';
             }
         }
 
@@ -607,7 +850,111 @@
             });
         }
 
-        /* --- OSCILAÇÃO DINÂMICA DE CENTAVOS (TABELA + CARDS PRINCIPAIS) --- */
+        function montarTabelaDY(listaAtivos) {
+            const corpo = document.getElementById('corpoTabelaDY');
+            corpo.innerHTML = "";
+
+            let totalMensal = 0;
+            let totalAnual = 0;
+
+            listaAtivos.forEach(ativo => {
+                const tickerClean = ativo[0].replace('F', '');
+                const qtd = parseFloat(ativo[1]) || 0;
+                const cat = ativo[6];
+
+                const infoProv = DADOS_PROVENTOS[tickerClean] || { dy: 8.0, rendMes: 0.20 };
+                const provMensalAtivo = qtd * infoProv.rendMes;
+                const provAnualAtivo = provMensalAtivo * 12;
+
+                totalMensal += provMensalAtivo;
+                totalAnual += provAnualAtivo;
+
+                let classeCategoria = cat.toLowerCase().includes('fii') ? 'cat-fii' : 'cat-acoes';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${ativo[0]}</strong></td>
+                    <td><span class="badge-categoria ${classeCategoria}">${cat}</span></td>
+                    <td>${qtd}</td>
+                    <td><strong style="color:var(--accent-color);">${infoProv.dy.toFixed(2)}%</strong></td>
+                    <td style="color:#ffb703; font-weight:bold;">${provMensalAtivo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                    <td style="color:var(--positive); font-weight:bold;">${provAnualAtivo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                `;
+                corpo.appendChild(tr);
+            });
+
+            const trTotal = document.createElement('tr');
+            trTotal.style.backgroundColor = '#181818';
+            trTotal.innerHTML = `
+                <td colspan="3"><strong>TOTAL ESTIMADO</strong></td>
+                <td><strong style="color:var(--accent-color);">9,25%</strong></td>
+                <td style="color:#ffb703; font-weight:bold;">${totalMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                <td style="color:var(--positive); font-weight:bold;">${totalAnual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+            `;
+            corpo.appendChild(trTotal);
+
+            document.getElementById('cardRendaMensal').innerText = totalMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function montarTabelaDYFallback() {
+            const fallbackAtivos = [
+                ["ITSA4", "50", "R$ 13,34", "R$ 13,34", "R$ 667,00", "+0,00%", "Ações"],
+                ["TAEE11", "10", "R$ 39,49", "R$ 39,49", "R$ 394,90", "+0,00%", "Ações"],
+                ["BTLG11", "70", "R$ 102,27", "R$ 102,27", "R$ 7.158,90", "+0,00%", "Fii"],
+                ["KNCR11", "10", "R$ 105,27", "R$ 105,27", "R$ 1.052,70", "+0,00%", "Fii"],
+                ["BBSE3", "10", "R$ 35,01", "R$ 35,01", "R$ 350,10", "+0,00%", "Ações"],
+                ["BBAS3", "60", "R$ 19,57", "R$ 19,57", "R$ 1.174,20", "+0,00%", "Ações"],
+                ["ITUB4", "10", "R$ 40,63", "R$ 40,63", "R$ 406,30", "+0,00%", "Ações"],
+                ["CSMG3", "10", "R$ 57,93", "R$ 57,93", "R$ 579,30", "+0,00%", "Ações"],
+                ["ALUP11", "10", "R$ 32,00", "R$ 32,00", "R$ 320,00", "+0,00%", "Ações"],
+                ["CPLE3", "40", "R$ 14,81", "R$ 14,81", "R$ 592,40", "+0,00%", "Ações"]
+            ];
+            montarTabela(fallbackAtivos);
+            montarTabelaDY(fallbackAtivos);
+        }
+
+        function calcularEvolucaoCarteira() {
+            const corpo = document.getElementById('corpoTabelaEvolucao');
+            corpo.innerHTML = "";
+
+            const aporteExtra = parseFloat(document.getElementById('inputAporteMensal').value) || 0;
+            const taxaAnual = 0.0925; 
+            const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
+
+            const prazosMeses = [1, 6, 12, 24, 36, 60, 120, 180, 240];
+            let saldo = totalInvestidoGlobal;
+
+            let historicoPrazos = {};
+
+            for (let m = 1; m <= 240; m++) {
+                let rendimentoMensal = saldo * taxaMensal;
+                saldo += rendimentoMensal + aporteExtra;
+
+                if (prazosMeses.includes(m)) {
+                    historicoPrazos[m] = {
+                        saldo: saldo,
+                        rendaMensal: saldo * taxaMensal,
+                        rendaAnual: (saldo * taxaMensal) * 12
+                    };
+                }
+            }
+
+            prazosMeses.forEach(meses => {
+                const dados = historicoPrazos[meses];
+                const tr = document.createElement('tr');
+                
+                let rotuloTempo = meses < 12 ? `${meses}m` : `${meses / 12}a`;
+
+                tr.innerHTML = `
+                    <td><strong>${rotuloTempo}</strong></td>
+                    <td style="color:var(--accent-color); font-weight:bold;">${dados.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                    <td style="color:#ffb703; font-weight:bold;">${dados.rendaMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                    <td style="color:var(--positive); font-weight:bold;">${dados.rendaAnual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                `;
+                corpo.appendChild(tr);
+            });
+        }
+
         function iniciarOscilacaoCentavos() {
             if (timerOscilacao) clearInterval(timerOscilacao);
 
@@ -615,38 +962,31 @@
                 const linhas = document.querySelectorAll('#corpoTabela tr');
                 if (linhas.length === 0) return;
 
-                // Escolhe um ativo aleatório na tabela visível
                 const linhaAleatoria = linhas[Math.floor(Math.random() * linhas.length)];
                 const tdPreco = linhaAleatoria.querySelector('.col-preco-atual');
                 const tdValorTotal = linhaAleatoria.querySelector('.col-valor-atual');
 
                 if (!tdPreco || !tdValorTotal) return;
 
-                // Extrai o número do Preço Atual
                 let precoTexto = tdPreco.innerText;
                 let precoNum = parseFloat(precoTexto.replace(/[^\d,-]/g, '').replace(',', '.'));
                 if (isNaN(precoNum) || precoNum <= 0) return;
 
-                // Oscilação aleatória entre -0.03 e +0.03 centavos
                 const variacaoCentavos = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 3) + 1) / 100;
                 let novoPreco = precoNum + variacaoCentavos;
                 if (novoPreco <= 0) novoPreco = precoNum;
 
-                // Extrai a quantidade para atualizar o Valor Atual do ativo
                 const qtdTexto = linhaAleatoria.children[1].innerText;
                 const qtd = parseFloat(qtdTexto.replace(/[^\d,-]/g, '').replace(',', '.')) || 1;
                 const novoValorTotal = novoPreco * qtd;
                 const diferencaReaisAtivo = novoValorTotal - (precoNum * qtd);
 
-                // Formata os novos valores para R$ XX,XX na tabela
                 const novoPrecoFormatado = novoPreco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const novoValorTotalFormatado = novoValorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-                // Atualiza o HTML da tabela
                 tdPreco.innerText = novoPrecoFormatado;
                 tdValorTotal.innerText = novoValorTotalFormatado;
 
-                // Aplica efeito visual de piscar na tabela
                 const classeFlash = variacaoCentavos > 0 ? 'flash-up' : 'flash-down';
                 tdPreco.classList.add(classeFlash);
                 tdValorTotal.classList.add(classeFlash);
@@ -656,7 +996,6 @@
                     tdValorTotal.classList.remove(classeFlash);
                 }, 600);
 
-                // --- ATUALIZAÇÃO RECALCULADA DOS CARDS PRINCIPAIS ---
                 const elCardTotal = document.getElementById('cardTotal');
                 const elCardLucro = document.getElementById('cardLucro');
                 const elCardRentabilidade = document.getElementById('cardRentabilidade');
@@ -667,7 +1006,6 @@
                     let novoLucroGeral = novoTotalGeral - custoTotalCarteira;
                     let novaRentabilidade = custoTotalCarteira > 0 ? ((novoLucroGeral / custoTotalCarteira) * 100) : 0;
 
-                    // Formatação
                     const totalGeralFormatado = novoTotalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     const lucroGeralFormatado = novoLucroGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     const rentabilidadeFormatada = (novaRentabilidade >= 0 ? '+' : '') + novaRentabilidade.toFixed(2).replace('.', ',') + '%';
@@ -676,10 +1014,9 @@
                     elCardLucro.innerText = lucroGeralFormatado;
                     elCardRentabilidade.innerText = rentabilidadeFormatada;
 
-                    // Atualiza também a Barra de Meta
                     atualizarBarraMeta(totalGeralFormatado);
+                    totalInvestidoGlobal = novoTotalGeral;
 
-                    // Efeito suave de piscar nos cards principais afetados
                     const cardTotalEl = elCardTotal.closest('.card');
                     const cardLucroEl = elCardLucro.closest('.card');
                     const cardRentEl = elCardRentabilidade.closest('.card');
@@ -692,7 +1029,7 @@
                     });
                 }
 
-            }, 2500); // Oscila a cada 2.5 segundos
+            }, 2500); 
         }
 
         function filtrarTabela() {
