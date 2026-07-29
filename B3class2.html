@@ -158,7 +158,7 @@
             100% { background-position: 200% 0%; }
         }
 
-        /* --- 4. EFEITO DE LUZ SHIMMER NOS CARDS --- */
+        /* --- 4. CARDS DE RESUMO --- */
         .dashboard {
             display: flex;
             gap: 15px;
@@ -216,6 +216,17 @@
             transition: color 0.3s ease;
         }
 
+        .sub-valor {
+            font-size: 0.80rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: normal;
+        }
+
+        .sub-valor span {
+            font-weight: bold;
+        }
+
         /* --- 5. NAVEGAÇÃO POR ABAS --- */
         .nav-tabs {
             display: flex;
@@ -267,7 +278,7 @@
             gap: 10px;
         }
 
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], select {
             flex: 1;
             padding: 10px 14px;
             background: var(--bg-card);
@@ -278,7 +289,7 @@
             outline: none;
         }
 
-        input[type="text"]:focus, input[type="number"]:focus {
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
             border-color: var(--accent-color);
         }
 
@@ -340,7 +351,6 @@
         .subindo { color: var(--positive); font-weight: bold; }
         .caindo { color: var(--negative); font-weight: bold; }
         
-        /* ANIMAÇÃO DE PISCAR NA ATUALIZAÇÃO DOS CENTAVOS */
         .flash-up {
             background-color: rgba(40, 167, 69, 0.25) !important;
         }
@@ -485,7 +495,7 @@
                 gap: 8px;
             }
 
-            .simulador-box input {
+            .simulador-box input, .simulador-box select {
                 width: 100%;
                 max-width: 100% !important;
             }
@@ -507,7 +517,7 @@
 
         <h1><i class="fas fa-chart-line"></i> Minha Carteira B3 Pro</h1>
         
-        <!-- Frase Motivacional com digitação ao vivo -->
+        <!-- Frase Motivacional -->
         <div class="quote-banner">
             <i class="fas fa-quote-left" style="color: var(--accent-color); margin-right: 8px;"></i>
             <span id="textoDigitado"></span><span class="cursor">&nbsp;</span>
@@ -538,8 +548,9 @@
                 <div class="valor" id="cardRentabilidade">0,00%</div>
             </div>
             <div class="card dividendo">
-                <h3>Renda Mensal Estimada</h3>
+                <h3>Renda Mensal / Anual</h3>
                 <div class="valor" id="cardRendaMensal" style="color: #ffb703;">R$ 97,87</div>
+                <div class="sub-valor">Anual: <span id="cardRendaAnual" style="color: var(--positive);">R$ 1.174,44</span></div>
             </div>
             <div class="card tempo">
                 <h3>Tempo de Carteira</h3>
@@ -613,9 +624,20 @@
         <!-- ABA 3: EVOLUÇÃO E REINVESTIMENTO DE PROVENTOS -->
         <div id="tabReinvestimento" class="tab-content">
             <div class="simulador-box">
-                <label for="inputAporteMensal"><i class="fas fa-plus-circle" style="color:var(--accent-color)"></i> Aporte Extra Mensal (R$):</label>
-                <input type="number" id="inputAporteMensal" value="0" min="0" step="100" style="max-width: 200px;" oninput="calcularEvolucaoCarteira()">
-                <small style="color: var(--text-muted);">Altere para ver a velocidade do efeito Bola de Neve!</small>
+                <div>
+                    <label for="selectFrequenciaAporte"><i class="fas fa-clock" style="color:var(--accent-color)"></i> Frequência:</label>
+                    <select id="selectFrequenciaAporte" onchange="calcularEvolucaoCarteira()" style="max-width: 150px; margin-top: 4px;">
+                        <option value="mensal" selected>Mensal</option>
+                        <option value="semanal">Semanal</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="inputAporteMensal" id="labelAporteValor"><i class="fas fa-plus-circle" style="color:var(--accent-color)"></i> Aporte Extra (R$):</label>
+                    <input type="number" id="inputAporteMensal" value="0" min="0" step="50" style="max-width: 180px; margin-top: 4px;" oninput="calcularEvolucaoCarteira()">
+                </div>
+                
+                <small style="color: var(--text-muted); width: 100%;">Altere para ver a velocidade do efeito Bola de Neve!</small>
             </div>
 
             <div class="table-responsive">
@@ -638,13 +660,11 @@
     </div>
 
     <script>
-        // MANTIDO INTACTO: URL do script
         const URL_SCRIPT_B3 = "https://script.google.com/macros/s/AKfycbzGExvIEdtO_zqas6fz9kgNTQ21WePh4Q6sQFBBtMGYZIDVzrHLlxS51gkClrHTIefFaA/exec";
         
         const DATA_PRIMEIRO_APORTE = new Date(2026, 4, 27); // 27/05/2026
         const META_VALOR = 20000;
 
-        // Tabela de Proventos Pesquisados/Estimados por ativo
         const DADOS_PROVENTOS = {
             'ITSA4':  { dy: 7.65,  rendMes: 0.085 },
             'TAEE11': { dy: 9.12,  rendMes: 0.300 },
@@ -663,7 +683,6 @@
         let custoTotalCarteira = 0; 
         let totalInvestidoGlobal = 12695.80; 
 
-        // Efeito de Digitação da Frase Motivacional
         const fraseTexto = "O tempo vai passar de qualquer jeito. Daqui a alguns anos, você pode estar vivendo o seu sonho ou colecionando desculpas.";
         let indexTexto = 0;
 
@@ -894,6 +913,7 @@
             corpo.appendChild(trTotal);
 
             document.getElementById('cardRendaMensal').innerText = totalMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('cardRendaAnual').innerText = totalAnual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
         function montarTabelaDYFallback() {
@@ -913,29 +933,57 @@
             montarTabelaDY(fallbackAtivos);
         }
 
+        /* --- CÁLCULO ATUALIZADO: SUPORTE A APORTES SEMANAIS E MENSAIS --- */
         function calcularEvolucaoCarteira() {
             const corpo = document.getElementById('corpoTabelaEvolucao');
             corpo.innerHTML = "";
 
+            const frequencia = document.getElementById('selectFrequenciaAporte').value;
             const aporteExtra = parseFloat(document.getElementById('inputAporteMensal').value) || 0;
             const taxaAnual = 0.0925; 
-            const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
 
             const prazosMeses = [1, 6, 12, 24, 36, 60, 120, 180, 240];
             let saldo = totalInvestidoGlobal;
 
             let historicoPrazos = {};
 
-            for (let m = 1; m <= 240; m++) {
-                let rendimentoMensal = saldo * taxaMensal;
-                saldo += rendimentoMensal + aporteExtra;
+            if (frequencia === 'mensal') {
+                const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
 
-                if (prazosMeses.includes(m)) {
-                    historicoPrazos[m] = {
-                        saldo: saldo,
-                        rendaMensal: saldo * taxaMensal,
-                        rendaAnual: (saldo * taxaMensal) * 12
-                    };
+                for (let m = 1; m <= 240; m++) {
+                    let rendimentoMensal = saldo * taxaMensal;
+                    saldo += rendimentoMensal + aporteExtra;
+
+                    if (prazosMeses.includes(m)) {
+                        historicoPrazos[m] = {
+                            saldo: saldo,
+                            rendaMensal: saldo * taxaMensal,
+                            rendaAnual: (saldo * taxaMensal) * 12
+                        };
+                    }
+                }
+            } else {
+                // Cálculo Semanal (52 semanas no ano)
+                const taxaSemanal = Math.pow(1 + taxaAnual, 1/52) - 1;
+                const taxaMensalParaRenda = Math.pow(1 + taxaAnual, 1/12) - 1;
+                let semanasTotais = 240 * 4.3333; // ~4.33 semanas por mês
+
+                let semanaAtual = 1;
+                for (let m = 1; m <= 240; m++) {
+                    // Executa 4 ou 5 semanas por mês
+                    let semanasNoMes = (m % 3 === 0) ? 5 : 4; 
+                    for (let s = 0; s < semanasNoMes; s++) {
+                        let rendimentoSemanal = saldo * taxaSemanal;
+                        saldo += rendimentoSemanal + aporteExtra;
+                    }
+
+                    if (prazosMeses.includes(m)) {
+                        historicoPrazos[m] = {
+                            saldo: saldo,
+                            rendaMensal: saldo * taxaMensalParaRenda,
+                            rendaAnual: (saldo * taxaMensalParaRenda) * 12
+                        };
+                    }
                 }
             }
 
