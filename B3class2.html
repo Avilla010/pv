@@ -549,8 +549,8 @@
             </div>
             <div class="card dividendo">
                 <h3>Renda Mensal / Anual</h3>
-                <div class="valor" id="cardRendaMensal" style="color: #ffb703;">R$ 97,87</div>
-                <div class="sub-valor">Anual: <span id="cardRendaAnual" style="color: var(--positive);">R$ 1.174,44</span></div>
+                <div class="valor" id="cardRendaMensal" style="color: #ffb703;">R$ 0,00</div>
+                <div class="sub-valor">Anual: <span id="cardRendaAnual" style="color: var(--positive);">R$ 0,00</span></div>
             </div>
             <div class="card tempo">
                 <h3>Tempo de Carteira</h3>
@@ -675,7 +675,8 @@
             'ITUB4':  { dy: 7.38,  rendMes: 0.250 },
             'CSMG3':  { dy: 7.46,  rendMes: 0.360 },
             'ALUP11': { dy: 7.00,  rendMes: 0.187 },
-            'CPLE3':  { dy: 6.48,  rendMes: 0.080 }
+            'CPLE3':  { dy: 6.48,  rendMes: 0.080 },
+            'EGIE3':  { dy: 7.20,  rendMes: 0.220 } // Adicionado EGIE3
         };
 
         let todosOsDados = [];
@@ -723,6 +724,7 @@
 
         function animarContador(idElemento, valorTexto) {
             const el = document.getElementById(idElemento);
+            if (!el) return;
             const apenasNumeros = parseFloat(valorTexto.replace(/[^\d,-]/g, '').replace(',', '.'));
             
             if (isNaN(apenasNumeros)) {
@@ -753,7 +755,7 @@
 
             const percentual = Math.min((valorNumerico / META_VALOR) * 100, 100).toFixed(1);
             document.getElementById('metaBarraFill').style.width = percentual + "%";
-            document.getElementById('metaPercentual').innerText = percentual + "%";
+            document.getElementById('metaPercentual').innerText = percentual.replace('.', ',') + "%";
         }
 
         async function carregarCarteira() {
@@ -810,16 +812,9 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('tabelaContainer').style.display = 'block';
 
-                iniciarOscilacaoCentavos();
-                
             } catch (error) {
                 console.error(error);
                 document.getElementById('loading').innerHTML = "<i class='fas fa-exclamation-triangle' style='color:#dc3545'></i> Erro ao conectar com a planilha.<br><small style='color:#777; font-size:0.8rem;'>Exibindo dados locais pré-carregados.</small>";
-                
-                montarTabelaDYFallback();
-                calcularEvolucaoCarteira();
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('tabelaContainer').style.display = 'block';
             }
         }
 
@@ -880,219 +875,85 @@
                 const tickerClean = ativo[0].replace('F', '');
                 const qtd = parseFloat(ativo[1]) || 0;
                 const cat = ativo[6];
+                
+                const prov = DADOS_PROVENTOS[tickerClean] || { dy: 0, rendMes: 0 };
+                
+                const mesVal = qtd * prov.rendMes;
+                const anoVal = mesVal * 12;
 
-                const infoProv = DADOS_PROVENTOS[tickerClean] || { dy: 8.0, rendMes: 0.20 };
-                const provMensalAtivo = qtd * infoProv.rendMes;
-                const provAnualAtivo = provMensalAtivo * 12;
+                totalMensal += mesVal;
+                totalAnual += anoVal;
 
-                totalMensal += provMensalAtivo;
-                totalAnual += provAnualAtivo;
-
-                let classeCategoria = cat.toLowerCase().includes('fii') ? 'cat-fii' : 'cat-acoes';
+                let classeCategoria = 'cat-outros';
+                const catTexto = cat.toLowerCase();
+                if (catTexto.includes('ação') || catTexto.includes('ações')) classeCategoria = 'cat-acoes';
+                if (catTexto.includes('fii')) classeCategoria = 'cat-fii';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${ativo[0]}</strong></td>
                     <td><span class="badge-categoria ${classeCategoria}">${cat}</span></td>
                     <td>${qtd}</td>
-                    <td><strong style="color:var(--accent-color);">${infoProv.dy.toFixed(2)}%</strong></td>
-                    <td style="color:#ffb703; font-weight:bold;">${provMensalAtivo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                    <td style="color:var(--positive); font-weight:bold;">${provAnualAtivo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                    <td>${prov.dy.toFixed(2).replace('.', ',')}%</td>
+                    <td style="color:var(--positive);">R$ ${mesVal.toFixed(2).replace('.', ',')}</td>
+                    <td style="color:var(--positive);">R$ ${anoVal.toFixed(2).replace('.', ',')}</td>
                 `;
                 corpo.appendChild(tr);
             });
 
-            const trTotal = document.createElement('tr');
-            trTotal.style.backgroundColor = '#181818';
-            trTotal.innerHTML = `
-                <td colspan="3"><strong>TOTAL ESTIMADO</strong></td>
-                <td><strong style="color:var(--accent-color);">9,25%</strong></td>
-                <td style="color:#ffb703; font-weight:bold;">${totalMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                <td style="color:var(--positive); font-weight:bold;">${totalAnual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-            `;
-            corpo.appendChild(trTotal);
-
-            document.getElementById('cardRendaMensal').innerText = totalMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('cardRendaAnual').innerText = totalAnual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('cardRendaMensal').innerText = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('cardRendaAnual').innerText = `R$ ${totalAnual.toFixed(2).replace('.', ',')}`;
         }
 
-        function montarTabelaDYFallback() {
-            const fallbackAtivos = [
-                ["ITSA4", "50", "R$ 13,34", "R$ 13,34", "R$ 667,00", "+0,00%", "Ações"],
-                ["TAEE11", "10", "R$ 39,49", "R$ 39,49", "R$ 394,90", "+0,00%", "Ações"],
-                ["BTLG11", "70", "R$ 102,27", "R$ 102,27", "R$ 7.158,90", "+0,00%", "Fii"],
-                ["KNCR11", "10", "R$ 105,27", "R$ 105,27", "R$ 1.052,70", "+0,00%", "Fii"],
-                ["BBSE3", "10", "R$ 35,01", "R$ 35,01", "R$ 350,10", "+0,00%", "Ações"],
-                ["BBAS3", "60", "R$ 19,57", "R$ 19,57", "R$ 1.174,20", "+0,00%", "Ações"],
-                ["ITUB4", "10", "R$ 40,63", "R$ 40,63", "R$ 406,30", "+0,00%", "Ações"],
-                ["CSMG3", "10", "R$ 57,93", "R$ 57,93", "R$ 579,30", "+0,00%", "Ações"],
-                ["ALUP11", "10", "R$ 32,00", "R$ 32,00", "R$ 320,00", "+0,00%", "Ações"],
-                ["CPLE3", "40", "R$ 14,81", "R$ 14,81", "R$ 592,40", "+0,00%", "Ações"]
-            ];
-            montarTabela(fallbackAtivos);
-            montarTabelaDY(fallbackAtivos);
+        function filtrarTabela() {
+            const termo = document.getElementById('inputBusca').value.toUpperCase();
+            const ativosFiltrados = todosOsDados.filter(ativo => ativo[0].toUpperCase().includes(termo));
+            montarTabela(ativosFiltrados);
         }
 
-        /* --- CÁLCULO ATUALIZADO: SUPORTE A APORTES SEMANAIS E MENSAIS --- */
         function calcularEvolucaoCarteira() {
             const corpo = document.getElementById('corpoTabelaEvolucao');
             corpo.innerHTML = "";
 
-            const frequencia = document.getElementById('selectFrequenciaAporte').value;
-            const aporteExtra = parseFloat(document.getElementById('inputAporteMensal').value) || 0;
-            const taxaAnual = 0.0925; 
-
-            const prazosMeses = [1, 6, 12, 24, 36, 60, 120, 180, 240];
-            let saldo = totalInvestidoGlobal;
-
-            let historicoPrazos = {};
-
-            if (frequencia === 'mensal') {
-                const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
-
-                for (let m = 1; m <= 240; m++) {
-                    let rendimentoMensal = saldo * taxaMensal;
-                    saldo += rendimentoMensal + aporteExtra;
-
-                    if (prazosMeses.includes(m)) {
-                        historicoPrazos[m] = {
-                            saldo: saldo,
-                            rendaMensal: saldo * taxaMensal,
-                            rendaAnual: (saldo * taxaMensal) * 12
-                        };
-                    }
-                }
-            } else {
-                // Cálculo Semanal (52 semanas no ano)
-                const taxaSemanal = Math.pow(1 + taxaAnual, 1/52) - 1;
-                const taxaMensalParaRenda = Math.pow(1 + taxaAnual, 1/12) - 1;
-                let semanasTotais = 240 * 4.3333; // ~4.33 semanas por mês
-
-                let semanaAtual = 1;
-                for (let m = 1; m <= 240; m++) {
-                    // Executa 4 ou 5 semanas por mês
-                    let semanasNoMes = (m % 3 === 0) ? 5 : 4; 
-                    for (let s = 0; s < semanasNoMes; s++) {
-                        let rendimentoSemanal = saldo * taxaSemanal;
-                        saldo += rendimentoSemanal + aporteExtra;
-                    }
-
-                    if (prazosMeses.includes(m)) {
-                        historicoPrazos[m] = {
-                            saldo: saldo,
-                            rendaMensal: saldo * taxaMensalParaRenda,
-                            rendaAnual: (saldo * taxaMensalParaRenda) * 12
-                        };
-                    }
-                }
+            const freq = document.getElementById('selectFrequenciaAporte').value;
+            let aporteExtra = parseFloat(document.getElementById('inputAporteMensal').value) || 0;
+            
+            if (freq === 'semanal') {
+                aporteExtra = aporteExtra * 4.33; // converte aporte semanal para mensal aproximado
             }
 
-            prazosMeses.forEach(meses => {
-                const dados = historicoPrazos[meses];
-                const tr = document.createElement('tr');
-                
-                let rotuloTempo = meses < 12 ? `${meses}m` : `${meses / 12}a`;
+            const totalMensalAtual = parseFloat(document.getElementById('cardRendaMensal').innerText.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
+            const taxaRendimentoMensal = totalInvestidoGlobal > 0 ? (totalMensalAtual / totalInvestidoGlobal) : 0.008;
 
+            let patrimonio = totalInvestidoGlobal;
+            const anos = [1, 2, 3, 5, 10];
+
+            anos.forEach(ano => {
+                let patrimonioSimulado = patrimonio;
+                const meses = ano * 12;
+
+                for (let i = 0; i < meses; i++) {
+                    const rendimentoMes = patrimonioSimulado * taxaRendimentoMensal;
+                    patrimonioSimulado += rendimentoMes + aporteExtra;
+                }
+
+                const rendaMensalSimulada = patrimonioSimulado * taxaRendimentoMensal;
+                const rendaAnualSimulada = rendaMensalSimulada * 12;
+
+                const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong>${rotuloTempo}</strong></td>
-                    <td style="color:var(--accent-color); font-weight:bold;">${dados.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                    <td style="color:#ffb703; font-weight:bold;">${dados.rendaMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                    <td style="color:var(--positive); font-weight:bold;">${dados.rendaAnual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                    <td><strong>${ano} ${ano === 1 ? 'ano' : 'anos'}</strong></td>
+                    <td style="color:var(--accent-color); font-weight:bold;">R$ ${patrimonioSimulado.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td style="color:var(--positive);">R$ ${rendaMensalSimulada.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td style="color:var(--positive);">R$ ${rendaAnualSimulada.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                 `;
                 corpo.appendChild(tr);
             });
         }
 
-        function iniciarOscilacaoCentavos() {
-            if (timerOscilacao) clearInterval(timerOscilacao);
-
-            timerOscilacao = setInterval(() => {
-                const linhas = document.querySelectorAll('#corpoTabela tr');
-                if (linhas.length === 0) return;
-
-                const linhaAleatoria = linhas[Math.floor(Math.random() * linhas.length)];
-                const tdPreco = linhaAleatoria.querySelector('.col-preco-atual');
-                const tdValorTotal = linhaAleatoria.querySelector('.col-valor-atual');
-
-                if (!tdPreco || !tdValorTotal) return;
-
-                let precoTexto = tdPreco.innerText;
-                let precoNum = parseFloat(precoTexto.replace(/[^\d,-]/g, '').replace(',', '.'));
-                if (isNaN(precoNum) || precoNum <= 0) return;
-
-                const variacaoCentavos = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 3) + 1) / 100;
-                let novoPreco = precoNum + variacaoCentavos;
-                if (novoPreco <= 0) novoPreco = precoNum;
-
-                const qtdTexto = linhaAleatoria.children[1].innerText;
-                const qtd = parseFloat(qtdTexto.replace(/[^\d,-]/g, '').replace(',', '.')) || 1;
-                const novoValorTotal = novoPreco * qtd;
-                const diferencaReaisAtivo = novoValorTotal - (precoNum * qtd);
-
-                const novoPrecoFormatado = novoPreco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const novoValorTotalFormatado = novoValorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-                tdPreco.innerText = novoPrecoFormatado;
-                tdValorTotal.innerText = novoValorTotalFormatado;
-
-                const classeFlash = variacaoCentavos > 0 ? 'flash-up' : 'flash-down';
-                tdPreco.classList.add(classeFlash);
-                tdValorTotal.classList.add(classeFlash);
-
-                setTimeout(() => {
-                    tdPreco.classList.remove(classeFlash);
-                    tdValorTotal.classList.remove(classeFlash);
-                }, 600);
-
-                const elCardTotal = document.getElementById('cardTotal');
-                const elCardLucro = document.getElementById('cardLucro');
-                const elCardRentabilidade = document.getElementById('cardRentabilidade');
-
-                let totalAtual = parseFloat(elCardTotal.innerText.replace(/[^\d,-]/g, '').replace(',', '.'));
-                if (!isNaN(totalAtual)) {
-                    let novoTotalGeral = totalAtual + diferencaReaisAtivo;
-                    let novoLucroGeral = novoTotalGeral - custoTotalCarteira;
-                    let novaRentabilidade = custoTotalCarteira > 0 ? ((novoLucroGeral / custoTotalCarteira) * 100) : 0;
-
-                    const totalGeralFormatado = novoTotalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    const lucroGeralFormatado = novoLucroGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    const rentabilidadeFormatada = (novaRentabilidade >= 0 ? '+' : '') + novaRentabilidade.toFixed(2).replace('.', ',') + '%';
-
-                    elCardTotal.innerText = totalGeralFormatado;
-                    elCardLucro.innerText = lucroGeralFormatado;
-                    elCardRentabilidade.innerText = rentabilidadeFormatada;
-
-                    atualizarBarraMeta(totalGeralFormatado);
-                    totalInvestidoGlobal = novoTotalGeral;
-
-                    const cardTotalEl = elCardTotal.closest('.card');
-                    const cardLucroEl = elCardLucro.closest('.card');
-                    const cardRentEl = elCardRentabilidade.closest('.card');
-
-                    [cardTotalEl, cardLucroEl, cardRentEl].forEach(card => {
-                        if (card) {
-                            card.classList.add(classeFlash);
-                            setTimeout(() => card.classList.remove(classeFlash), 600);
-                        }
-                    });
-                }
-
-            }, 2500); 
-        }
-
-        function filtrarTabela() {
-            const termo = document.getElementById('inputBusca').value.trim().toUpperCase();
-            if(!termo) {
-                montarTabela(todosOsDados);
-            } else {
-                const filtrados = todosOsDados.filter(item => item[0].includes(termo));
-                montarTabela(filtrados);
-            }
-        }
-
-        window.onload = () => {
-            carregarCarteira();
+        window.onload = function() {
             digitarFrase();
+            carregarCarteira();
         };
     </script>
 </body>
