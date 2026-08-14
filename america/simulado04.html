@@ -3,143 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulado 04 -  Penalidades e Infrações</title>
+    <title>Simulado 04 Especial - Penalidades e Infrações | CNH Blindada</title>
     <link rel="icon" href="favicon.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root { 
-            --primary: #0056b3; --success: #28a745; --danger: #dc3545; --bg: #f8f9fa; --text: #333; 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --text: #fff; 
         }
         
-        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        body { font-family: 'Roboto', sans-serif; background: var(--netflix-black); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: transparent; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-voltar { text-decoration: none; color: #a3a3a3; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-voltar:hover { color: #fff; }
+        h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        .stats-bar { display: none; justify-content: space-around; background: var(--netflix-card); padding: 20px; border-radius: 4px; margin-bottom: 25px; font-weight: bold; border-bottom: 2px solid #333; }
+        .quiz-section { background: var(--netflix-card); padding: 40px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .progress-container { height: 4px; background: #333; margin-bottom: 30px; display: none; }
+        .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s; }
         
-        h1 { color: var(--primary); text-align: center; font-size: 26px; margin-top: 10px; }
-        .header-nav { display: flex; justify-content: flex-start; margin-bottom: 10px; }
-        .btn-voltar { text-decoration: none; color: #667; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; }
+        .quiz-img { display: block; margin: 0 auto 25px; max-width: 100%; height: auto; border-radius: 8px; border: 2px solid #333; }
 
-        .stats-bar { display: none; justify-content: space-around; background: #f1f3f5; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; font-size: 14px; border: 1px solid #ddd; }
-        #timer-box { color: #555; text-align: center; }
-        .score-correct { color: var(--success); }
-        .score-wrong { color: var(--danger); }
+        .option { display: block; padding: 18px; margin: 12px 0; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
+        .option:hover { background: rgba(255,255,255,0.08); }
+        .option input { margin-right: 15px; accent-color: var(--netflix-red); }
+        .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; }
+        .option.disabled { pointer-events: none; }
 
-        .alert { background: #e1f5fe; border-left: 5px solid #0288d1; padding: 15px; margin: 20px 0; border-radius: 8px; font-size: 14px; color: #01579b; }
+        .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
+        .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: var(--netflix-red); color: #fff; }
         
-        .quiz-section { background: #fff; border: 2px solid #eee; padding: 20px; border-radius: 12px; margin-top: 10px; }
-        .progress-container { background: #eee; border-radius: 5px; margin-bottom: 20px; overflow: hidden; display: none; height: 10px; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        
-        #quiz-area { display: none; }
-        #start-screen { text-align: center; padding: 20px; }
-
-        .question-text { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: block; }
-        
-        .quiz-img { display: block; margin: 15px auto; max-width: 180px; height: auto; border-radius: 8px; border: 1px solid #ddd; padding: 5px; }
-
-        .option { display: block; padding: 12px; margin: 10px 0; border: 2px solid #f0f0f0; border-radius: 8px; cursor: pointer; transition: 0.2s; position: relative; }
-        .option:hover { border-color: #ddd; background: #fdfdfd; }
-        .option input { margin-right: 10px; }
-
-        .option.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: bold; }
-        .option.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24; }
-        .option.disabled { pointer-events: none; opacity: 0.8; }
-
-        .btn-action { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-next-step { background: #ff9800; }
-
-        /* Estados de pausa do cronômetro */
-        .timer-paused { color: #aaa !important; opacity: 0.7; }
-        .pause-notice { font-size: 11px; display: block; color: var(--success); font-weight: normal; margin-top: 2px; }
+        /* Estilos da Pausa */
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
 
         #result-area { text-align: center; display: none; padding: 20px; }
-        .score-box { font-size: 40px; font-weight: bold; margin: 15px 0; color: var(--primary); }
+        .score-box { font-size: 4rem; font-weight: 700; margin: 20px 0; color: var(--netflix-red); }
         
-        /* Estrutura do Relatório Dinâmico de Erros */
-        .error-report-container { text-align: left; margin-top: 30px; border-top: 2px solid #eee; padding-top: 25px; display: none; }
-        .error-item { background: #fffdfd; border-left: 4px solid var(--danger); padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0; border-top: 1px solid #f5e6e6; border-right: 1px solid #f5e6e6; border-bottom: 1px solid #f5e6e6; }
-        .error-title { font-weight: bold; font-size: 16px; margin-bottom: 10px; color: #222; }
-        .error-user-ans { color: var(--danger); font-size: 14px; margin: 4px 0; }
-        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 14px; margin: 4px 0; }
+        /* Área do Plano de Correção de Erros */
+        .error-report-container { text-align: left; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; display: none; }
+        .error-item { background: rgba(255,255,255,0.02); border-left: 4px solid var(--netflix-red); padding: 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 15px; color: #eee; }
+        .error-img { display: block; max-width: 220px; height: auto; margin-bottom: 15px; border-radius: 4px; border: 1px solid #444; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 5px 0; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 5px 0; }
         
-        .btn-pdf { background: #28a745; margin-top: 15px; }
-        .btn-pdf:hover { background: #218838; }
+        .btn-pdf { background: #25d366; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #128c7e; color: #fff; }
 
-        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* AJUSTES DE IMPRESSÃO - PLANO DE ERROS LIMPO */
+        /* REGRAS EXCLUSIVAS PARA IMPRESSÃO EM PAPEL (SALVAR PDF) */
         @media print {
-            body { background: white !important; color: black !important; padding: 0; }
-            .header-nav, .stats-bar, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
-            .container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; }
-            .quiz-section { border: none !important; padding: 0 !important; }
+            body { background: #fff !important; color: #000 !important; padding: 0; }
+            .header-nav, #live-stats, .progress-container, .btn-action, .btn-pdf, h3, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .quiz-section { background: #fff !important; box-shadow: none !important; padding: 0 !important; }
             .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
-            .error-item { background: #fff !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc !important; margin-bottom: 20px; padding: 10px 0 10px 15px !important; }
+            .error-item { background: #f9f9f9 !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc; margin-bottom: 15px; padding: 15px !important; }
             .error-title { color: #000 !important; }
-            .error-user-ans { color: #555 !important; text-decoration: line-through; }
-            .error-correct-ans { color: #000 !important; font-weight: bold; }
-            .print-header { display: block !important; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+            .error-img { border: 1px solid #000 !important; max-width: 180px !important; }
+            .error-user-ans { color: #c00 !important; }
+            .error-correct-ans { color: #080 !important; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
         }
-        .print-header { display: none; }
+        .print-header { display: none; color: #000; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="print-header">
-        <h2>PLANO DE REVISÃO E CORREÇÃO DE ERROS</h2>
-        <p>Foco exclusivo nos tópicos com incorreções para otimização de estudo.</p>
+        <h2>MÉTODO CNH BLINDADA - PLANO DE CORREÇÃO DE ERROS</h2>
+        <p>Estude este material impresso focado nos seus erros para garantir sua aprovação de primeira.</p>
     </div>
 
     <div class="header-nav">
-        <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="lista-simulados.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Sair</a>
+        <h1>Simulado 04 Especial</h1>
+        <div style="width: 50px;"></div>
     </div>
-
-    <h1>📘 Simulado: Penalidades e Infrações</h1>
 
     <div id="live-stats" class="stats-bar">
-        <span id="timer-box">
-            <i class="fas fa-clock"></i> <span id="timer">15:00</span>
-            <span id="pause-text" class="pause-notice" style="display:none;">CRONÔMETRO PAUSADO</span>
+        <span id="timer-box" style="color:#fff; text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">15:00</span>
+            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
         </span>
-        <span class="score-correct"><i class="fas fa-check-circle"></i> Acertos: <span id="count-correct">0</span></span>
-        <span class="score-wrong"><i class="fas fa-times-circle"></i> Erros: <span id="count-wrong">0</span></span>
-    </div>
-
-    <div id="start-screen">
-        <div class="alert">
-            <strong>📋 INFORMAÇÕES:</strong><br><br>
-            • 15 Questões (Penalidades e Infrações).<br>
-            • Tempo limite total: 15 minutos.<br>
-            • Necessário 11 acertos para aprovação.<br>
-            • O cronômetro realiza pausas táticas após cada verificação para leitura técnica.
-        </div>
-        <button class="btn-action" onclick="startQuiz()">INICIAR SIMULADO</button>
+        <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
+        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
     </div>
 
     <div class="quiz-section">
         <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
         
+        <div id="start-screen" style="text-align:center">
+            <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc;">
+                <h3 style="color:#fff; margin-bottom:15px">Módulo: Penalidades e Infrações</h3>
+                • 15 Questões<br>
+                • Tempo: 15 Minutos (Pausa automática na correção)<br>
+                • Meta: 11 acertos para aprovação (70%)
+            </div>
+            <button class="btn-action" onclick="startQuiz()">Iniciar Exame</button>
+        </div>
+
         <div id="quiz-area"></div>
 
         <div id="result-area">
-            <h3>Resultado Final</h3>
+            <h3>Resultado do Teste</h3>
             <div id="score-text" class="score-box">0/15</div>
-            <p id="feedback-msg"></p>
+            <p id="feedback-msg" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
             
             <div id="pdf-trigger-zone"></div>
 
-            <button class="btn-action" style="background: #6c757d; margin-bottom: 10px;" onclick="location.reload()">Refazer Simulado</button>
-            <a href="lista-simulados.html" class="btn-action" style="display:block; text-decoration:none; text-align:center;">Voltar para Início</a>
+            <button class="btn-action" style="margin-bottom: 15px" onclick="location.reload()">Refazer Simulado</button>
         </div>
-    </div>
 
-    <div id="error-report" class="error-report-container">
-        <h3 style="border-bottom: 1px solid #ddd; padding-bottom: 8px; color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Questões para Revisão Obrigatória:</h3>
-        <div id="error-list"></div>
-    </div>
+        <div id="error-report" class="error-report-container">
+            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--netflix-red);"><i class="fas fa-graduation-cap"></i> Questões que você precisa revisar:</h3>
+            <div id="error-list"></div>
+        </div>
 
-    <div class="footer">Confia no processo e executa! 🚦✅</div>
+    </div>
+    <div class="footer">CNH Blindada Originals &copy; 2026</div>
 </div>
 
 <audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
@@ -244,7 +239,7 @@ function startQuiz() {
 function startTimer() {
     document.getElementById('timer-box').classList.remove('timer-paused');
     document.getElementById('pause-text').style.display = 'none';
-    
+
     timerInterval = setInterval(() => {
         timeLeft--;
         let mins = Math.floor(timeLeft / 60);
@@ -261,7 +256,6 @@ function renderQuestion() {
     answered = false;
     const area = document.getElementById('quiz-area');
     const q = questions[currentQ];
-    
     const imgHtml = q.img ? `<img src="${q.img}" class="quiz-img">` : '';
 
     area.innerHTML = `
@@ -281,17 +275,20 @@ function renderQuestion() {
 
 function handleButtonClick() {
     if (!answered) checkAnswer();
-    else nextQuestion();
+    else {
+        startTimer(); 
+        nextQuestion();
+    }
 }
 
 function checkAnswer() {
     const selected = document.querySelector('input[name="quiz_opt"]:checked');
-    if (!selected) return alert("Escolha uma opção!");
+    if (!selected) return;
     
     clearInterval(timerInterval);
     document.getElementById('timer-box').classList.add('timer-paused');
     document.getElementById('pause-text').style.display = 'block';
-    
+
     answered = true;
     const userChoice = parseInt(selected.value);
     const correctChoice = questions[currentQ].correct;
@@ -310,16 +307,19 @@ function checkAnswer() {
         document.getElementById(`opt-${correctChoice}`).classList.add('correct');
         document.getElementById('snd-wrong').play().catch(()=>{});
 
+        let imagemDaQuestao = questions[currentQ].img ? questions[currentQ].img : null;
+
         userErrorsLog.push({
             questionNum: currentQ + 1,
             enunciado: questions[currentQ].q,
+            imagem: imagemDaQuestao,
             respostaDoAluno: questions[currentQ].options[userChoice],
             respostaCorreta: questions[currentQ].options[correctChoice]
         });
     }
     
     const btn = document.getElementById('btn-quiz');
-    btn.innerHTML = "Próxima Questão <i class='fas fa-arrow-right' style='font-size:13px; margin-left:5px'></i>";
+    btn.innerHTML = "Próxima Questão <i class='fas fa-chevron-right' style='font-size:0.8rem; margin-left:8px'></i>";
     btn.classList.add('btn-next-step');
 }
 
@@ -327,7 +327,6 @@ function nextQuestion() {
     currentQ++;
     if (currentQ < questions.length) {
         renderQuestion();
-        startTimer();
     } else {
         showFinalResult();
     }
@@ -341,18 +340,23 @@ function showFinalResult() {
     document.getElementById('result-area').style.display = "block";
     
     document.getElementById('score-text').innerHTML = `${score}/${questions.length}`;
-    document.getElementById('feedback-msg').innerHTML = score >= 11 ? "🏆 Aprovado! Você domina as normas." : "⚠️ Quase lá! Estude um pouco mais e tente novamente.";
+    
+    const isAprovado = score >= 11;
+    document.getElementById('feedback-msg').innerHTML = isAprovado ? "🏆 APROVADO! Você domina o assunto de penalidades e infrações." : "⚠️ REPROVADO! Revise a matéria de penalidades e tente novamente.";
 
     if(userErrorsLog.length > 0) {
         const errorListDiv = document.getElementById('error-list');
-        errorListDiv.innerHTML = "";
+        errorListDiv.innerHTML = ""; 
         
         userErrorsLog.forEach(item => {
+            let renderImgHtml = item.imagem ? `<img src="${item.imagem}" class="error-img">` : '';
+
             errorListDiv.innerHTML += `
                 <div class="error-item">
                     <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
-                    <div class="error-user-ans"><i class="fas fa-times-circle"></i> Sua resposta: ${item.respostaDoAluno}</div>
-                    <div class="error-correct-ans"><i class="fas fa-check-circle"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                    ${renderImgHtml}
+                    <div class="error-user-ans"><i class="fas fa-times"></i> Você marcou: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check"></i> Resposta Correta: ${item.respostaCorreta}</div>
                 </div>
             `;
         });
@@ -361,9 +365,9 @@ function showFinalResult() {
 
         document.getElementById('pdf-trigger-zone').innerHTML = `
             <button class="btn-action btn-pdf" onclick="window.print()">
-                <i class="fas fa-file-pdf"></i> Salvar Plano de Erros em PDF
+                <i class="fab fa-whatsapp"></i> Imprimir Plano de Erros com Imagens (PDF)
             </button>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Gere o PDF para revisar focado apenas nas suas falhas antes da prova oficial.</p>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O PDF incluirá as imagens e placas das questões que você errou!</p>
         `;
     }
 }
