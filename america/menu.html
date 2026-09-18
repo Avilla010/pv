@@ -6,7 +6,7 @@
     <title>CNH Blindada - Edição Especial de Natal 🎄</title>
 
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#d61c1c">
+    <meta name="theme-color" content="#c0392b">
     
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,29 +14,26 @@
 
     <style>
         :root {
-            --xmas-red: #d61c1c;
-            --xmas-red-dark: #8b0000;
-            --xmas-green: #0f5228;
-            --xmas-green-light: #188038;
-            --xmas-gold: #ffcf25;
-            --xmas-gold-glow: rgba(255, 207, 37, 0.6);
-            --netflix-black: #0c0f12;
-            --netflix-dark-grey: #141921;
+            --natal-red: #d63031;
+            --natal-red-dark: #b22222;
+            --natal-green: #27ae60;
+            --natal-gold: #f1c40f;
+            --bg-dark: #0f141d;
+            --card-bg: #1a2332;
             --sidebar-width: 260px;
         }
 
         /* Reset e Base */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
         body { 
-            background-color: var(--netflix-black); 
+            background-color: var(--bg-dark); 
             display: flex; 
             color: #fff; 
             overflow-x: hidden; 
             position: relative;
-            min-height: 100vh;
         }
 
-        /* Canvas da Neve */
+        /* CANVAS DE NEVE */
         #snow-canvas {
             position: fixed;
             top: 0;
@@ -47,570 +44,375 @@
             z-index: 9999;
         }
 
-        /* --- SIDEBAR NATALINA --- */
+        /* TRENÓ FLUTUANTE */
+        .sleigh-container {
+            position: fixed;
+            top: 15%;
+            left: -200px;
+            z-index: 9998;
+            pointer-events: none;
+            animation: flySleigh 25s linear infinite;
+            font-size: 2.5rem;
+            color: var(--natal-gold);
+            filter: drop-shadow(0 0 10px rgba(241, 196, 15, 0.6));
+        }
+
+        @keyframes flySleigh {
+            0% { left: -200px; top: 15%; transform: scale(0.8) rotate(2deg); }
+            50% { top: 8%; transform: scale(1) rotate(-2deg); }
+            100% { left: 105vw; top: 12%; transform: scale(0.8) rotate(2deg); }
+        }
+
+        /* LUZES PISCA-PISCA */
+        .christmas-lights {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 1002;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: glow 1.2s infinite alternate;
+        }
+        .light:nth-child(1n) { background: var(--natal-red); animation-delay: 0s; }
+        .light:nth-child(2n) { background: var(--natal-gold); animation-delay: 0.3s; }
+        .light:nth-child(3n) { background: var(--natal-green); animation-delay: 0.6s; }
+        .light:nth-child(4n) { background: #3498db; animation-delay: 0.9s; }
+
+        @keyframes glow {
+            from { opacity: 0.3; box-shadow: none; }
+            to { opacity: 1; box-shadow: 0 0 10px currentColor, 0 0 15px currentColor; }
+        }
+
+        /* SIDEBAR NATALINA */
         .sidebar {
             width: var(--sidebar-width); height: 100vh; 
-            background: linear-gradient(180deg, #090c0f 0%, #111822 100%);
-            position: fixed; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(180deg, #0b0f19 0%, #161f2e 100%);
+            position: fixed; transition: all 0.3s ease;
             z-index: 1001; display: flex; flex-direction: column;
-            border-right: 1px solid rgba(214, 28, 28, 0.3); 
-            box-shadow: 4px 0 25px rgba(0,0,0,0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.1); 
         }
 
         .sidebar-overlay {
             display: none; position: fixed; top: 0; left: 0;
             width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1000;
-            backdrop-filter: blur(4px);
         }
 
         .logo-area { 
-            padding: 35px 20px 20px 20px; 
+            padding: 35px 20px 20px; 
             text-align: center; 
             position: relative;
         }
-        
+
         .logo-area img { 
             max-width: 140px; 
             height: auto; 
-            filter: drop-shadow(0 0 10px rgba(214, 28, 28, 0.5));
-            transition: transform 0.3s;
+            filter: drop-shadow(0 0 8px rgba(214, 48, 49, 0.4)); 
         }
-        .logo-area img:hover { transform: scale(1.05) rotate(-2deg); }
 
-        /* Gorrinho de Natal no Logo */
-        .santa-hat-logo {
+        .santa-hat {
             position: absolute;
-            top: 15px;
-            left: 50px;
-            width: 45px;
-            height: auto;
-            transform: rotate(-15deg);
-            z-index: 10;
-            pointer-events: none;
-            filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.5));
+            top: 18px;
+            right: 48px;
+            font-size: 1.8rem;
+            transform: rotate(15deg);
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
         }
 
         .nav-menu { flex-grow: 1; padding: 10px; overflow-y: auto; }
         
         .nav-item {
             display: flex; align-items: center; padding: 12px 15px; margin-bottom: 6px;
-            color: #c3ced9; text-decoration: none; border-radius: 8px; transition: 0.25s ease; 
-            font-weight: 500; cursor: pointer; font-size: 0.9rem; position: relative;
+            color: #b0bec5; text-decoration: none; border-radius: 6px; transition: 0.3s; 
+            font-weight: 500; cursor: pointer; font-size: 0.9rem;
         }
         
-        .nav-item i { margin-right: 15px; font-size: 1.1rem; width: 20px; text-align: center; color: #8fa3b8; transition: 0.2s; }
-        .nav-item:hover { background-color: rgba(255,255,255,0.08); color: #fff; }
-        .nav-item:hover i { color: var(--xmas-gold); transform: scale(1.15); }
-
-        .nav-item.active { 
-            background: linear-gradient(90deg, rgba(214, 28, 28, 0.25) 0%, rgba(214, 28, 28, 0.05) 100%); 
+        .nav-item i { margin-right: 15px; font-size: 1.1rem; width: 20px; text-align: center; }
+        .nav-item:hover, .nav-item.active { 
+            background: rgba(255, 255, 255, 0.08); 
             color: #fff; 
-            border-left: 4px solid var(--xmas-red); 
-            padding-left: 11px;
-            font-weight: bold;
         }
-        .nav-item.active i { color: var(--xmas-red); }
+        .nav-item.active { 
+            border-left: 4px solid var(--natal-red); 
+            background: linear-gradient(90deg, rgba(214, 48, 49, 0.2) 0%, transparent 100%);
+            padding-left: 11px; 
+            color: #fff;
+        }
 
-        /* Destaque Loja Natalina */
         .nav-item.store-highlight { 
-            background: linear-gradient(90deg, rgba(255, 207, 37, 0.15) 0%, rgba(255, 207, 37, 0.02) 100%);
-            color: var(--xmas-gold); 
+            color: var(--natal-gold); 
             font-weight: bold; 
-            border: 1px solid rgba(255, 207, 37, 0.3);
+            background: rgba(241, 196, 15, 0.08);
+            border: 1px dashed rgba(241, 196, 15, 0.3);
         }
-        .nav-item.store-highlight i { color: var(--xmas-gold); }
         .nav-item.store-highlight:hover { 
-            background-color: rgba(255, 207, 37, 0.25); 
-            box-shadow: 0 0 12px var(--xmas-gold-glow);
+            background: rgba(241, 196, 15, 0.2); 
         }
 
-        /* --- HEADER & LUZES DE NATAL --- */
-        .main-content { margin-left: var(--sidebar-width); width: 100%; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+        /* CONTEÚDO PRINCIPAL */
+        .main-content { margin-left: var(--sidebar-width); width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
 
         header {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: rgba(12, 15, 18, 0.85);
-            height: 75px; padding: 0 30px; display: flex;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(15, 20, 29, 0.85);
+            height: 70px; padding: 0 30px; display: flex;
             align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 900;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Varal de Pisca-Pisca no Header */
-        .christmas-lights {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 14px;
-            display: flex;
-            justify-content: space-around;
-            padding: 0 10px;
-            pointer-events: none;
-            z-index: 901;
-            overflow: hidden;
-        }
-
-        .light-bulb {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-top: -2px;
-            animation: flash 1.2s infinite alternate;
-        }
-        .light-bulb:nth-child(4n+1) { background: #ff2d55; box-shadow: 0 2px 8px #ff2d55; animation-delay: 0s; }
-        .light-bulb:nth-child(4n+2) { background: #4cd964; box-shadow: 0 2px 8px #4cd964; animation-delay: 0.3s; }
-        .light-bulb:nth-child(4n+3) { background: #ffcc00; box-shadow: 0 2px 8px #ffcc00; animation-delay: 0.6s; }
-        .light-bulb:nth-child(4n+4) { background: #5856d6; box-shadow: 0 2px 8px #5856d6; animation-delay: 0.9s; }
-
-        @keyframes flash {
-            0% { opacity: 0.3; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.2); }
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .btn-mobile { display: none; font-size: 1.5rem; cursor: pointer; color: #fff; }
 
-        .user-profile {
+        .user-greeting {
             display: flex;
             align-items: center;
-            gap: 12px;
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 207, 37, 0.3);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #ecf0f1;
         }
 
-        .user-avatar-container {
-            position: relative;
+        .user-greeting strong {
+            color: var(--natal-gold);
+            margin-left: 5px;
         }
 
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--xmas-red);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #fff;
-            border: 2px solid var(--xmas-gold);
-        }
-
-        .santa-hat-avatar {
-            position: absolute;
-            top: -10px;
-            right: -8px;
-            width: 22px;
-            height: auto;
-            transform: rotate(20deg);
-        }
-
-        /* --- TRENÓ DO PAPAI NOEL VOADOR --- */
-        .sleigh-container {
-            position: fixed;
-            top: 80px;
-            left: -300px;
-            z-index: 850;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: flySleigh 22s linear infinite;
-        }
-
-        @keyframes flySleigh {
-            0% { left: -350px; top: 90px; transform: scale(0.8) rotate(2deg); }
-            25% { top: 120px; transform: scale(0.85) rotate(-1deg); }
-            50% { top: 80px; transform: scale(0.9) rotate(3deg); }
-            75% { top: 110px; transform: scale(0.85) rotate(0deg); }
-            100% { left: calc(100vw + 350px); top: 90px; transform: scale(0.8) rotate(2deg); }
-        }
-
-        .sleigh-img {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
-            animation: floatSleigh 1s ease-in-out infinite alternate;
-        }
-
-        @keyframes floatSleigh {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-6px); }
-        }
-
-        .sleigh-sparkles {
-            color: var(--xmas-gold);
-            font-size: 0.8rem;
-            animation: sparkleGlow 0.5s infinite alternate;
-        }
-
-        /* --- DASHBOARD GRID & CARDS NATALINOS --- */
-        #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 75px); background: #000; }
+        #content-frame-container { flex-grow: 1; display: none; width: 100%; height: calc(100vh - 70px); background: #000; }
         iframe { width: 100%; height: 100%; border: none; }
 
+        /* GRID DE CARDS */
         .dashboard-grid { 
             padding: 40px; 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 30px; 
-            position: relative;
-            z-index: 10;
+            gap: 25px; 
         }
 
-        /* Banner de Boas-Vindas de Natal */
-        .christmas-banner {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--xmas-red-dark) 0%, #3a0007 100%);
-            border-radius: 12px;
-            padding: 25px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid rgba(255, 207, 37, 0.4);
-            box-shadow: 0 8px 32px rgba(214, 28, 28, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .christmas-banner::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 6px;
-            background: repeating-linear-gradient(45deg, #fff, #fff 10px, var(--xmas-red) 10px, var(--xmas-red) 20px);
-        }
-
-        .banner-text h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.5rem;
-            color: #fff;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .banner-text p {
-            color: #ffd8d8;
-            font-size: 0.95rem;
-        }
-
-        .banner-icon {
-            font-size: 3.5rem;
-            color: var(--xmas-gold);
-            filter: drop-shadow(0 0 10px var(--xmas-gold-glow));
-            margin-left: 20px;
-        }
-
-        /* Estilo dos Cards */
         .card {
-            background: var(--netflix-dark-grey); 
-            border-radius: 12px; 
+            background: var(--card-bg); 
+            border-radius: 8px; 
             overflow: hidden;
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: all 0.3s ease; 
             cursor: pointer; 
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* Neve no Topo do Card */
+        /* Neve no topo dos cards */
         .card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 8px;
-            background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 60%, transparent 100%);
-            border-radius: 12px 12px 0 0;
-            z-index: 8;
-            pointer-events: none;
+            height: 6px;
+            background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+            border-radius: 8px 8px 0 0;
+            z-index: 6;
         }
 
         .card:hover { 
-            transform: translateY(-8px) scale(1.02); 
+            transform: translateY(-8px); 
             z-index: 10; 
-            box-shadow: 0 15px 30px rgba(214, 28, 28, 0.3); 
-            border-color: rgba(255, 207, 37, 0.5);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.5), 0 0 15px rgba(214, 48, 49, 0.3); 
+            border-color: var(--natal-red); 
         }
 
         .card-image {
-            height: 150px; 
-            background: linear-gradient(135deg, #161c24, #222b38);
+            height: 140px; 
+            background: linear-gradient(135deg, #111722, #1d2736);
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 2.8rem; 
-            color: var(--xmas-red);
+            font-size: 2.5rem; 
+            color: var(--natal-red);
             position: relative;
-            transition: transform 0.3s;
-        }
-
-        .card:hover .card-image i {
-            transform: scale(1.15) rotate(-5deg);
-            transition: transform 0.3s ease;
         }
 
         .card-body { padding: 18px; }
-        .card h3 { 
-            margin-bottom: 6px; 
-            font-size: 1.05rem; 
-            color: #fff; 
-            font-family: 'Montserrat', sans-serif; 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .card p { color: #9aa8b6; font-size: 0.83rem; line-height: 1.45; }
+        .card h3 { margin-bottom: 6px; font-size: 1.05rem; color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+        .card p { color: #95a5a6; font-size: 0.85rem; line-height: 1.4; }
 
-        /* Badges Natalinas */
-        .badge-xmas {
-            background: linear-gradient(135deg, var(--xmas-red) 0%, var(--xmas-red-dark) 100%);
+        .badge-natal {
+            background: var(--natal-red); 
             color: white; 
-            padding: 4px 10px; 
-            font-size: 0.68rem; 
-            font-weight: 800; 
-            border-radius: 20px;
+            padding: 3px 10px; 
+            font-size: 0.65rem; 
+            font-weight: 700; 
+            border-radius: 12px;
             position: absolute; 
-            top: 15px; 
-            left: 15px; 
-            z-index: 9;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.3);
-            letter-spacing: 0.5px;
+            top: 12px; 
+            left: 12px; 
+            z-index: 7;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            text-transform: uppercase;
         }
 
         .badge-gold {
-            background: linear-gradient(135deg, #ffcf25 0%, #cca000 100%); 
+            background: var(--natal-gold); 
             color: #000; 
-            padding: 4px 10px; 
-            font-size: 0.68rem; 
+            padding: 3px 10px; 
+            font-size: 0.65rem; 
             font-weight: 800; 
-            border-radius: 20px;
+            border-radius: 12px;
             position: absolute; 
-            top: 15px; 
-            left: 15px; 
-            z-index: 9;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            letter-spacing: 0.5px;
+            top: 12px; 
+            left: 12px; 
+            z-index: 7;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            text-transform: uppercase;
         }
 
-        .badge-green {
-            background: linear-gradient(135deg, var(--xmas-green-light) 0%, var(--xmas-green) 100%);
-            color: #fff;
-            padding: 4px 10px; 
-            font-size: 0.68rem; 
-            font-weight: 800; 
-            border-radius: 20px;
-            position: absolute; 
-            top: 15px; 
-            left: 15px; 
-            z-index: 9;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        /* Responsividade */
         @media (max-width: 768px) {
             .sidebar { left: -100%; }
             .sidebar.show { left: 0; }
             .sidebar.show + .sidebar-overlay { display: block; }
             .main-content { margin-left: 0; }
             .btn-mobile { display: block; }
-            .dashboard-grid { grid-template-columns: 1fr; padding: 20px; gap: 20px; }
-            .christmas-banner { flex-direction: column; text-align: center; gap: 15px; }
-            .banner-icon { margin-left: 0; }
-            .sleigh-container { display: none; } /* Ocultar em telas muito pequenas para performance */
+            .dashboard-grid { grid-template-columns: 1fr; padding: 20px; }
         }
     </style>
 </head>
 <body onclick="closeSidebarOnMobile()">
 
-    <!-- Canvas da Neve Caindo -->
+    <!-- NEVE ANIMADA -->
     <canvas id="snow-canvas"></canvas>
 
-    <!-- Trenó do Papai Noel Flutuante -->
+    <!-- TRENÓ DO PAPAI NOEL -->
     <div class="sleigh-container">
-        <span class="sleigh-sparkles">✨ 🪪 🎁</span>
-        <div class="sleigh-img">🎅🛷🦌🦌</div>
-        <span class="sleigh-sparkles">✨ 🎄 ❄️</span>
+        🎅🏼🛷🦌🦌
     </div>
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="logo-area">
-            <!-- Gorrinho no Logo -->
-            <svg class="santa-hat-logo" viewBox="0 0 100 100">
-                <path d="M20,70 Q50,10 80,70 Z" fill="#d61c1c" />
-                <path d="M15,68 Q50,58 85,68 Q85,78 50,78 Q15,78 15,68 Z" fill="#ffffff" />
-                <circle cx="80" cy="70" r="10" fill="#ffffff" />
-            </svg>
-            <img src="cnh.png" alt="CNH Blindada" onerror="this.src='https://placehold.co/140x50/141921/ffffff?text=CNH+Natal'">
+            <span class="santa-hat">🎅</span>
+            <img src="cnh.png" alt="CNH Blindada">
         </div>
-        
         <nav class="nav-menu">
-            <div onclick="openHome()" class="nav-item active" id="menu-painel">
-                <i class="fas fa-home"></i> Início Natalino
-            </div>
+            <div onclick="openHome()" class="nav-item active" id="menu-painel"><i class="fas fa-home"></i> Início</div>
             
-            <!-- LOJA PREMIUM DE NATAL -->
-            <div onclick="loadPage('loja.html')" class="nav-item store-highlight">
-                <i class="fas fa-gift"></i> Loja de Natal 🎁
-            </div>
+            <div onclick="loadPage('loja.html')" class="nav-item store-highlight"><i class="fas fa-gift"></i> Loja de Natal</div>
             
-            <div onclick="loadPage('shorts.html')" class="nav-item">
-                <i class="fas fa-bolt"></i> Dicas Rápidas (Shorts)
-            </div>
-            <div onclick="loadPage('curso-audio.html')" class="nav-item">
-                <i class="fas fa-headphones"></i> Curso em Áudio
-            </div>
-            <div onclick="loadPage('plano-estudo.html')" class="nav-item">
-                <i class="fas fa-list-ul"></i> Meu Plano De Estudos
-            </div>
-            <div onclick="loadPage('agendar2.html')" class="nav-item">
-                <i class="fas fa-calendar-alt"></i> Horários de Aulas
-            </div>
-            <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item">
-                <i class="fas fa-video"></i> Ao Vivo
-            </div>
-            <div onclick="loadPage('listas_gravadas.html')" class="nav-item">
-                <i class="fas fa-film"></i> Aulas Gravadas
-            </div>
-            <div onclick="loadPage('lista-simulados.html')" class="nav-item">
-                <i class="fas fa-check-circle"></i> Simulados Natalinos
-            </div>
-            <div onclick="loadPage('material.html')" class="nav-item">
-                <i class="fas fa-file-alt"></i> Materiais & PDFs
-            </div>
-            <div onclick="loadPage('suporte.html')" class="nav-item">
-                <i class="fas fa-headset"></i> Suporte Aluno
-            </div>
+            <div onclick="loadPage('shorts.html')" class="nav-item"><i class="fas fa-bolt"></i> Dicas Rápidas (Shorts)</div>
+            <div onclick="loadPage('curso-audio.html')" class="nav-item"><i class="fas fa-headphones"></i> Curso em Áudio</div>
+            <div onclick="loadPage('plano-estudo.html')" class="nav-item"><i class="fas fa-list-ul"></i> Meu Plano De Estudos</div>
+            <div onclick="loadPage('agendar2.html')" class="nav-item"><i class="fas fa-calendar-alt"></i> Horários de Aulas</div>
+            <div onclick="loadPage('aula-ao-vivo.html')" class="nav-item"><i class="fas fa-video"></i> Ao Vivo</div>
+            <div onclick="loadPage('listas_gravadas.html')" class="nav-item"><i class="fas fa-film"></i> Aulas Gravadas</div>
+            <div onclick="loadPage('lista-simulados.html')" class="nav-item"><i class="fas fa-check-circle"></i> Simulados</div>
+            <div onclick="loadPage('material.html')" class="nav-item"><i class="fas fa-file-alt"></i> Materiais</div>
+            <div onclick="loadPage('suporte.html')" class="nav-item"><i class="fas fa-headset"></i> Suporte</div>
         </nav>
     </aside>
 
     <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="main-content">
+        <!-- CABEÇALHO -->
         <header>
-            <!-- Luzes de Natal (Pisca-Pisca) -->
             <div class="christmas-lights">
-                <div class="light-bulb"></div><div class="light-bulb"></div>
-                <div class="light-bulb"></div><div class="light-bulb"></div>
-                <div class="light-bulb"></div><div class="light-bulb"></div>
-                <div class="light-bulb"></div><div class="light-bulb"></div>
-                <div class="light-bulb"></div><div class="light-bulb"></div>
-                <div class="light-bulb"></div><div class="light-bulb"></div>
+                <div class="light"></div><div class="light"></div><div class="light"></div>
+                <div class="light"></div><div class="light"></div><div class="light"></div>
+                <div class="light"></div><div class="light"></div><div class="light"></div>
+                <div class="light"></div><div class="light"></div><div class="light"></div>
             </div>
 
             <div class="btn-mobile" onclick="event.stopPropagation(); toggleSidebar();">
                 <i class="fas fa-bars"></i>
             </div>
             
-            <div class="user-profile">
-                <div class="user-avatar-container">
-                    <div class="user-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <!-- Gorrinho de Natal no Avatar -->
-                    <svg class="santa-hat-avatar" viewBox="0 0 100 100">
-                        <path d="M20,70 Q50,10 80,70 Z" fill="#d61c1c" />
-                        <path d="M15,68 Q50,58 85,68 Q85,78 50,78 Q15,78 15,68 Z" fill="#ffffff" />
-                        <circle cx="80" cy="70" r="10" fill="#ffffff" />
-                    </svg>
-                </div>
-                <span style="font-size: 0.9rem;">Boas Festas, <strong id="user-display-name" style="color: var(--xmas-gold);">Condutor Blindado</strong> 🎄</span>
+            <div class="user-greeting">
+                <span>Boas Festas, <strong id="user-display-name">Condutor</strong>! 🎄✨</span>
             </div>
         </header>
 
+        <!-- DASHBOARD GRID -->
         <section id="view-home" class="dashboard-grid">
 
-            <!-- BANNER ESPECIAL DE NATAL -->
-            <div class="christmas-banner">
-                <div class="banner-text">
-                    <h2>HO HO HO! Sua Aprovação de Presente 🎅</h2>
-                    <p>Neste fim de ano, acelere rumo à sua habilitação com o treinamento especial CNH de Natal!</p>
-                </div>
-                <div class="banner-icon">
-                    <i class="fas fa-sleigh"></i>
-                </div>
-            </div>
-
-            <!-- CARD LOJA PREMIUM (DESTAQUE NATALINO) -->
-            <div class="card" onclick="loadPage('loja.html')" style="border: 1px solid var(--xmas-gold);">
-                <span class="badge-gold"><i class="fas fa-gift"></i> PRESENTE DE NATAL</span>
-                <div class="card-image" style="color: var(--xmas-gold); background: linear-gradient(135deg, #2b2100, #423501);">
+            <div class="card" onclick="loadPage('loja.html')" style="border-color: var(--natal-gold);">
+                <span class="badge-gold"><i class="fas fa-star"></i> ESPECIAL DE NATAL</span>
+                <div class="card-image" style="color: var(--natal-gold); background: linear-gradient(135deg, #2a2004, #443508);">
                     <i class="fas fa-gift"></i>
                 </div>
                 <div class="card-body">
-                    <h3 style="color: var(--xmas-gold);">Loja Natalina Premium</h3>
-                    <p>Turbine sua preparação. Simulados secretos, resumos táticos e muito mais com descontos de fim de ano.</p>
+                    <h3 style="color: var(--natal-gold);">Loja Premium</h3>
+                    <p>Presenteie sua aprovação! Simulados secretos, resumos táticos e muito mais.</p>
                 </div>
             </div>
 
             <div class="card" onclick="loadPage('shorts.html')">
-                <span class="badge-xmas">🔥 BOMBANDO</span>
-                <div class="card-image" style="color: #ffeb3b;"><i class="fas fa-bolt"></i></div>
+                <span class="badge-natal">BOMBANDO</span>
+                <div class="card-image" style="color: var(--natal-gold);"><i class="fas fa-bolt"></i></div>
                 <div class="card-body">
                     <h3>Dicas Rápidas</h3>
-                    <p>Vídeos curtos com as melhores sacadas para passar de primeira antes do ano fechar.</p>
+                    <p>Vídeos curtos com as melhores sacadas para a prova.</p>
                 </div>
             </div>
 
             <div class="card" onclick="loadPage('listas_gravadas.html')">
-                <span class="badge-green">🎄 CONTINUAR</span>
-                <div class="card-image"><i class="fas fa-play"></i></div>
+                <span class="badge-natal">CONTINUAR</span>
+                <div class="card-image" style="color: var(--natal-red);"><i class="fas fa-play"></i></div>
                 <div class="card-body">
                     <h3>Aulas Gravadas</h3>
-                    <p>Assista aos módulos completos de legislação e sinalização no seu ritmo de férias.</p>
+                    <p>Assista aos módulos completos de legislação e sinalização.</p>
                 </div>
             </div>
 
             <div class="card" onclick="loadPage('lista-simulados.html')">
-                <span class="badge-gold">⭐ RECOMENDADO</span>
-                <div class="card-image" style="color: #46d369;"><i class="fas fa-edit"></i></div>
+                <div class="card-image" style="color: var(--natal-green);"><i class="fas fa-edit"></i></div>
                 <div class="card-body">
                     <h3>Simulados Blindados</h3>
-                    <p>Treine com questões reais da prova teórica e garanta seu presente de aprovação.</p>
+                    <p>Treine com questões reais e conquiste sua CNH de Natal.</p>
                 </div>
             </div>            
             
             <div class="card" onclick="loadPage('curso-audio.html')">
-                <span class="badge-xmas">🎧 MODO VIAGEM</span>
-                <div class="card-image" style="color: #ff9800;"><i class="fas fa-headphones"></i></div>
+                <span class="badge-natal">NOVO MODO</span>
+                <div class="card-image" style="color: #e67e22;"><i class="fas fa-headphones"></i></div>
                 <div class="card-body">
                     <h3>Curso em Áudio</h3>
-                    <p>Estude enquanto viaja ou descansa nas festas. Toda a matéria em áudio HD.</p>
+                    <p>Estude enquanto viaja neste fim de ano. Toda a matéria em áudio HD.</p>
                 </div>
             </div>
 
             <div class="card" onclick="loadPage('plano-estudo.html')">
-                <div class="card-image" style="color: var(--xmas-red);"><i class="fas fa-list-ul"></i></div>
+                <div class="card-image" style="color: var(--natal-red);"><i class="fas fa-list-ul"></i></div>
                 <div class="card-body">
                     <h3>Plano de Estudos</h3>
-                    <p>O roteiro exato para planejar sua CNH no início do ano novo.</p>
+                    <p>O roteiro exato para passar de primeira antes do ano terminar.</p>
                 </div>
             </div>
 
             <div class="card" onclick="loadPage('agendar2.html')">
-                <div class="card-image" style="color: #a29bfe;"><i class="fas fa-calendar-check"></i></div>
+                <div class="card-image" style="color: #9b59b6;"><i class="fas fa-calendar-check"></i></div>
                 <div class="card-body">
                     <h3>Horários de Aulas</h3>
-                    <p>Escolha o melhor horário para suas aulas remotas durante o fim de ano.</p>
+                    <p>Escolha o melhor horário para suas aulas remotas.</p>
                 </div>
             </div>
 
             <div class="card" onclick="loadPage('material.html')">
-                <div class="card-image" style="color: #54b4ff;"><i class="fas fa-arrow-alt-circle-down"></i></div>
+                <div class="card-image" style="color: #3498db;"><i class="fas fa-arrow-alt-circle-down"></i></div>
                 <div class="card-body">
                     <h3>Materiais & PDF</h3>
-                    <p>Mapas mentais e resumos estratégicos para baixar e revisar offline.</p>
+                    <p>Mapas mentais e resumos estratégicos para baixar.</p>
                 </div>
             </div>
 
             <div class="card" onclick="loadPage('suporte.html')">
-                <div class="card-image" style="color: #f1f1f1;"><i class="fas fa-headset"></i></div>
+                <div class="card-image" style="color: #ecf0f1;"><i class="fas fa-headset"></i></div>
                 <div class="card-body">
                     <h3>Suporte Aluno</h3>
-                    <p>Nossa equipe de duendes da aprovação está pronta para te ajudar.</p>
+                    <p>Fale conosco se tiver dúvidas ou problemas técnicos.</p>
                 </div>
             </div>
 
@@ -622,24 +424,24 @@
     </main>
 
     <script>
-        // --- AUTENTICAÇÃO E NAVEGAÇÃO ---
         const sidebar = document.getElementById('sidebar');
 
+        // VERIFICAÇÃO DE LOGIN CORRIGIDA
         window.onload = function() {
-            try {
-                const dados = JSON.parse(localStorage.getItem('usuario_logado'));
-                if (!dados) {
-                    // Fallback para visualização se não houver login salvo
-                    document.getElementById('user-display-name').innerText = "Futuro Motorista";
-                } else {
-                    document.getElementById('user-display-name').innerText = dados.primeiroNome || "Condutor Blindado";
-                }
-            } catch(e) {
-                document.getElementById('user-display-name').innerText = "Condutor Blindado";
+            const usuarioString = localStorage.getItem('usuario_logado');
+            
+            if (!usuarioString) {
+                window.location.href = 'login.html';
+                return;
             }
 
-            // Iniciar Neve
-            initSnowEffect();
+            try {
+                const dados = JSON.parse(usuarioString);
+                const nomeExibicao = dados.primeiroNome || dados.nome || 'Condutor';
+                document.getElementById('user-display-name').innerText = nomeExibicao;
+            } catch (e) {
+                window.location.href = 'login.html';
+            }
         }
 
         function toggleSidebar() {
@@ -690,75 +492,56 @@
             }
         }
 
-        // --- SISTEMA DE EFEITO DE NEVE (HTML5 CANVAS) ---
-        function initSnowEffect() {
-            const canvas = document.getElementById('snow-canvas');
-            const ctx = canvas.getContext('2d');
+        /* --- SCRIPT DO CANVAS DE NEVE --- */
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
 
-            let width = canvas.width = window.innerWidth;
-            let height = canvas.height = window.innerHeight;
-
-            window.addEventListener('resize', () => {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            });
-
-            const numFlakes = Math.min(width < 768 ? 40 : 90, 120);
-            const flakes = [];
-
-            class Flake {
-                constructor() {
-                    this.reset();
-                }
-
-                reset() {
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * -height;
-                    this.vy = 1 + Math.random() * 2.5;
-                    this.vx = (Math.random() - 0.5) * 1.2;
-                    this.radius = 1.5 + Math.random() * 3;
-                    this.alpha = 0.3 + Math.random() * 0.7;
-                    this.swing = Math.random() * 0.05;
-                    this.swingStep = Math.random() * Math.PI * 2;
-                }
-
-                update() {
-                    this.swingStep += this.swing;
-                    this.x += this.vx + Math.sin(this.swingStep) * 0.5;
-                    this.y += this.vy;
-
-                    if (this.y > height + 10 || this.x < -10 || this.x > width + 10) {
-                        this.reset();
-                        this.y = -10;
-                    }
-                }
-
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
-                    ctx.shadowBlur = 5;
-                    ctx.shadowColor = '#ffffff';
-                    ctx.fill();
-                    ctx.closePath();
-                }
-            }
-
-            for (let i = 0; i < numFlakes; i++) {
-                flakes.push(new Flake());
-            }
-
-            function animateSnow() {
-                ctx.clearRect(0, 0, width, height);
-                flakes.forEach(flake => {
-                    flake.update();
-                    flake.draw();
-                });
-                requestAnimationFrame(animateSnow);
-            }
-
-            animateSnow();
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const flakes = [];
+        const flakeCount = 70;
+
+        for (let i = 0; i < flakeCount; i++) {
+            flakes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 3 + 1,
+                density: Math.random() * flakeCount,
+                opacity: Math.random() * 0.8 + 0.2
+            });
+        }
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < flakeCount; i++) {
+                const f = flakes[i];
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
+                ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2, true);
+                ctx.fill();
+
+                f.y += Math.cos(f.density) + 1 + f.radius / 2;
+                f.x += Math.sin(f.density) * 0.5;
+
+                if (f.y > canvas.height) {
+                    flakes[i] = {
+                        x: Math.random() * canvas.width,
+                        y: 0,
+                        radius: f.radius,
+                        density: f.density,
+                        opacity: f.opacity
+                    };
+                }
+            }
+            requestAnimationFrame(drawSnow);
+        }
+        drawSnow();
     </script>
 </body>
 </html>
