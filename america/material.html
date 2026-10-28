@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Materiais - CNH Blindada Originals</title>
     <link rel="icon" href="favicon.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,22 +14,27 @@
             --netflix-card: #181818;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--netflix-black);
             margin: 0;
-            padding: 40px 4%;
+            padding: 20px 4%;
             color: #fff;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .header {
-            margin-bottom: 40px;
+            margin-bottom: 25px;
             border-left: 4px solid var(--netflix-red);
-            padding-left: 20px;
+            padding-left: 15px;
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -39,44 +44,232 @@
         .header p {
             color: #a3a3a3;
             margin: 5px 0 0 0;
+            font-size: 0.9rem;
         }
 
+        /* DESTAQUE DA APOSTILA DIGITAL (E-READER) */
+        .reader-section {
+            background: var(--netflix-card);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 40px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        .reader-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .reader-title h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reader-title h2 i {
+            color: var(--netflix-red);
+        }
+
+        .reader-title p {
+            margin: 5px 0 0 0;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .page-counter {
+            background: rgba(229, 9, 20, 0.2);
+            color: var(--netflix-red);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1px solid rgba(229, 9, 20, 0.4);
+        }
+
+        /* PALCO CENTRALIZADO COM SUPORTE A SWIPE E TELA CHEIA */
+        .reader-viewer {
+            background: #080808;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 15px;
+            border: 1px solid #222;
+            touch-action: pan-y;
+            user-select: none;
+            overflow: hidden;
+            min-height: 50vh;
+            padding: 10px;
+        }
+
+        /* ESTILO QUANDO ESTIVER EM MODO TELA CHEIA */
+        .reader-viewer:fullscreen,
+        .reader-viewer:-webkit-full-screen,
+        .reader-viewer:-ms-fullscreen {
+            background: #000;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+        }
+
+        .reader-viewer img {
+            max-width: 100%;
+            height: auto;
+            max-height: 80vh;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .reader-viewer:fullscreen img,
+        .reader-viewer:-webkit-full-screen img {
+            max-height: 100vh;
+            max-width: 100vw;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        /* BOTÃO FLUTUANTE DE TELA CHEIA */
+        .btn-fullscreen {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            z-index: 10;
+        }
+
+        .btn-fullscreen:hover {
+            background: var(--netflix-red);
+            border-color: var(--netflix-red);
+        }
+
+        .loading-msg {
+            position: absolute;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* CONTROLES DE NAVEGAÇÃO */
+        .reader-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-nav {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            text-transform: uppercase;
+            flex: 1;
+            max-width: 150px;
+            justify-content: center;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background-color: var(--netflix-red);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .jump-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .jump-container select {
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-family: inherit;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        /* GRID DOS MATERIAIS ADICIONAIS */
         .grid-materiais {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            gap: 20px;
         }
 
         .card-material {
             background: var(--netflix-card);
-            padding: 25px;
-            border-radius: 4px;
+            padding: 20px;
+            border-radius: 6px;
             display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
-            border-bottom: 3px solid transparent;
-            cursor: default;
+            flex-direction: column;
+            gap: 15px;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s;
+            border: 1px solid #222;
         }
 
         .card-material:hover {
-            transform: scale(1.05);
-            z-index: 10;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
-            border-bottom-color: var(--netflix-red);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            border-color: #444;
+        }
+
+        .card-body {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .icon-box {
             background: rgba(255,255,255,0.05);
             color: #fff;
-            width: 70px;
-            height: 70px;
+            width: 55px;
+            height: 55px;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            transition: 0.3s;
+            font-size: 24px;
+            flex-shrink: 0;
         }
 
         .card-material:hover .icon-box {
@@ -88,36 +281,61 @@
         }
 
         .info h3 {
-            margin: 0 0 8px 0;
-            font-size: 1.1rem;
+            margin: 0 0 5px 0;
+            font-size: 1.05rem;
             color: #fff;
         }
 
         .info p {
             margin: 0;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #808080;
-            line-height: 1.4;
+            line-height: 1.3;
+        }
+
+        /* GRUPO DE BOTÕES (VISUALIZAR + BAIXAR) */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-action {
+            flex: 1;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+            text-transform: uppercase;
+            box-sizing: border-box;
+        }
+
+        .btn-view {
+            background-color: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        .btn-view:hover {
+            background-color: #444;
+            color: #fff;
         }
 
         .btn-download {
             background-color: #fff;
             color: #000;
-            text-decoration: none;
-            padding: 12px 18px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: 0.2s;
-            text-transform: uppercase;
+            border: 1px solid #fff;
         }
 
         .btn-download:hover {
             background-color: var(--netflix-red);
+            border-color: var(--netflix-red);
             color: #fff;
         }
 
@@ -126,23 +344,28 @@
             color: var(--netflix-red);
             padding: 2px 8px;
             border-radius: 2px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             text-transform: uppercase;
             display: inline-block;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         @media (max-width: 600px) {
-            .grid-materiais {
-                grid-template-columns: 1fr;
+            body {
+                padding: 15px 3%;
             }
-            .card-material {
-                flex-direction: column;
-                text-align: center;
+            .reader-controls {
+                flex-wrap: wrap;
             }
-            .btn-download {
+            .jump-container {
+                order: -1;
                 width: 100%;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+            .btn-nav {
+                max-width: 48%;
             }
         }
     </style>
@@ -151,54 +374,235 @@
 
     <div class="header">
         <h1>Materiais Didáticos</h1>
-        <p>Documentos e PDFs para turbinar seus estudos.</p>
+        <p>Apostila oficial interativa e documentos de apoio.</p>
     </div>
 
+    <!-- LEITOR DIGITAL DA APOSTILA -->
+    <section class="reader-section">
+        <div class="reader-header">
+            <div class="reader-title">
+                <h2><i class="fas fa-book-open"></i> Apostila Teórica Interativa 2026</h2>
+                <p>Deslize para o lado, use a tela cheia ou o botão voltar do celular.</p>
+            </div>
+            <div class="page-counter" id="pageIndicator">Página 01 de 29</div>
+        </div>
+
+        <div class="reader-viewer" id="viewerContainer">
+            <button class="btn-fullscreen" onclick="alternarTelaCheia()" title="Tela Cheia">
+                <i class="fas fa-expand" id="fullscreenIcon"></i> Tela Cheia
+            </button>
+            <span class="loading-msg" id="loadingMsg">Carregando página...</span>
+            <img id="apostilaImg" src="" alt="Página da Apostila Teórica">
+        </div>
+
+        <div class="reader-controls">
+            <button class="btn-nav" id="btnPrev" onclick="mudarPagina(-1)">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+
+            <div class="jump-container">
+                <label for="pageSelect">Ir para:</label>
+                <select id="pageSelect" onchange="irParaPagina(this.value)">
+                    <!-- Preenchido via JS -->
+                </select>
+            </div>
+
+            <button class="btn-nav" id="btnNext" onclick="mudarPagina(1)">
+                Próxima <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- DEMAIS MATERIAIS PARA VISUALIZAÇÃO E DOWNLOAD -->
     <div class="grid-materiais">
         
         <div class="card-material">
-            <div class="icon-box">
-                <i class="fas fa-calendar-check"></i>
+            <div class="card-body">
+                <div class="icon-box">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="info">
+                    <span class="badge-pdf">Documento</span>
+                    <h3>Plano de Aulas 2026</h3>
+                    <p>O roteiro completo para sua aprovação este ano.</p>
+                </div>
             </div>
-            <div class="info">
-                <span class="badge-pdf">Documento</span>
-                <h3>Plano de Aulas 2026</h3>
-                <p>O roteiro completo para sua aprovação este ano.</p>
+            <div class="action-buttons">
+                <a href="plano-de-aulas.pdf" target="_blank" class="btn-action btn-view">
+                    <i class="fas fa-eye"></i> Visualizar
+                </a>
+                <a href="plano-de-aulas.pdf" download class="btn-action btn-download">
+                    <i class="fas fa-download"></i> Baixar
+                </a>
             </div>
-            <a href="plano-de-aulas.pdf" download class="btn-download">
-                <i class="fas fa-download"></i> Baixar
-            </a>
         </div>
 
         <div class="card-material">
-            <div class="icon-box">
-                <i class="fas fa-list-ol"></i>
+            <div class="card-body">
+                <div class="icon-box">
+                    <i class="fas fa-list-ol"></i>
+                </div>
+                <div class="info">
+                    <span class="badge-pdf">Gabarito</span>
+                    <h3>Respostas Simulados</h3>
+                    <p>Confira seu desempenho detalhado.</p>
+                </div>
             </div>
-            <div class="info">
-                <span class="badge-pdf">Gabarito</span>
-                <h3>Respostas Simulados</h3>
-                <p>Confira seu desempenho detalhado.</p>
+            <div class="action-buttons">
+                <a href="gabarito.pdf" target="_blank" class="btn-action btn-view">
+                    <i class="fas fa-eye"></i> Visualizar
+                </a>
+                <a href="gabarito.pdf" download class="btn-action btn-download">
+                    <i class="fas fa-download"></i> Baixar
+                </a>
             </div>
-            <a href="gabarito.pdf" download class="btn-download">
-                <i class="fas fa-download"></i> Baixar
-            </a>
-        </div>
-
-        <div class="card-material">
-            <div class="icon-box">
-                <i class="fas fa-book-open"></i>
-            </div>
-            <div class="info">
-                <span class="badge-pdf">Resumo</span>
-                <h3>Resumo da Apostila Teórica</h3>
-                <p>Conteúdo essencial em texto simplificado.</p>
-            </div>
-            <a href="apostila.pdf" download class="btn-download">
-                <i class="fas fa-download"></i> Baixar
-            </a>
         </div>
 
     </div>
 
+    <script>
+        const totalPaginas = 29;
+        const pastaImagens = "apostila_img/";
+        const storageKey = "cnh_apostila_ultima_pagina";
+
+        let paginaAtual = parseInt(localStorage.getItem(storageKey)) || 1;
+        if (paginaAtual < 1 || paginaAtual > totalPaginas) paginaAtual = 1;
+
+        const imgElement = document.getElementById("apostilaImg");
+        const indicatorElement = document.getElementById("pageIndicator");
+        const btnPrev = document.getElementById("btnPrev");
+        const btnNext = document.getElementById("btnNext");
+        const pageSelect = document.getElementById("pageSelect");
+        const loadingMsg = document.getElementById("loadingMsg");
+        const viewerContainer = document.getElementById("viewerContainer");
+        const fullscreenIcon = document.getElementById("fullscreenIcon");
+
+        let isNavigatingHistory = false;
+
+        function inicializarSeletor() {
+            pageSelect.innerHTML = "";
+            for (let i = 1; i <= totalPaginas; i++) {
+                let opt = document.createElement("option");
+                opt.value = i;
+                opt.textContent = `Página ${i < 10 ? '0' + i : i}`;
+                pageSelect.appendChild(opt);
+            }
+        }
+
+        function formatarNomeArquivo(num) {
+            return num < 10 ? "0" + num + ".png" : num + ".png";
+        }
+
+        function carregarPagina(num, atualizarHistorico = true) {
+            paginaAtual = num;
+            loadingMsg.style.display = "block";
+            imgElement.style.opacity = "0.3";
+            
+            imgElement.src = pastaImagens + formatarNomeArquivo(paginaAtual);
+            
+            indicatorElement.textContent = `Página ${paginaAtual < 10 ? '0' + paginaAtual : paginaAtual} de ${totalPaginas}`;
+            pageSelect.value = paginaAtual;
+
+            btnPrev.disabled = (paginaAtual === 1);
+            btnNext.disabled = (paginaAtual === totalPaginas);
+
+            localStorage.setItem(storageKey, paginaAtual);
+
+            // Gerencia o histórico do navegador para o botão "Voltar" do celular funcionar entre as páginas
+            if (atualizarHistorico && !isNavigatingHistory) {
+                window.history.pushState({ pagina: paginaAtual }, "", `#pagina-${paginaAtual}`);
+            }
+            isNavigatingHistory = false;
+        }
+
+        // Intercepta o botão "Voltar" do navegador/celular
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.pagina) {
+                isNavigatingHistory = true;
+                carregarPagina(event.state.pagina, false);
+            }
+        });
+
+        imgElement.onload = function() {
+            loadingMsg.style.display = "none";
+            imgElement.style.opacity = "1";
+        };
+
+        imgElement.onerror = function() {
+            loadingMsg.textContent = "Erro ao carregar a página.";
+        };
+
+        function mudarPagina(direcao) {
+            let novaPagina = paginaAtual + direcao;
+            if (novaPagina >= 1 && novaPagina <= totalPaginas) {
+                carregarPagina(novaPagina, true);
+            }
+        }
+
+        function irParaPagina(valor) {
+            let p = parseInt(valor);
+            if (p >= 1 && p <= totalPaginas) {
+                carregarPagina(p, true);
+            }
+        }
+
+        // CONTROLE DE TELA CHEIA (FULLSCREEN)
+        function alternarTelaCheia() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (viewerContainer.requestFullscreen) {
+                    viewerContainer.requestFullscreen();
+                } else if (viewerContainer.webkitRequestFullscreen) {
+                    viewerContainer.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', atualizarIconeFullscreen);
+        document.addEventListener('webkitfullscreenchange', atualizarIconeFullscreen);
+
+        function atualizarIconeFullscreen() {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                fullscreenIcon.className = "fas fa-compress";
+            } else {
+                fullscreenIcon.className = "fas fa-expand";
+            }
+        }
+
+        // SUPORTE A SWIPE / ARRASTAR NO TOUCH
+        let startX = 0;
+        let endX = 0;
+
+        viewerContainer.addEventListener('touchstart', function(e) {
+            startX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        viewerContainer.addEventListener('touchend', function(e) {
+            endX = e.changedTouches[0].screenX;
+            handleGesture();
+        }, { passive: true });
+
+        function handleGesture() {
+            const limiar = 40;
+            if (endX < startX - limiar) {
+                mudarPagina(1); // Próxima
+            }
+            if (endX > startX + limiar) {
+                mudarPagina(-1); // Anterior
+            }
+        }
+
+        window.onload = function() {
+            inicializarSeletor();
+            // Registra o estado inicial no histórico para o botão voltar funcionar corretamente
+            window.history.replaceState({ pagina: paginaAtual }, "", `#pagina-${paginaAtual}`);
+            carregarPagina(paginaAtual, false);
+        };
+    </script>
 </body>
 </html>
