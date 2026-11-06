@@ -39,11 +39,25 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- EFECTO DE NEVE NATALINA --- */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         /* --- 1. TICKER AO VIVO EM MOVIMENTO CONSTANTE (MARQUEE) --- */
@@ -504,10 +518,14 @@
 </head>
 <body>
 
+    <!-- Canvas para Animação de Neve de Natal -->
+    <canvas id="snow-canvas"></canvas>
+
     <div class="container">
         <!-- Ticker dinâmico em movimento no topo -->
         <div class="ticker-wrap">
             <div class="ticker-move" id="tickerDinamico">
+                <span class="ticker-item"><i class="fas fa-snowflake"></i> FELIZ NATAL</span>
                 <span class="ticker-item"><i class="fas fa-chart-line"></i> B3 CARTEIRA PRO</span>
                 <span class="ticker-item"><i class="fas fa-sync-alt fa-spin"></i> ATUALIZAÇÃO EM TEMPO REAL</span>
                 <span class="ticker-item"><i class="fas fa-bullseye"></i> META: R$ 20.000</span>
@@ -515,7 +533,7 @@
             </div>
         </div>
 
-        <h1><i class="fas fa-chart-line"></i> Carteira B3 Pro</h1>
+        <h1><i class="fas fa-tree" style="color: #28a745;"></i> Carteira B3 Pro <i class="fas fa-gift" style="color: #dc3545;"></i></h1>
         
         <!-- Frase Motivacional -->
         <div class="quote-banner">
@@ -578,7 +596,7 @@
         <!-- ABA 1: CARTEIRA PRINCIPAL -->
         <div id="tabCarteira" class="tab-content active">
             <div class="busca-container">
-                <input type="text" id="inputBusca" placeholder="Buscar ativo pelo ticker... (Ex: BBAS3)" oninput="filtrarTabela()">
+                <input type="text" id="inputBusca" placeholder="Buscar ativo pelo ticker... (Ex: BBAS3, PETR4F)" oninput="filtrarTabela()">
                 <button onclick="carregarCarteira()"><i class="fas fa-sync-alt"></i> Atualizar</button>
             </div>
 
@@ -665,6 +683,7 @@
         const DATA_PRIMEIRO_APORTE = new Date(2026, 4, 27); // 27/05/2026
         const META_VALOR = 20000;
 
+        // Tabela de Proventos incluindo PETR4 e VALE3 (tratando o 'F' fracionário dinamicamente)
         const DADOS_PROVENTOS = {
             'ITSA4':  { dy: 7.65,  rendMes: 0.085 },
             'TAEE11': { dy: 9.12,  rendMes: 0.300 },
@@ -676,7 +695,10 @@
             'CSMG3':  { dy: 7.46,  rendMes: 0.360 },
             'ALUP11': { dy: 7.00,  rendMes: 0.187 },
             'CPLE3':  { dy: 6.48,  rendMes: 0.080 },
-            'EGIE3':  { dy: 7.20,  rendMes: 0.220 } // Adicionado EGIE3
+            'EGIE3':  { dy: 7.20,  rendMes: 0.220 },
+            'PETR4':  { dy: 14.50, rendMes: 0.380 }, // Suporte para PETR4 / PETR4F
+            'VALE3':  { dy: 8.90,  rendMes: 0.450 }, // Suporte para VALE3 / VALE4F / VALE3F
+            'VALE4':  { dy: 8.90,  rendMes: 0.450 }
         };
 
         let todosOsDados = [];
@@ -872,11 +894,18 @@
             let totalAnual = 0;
 
             listaAtivos.forEach(ativo => {
-                const tickerClean = ativo[0].replace('F', '');
+                // Remove o sufixo 'F' se existir para casar com PETR4, VALE3, VALE4, etc.
+                const tickerRaw = ativo[0].trim();
+                let tickerClean = tickerRaw;
+                if (tickerRaw.endsWith('F') && tickerRaw.length > 5) {
+                    tickerClean = tickerRaw.slice(0, -1);
+                }
+
                 const qtd = parseFloat(ativo[1]) || 0;
                 const cat = ativo[6];
                 
-                const prov = DADOS_PROVENTOS[tickerClean] || { dy: 0, rendMes: 0 };
+                // Busca no dicionário ou padrão 0
+                const prov = DADOS_PROVENTOS[tickerClean] || DADOS_PROVENTOS[tickerRaw] || { dy: 0, rendMes: 0 };
                 
                 const mesVal = qtd * prov.rendMes;
                 const anoVal = mesVal * 12;
@@ -901,14 +930,14 @@
                 corpo.appendChild(tr);
             });
 
-            document.getElementById('cardRendaMensal').innerText = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
-            document.getElementById('cardRendaAnual').innerText = `R$ ${totalAnual.toFixed(2).replace('.', ',')}`;
+            document.getElementById('cardRendaMensal').innerText = "R$ " + totalMensal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('cardRendaAnual').innerText = "R$ " + totalAnual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         function filtrarTabela() {
             const termo = document.getElementById('inputBusca').value.toUpperCase();
-            const ativosFiltrados = todosOsDados.filter(ativo => ativo[0].toUpperCase().includes(termo));
-            montarTabela(ativosFiltrados);
+            const filtrados = todosOsDados.filter(ativo => ativo[0].toUpperCase().includes(termo));
+            montarTabela(filtrados);
         }
 
         function calcularEvolucaoCarteira() {
@@ -916,44 +945,117 @@
             corpo.innerHTML = "";
 
             const freq = document.getElementById('selectFrequenciaAporte').value;
-            let aporteExtra = parseFloat(document.getElementById('inputAporteMensal').value) || 0;
+            let aporteAdicional = parseFloat(document.getElementById('inputAporteMensal').value) || 0;
             
-            if (freq === 'semanal') {
-                aporteExtra = aporteExtra * 4.33; // converte aporte semanal para mensal aproximado
+            if (freq === "semanal") {
+                aporteAdicional = aporteAdicional * 4; // Converte semanal para equivalente mensal
             }
 
-            const totalMensalAtual = parseFloat(document.getElementById('cardRendaMensal').innerText.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
-            const taxaRendimentoMensal = totalInvestidoGlobal > 0 ? (totalMensalAtual / totalInvestidoGlobal) : 0.008;
+            const totalRendaStr = document.getElementById('cardRendaMensal').innerText;
+            const rendaMensalAtual = parseFloat(totalRendaStr.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
 
-            let patrimonio = totalInvestidoGlobal;
-            const anos = [1, 2, 3, 5, 10];
+            const taxaRendimentoMensalMedio = totalInvestidoGlobal > 0 ? (rendaMensalAtual / totalInvestidoGlobal) : 0.007; 
 
-            anos.forEach(ano => {
-                let patrimonioSimulado = patrimonio;
-                const meses = ano * 12;
+            let patrimonioSimulado = totalInvestidoGlobal;
 
-                for (let i = 0; i < meses; i++) {
-                    const rendimentoMes = patrimonioSimulado * taxaRendimentoMensal;
-                    patrimonioSimulado += rendimentoMes + aporteExtra;
+            const prazos = [
+                { nome: "Hoje (Atual)", meses: 0 },
+                { nome: "6 Meses", meses: 6 },
+                { nome: "1 Ano", meses: 12 },
+                { nome: "2 Anos", meses: 24 },
+                { nome: "3 Anos", meses: 36 },
+                { nome: "5 Anos", meses: 60 }
+            ];
+
+            prazos.forEach(item => {
+                let tempPatrimonio = totalInvestidoGlobal;
+                for (let i = 0; i < item.meses; i++) {
+                    const dividendoDoMes = tempPatrimonio * taxaRendimentoMensalMedio;
+                    tempPatrimonio += dividendoDoMes + aporteAdicional;
                 }
 
-                const rendaMensalSimulada = patrimonioSimulado * taxaRendimentoMensal;
-                const rendaAnualSimulada = rendaMensalSimulada * 12;
+                const rendaMesSimulada = tempPatrimonio * taxaRendimentoMensalMedio;
+                const rendaAnoSimulada = rendaMesSimulada * 12;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong>${ano} ${ano === 1 ? 'ano' : 'anos'}</strong></td>
-                    <td style="color:var(--accent-color); font-weight:bold;">R$ ${patrimonioSimulado.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td style="color:var(--positive);">R$ ${rendaMensalSimulada.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td style="color:var(--positive);">R$ ${rendaAnualSimulada.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td><strong>${item.nome}</strong></td>
+                    <td style="color:var(--accent-color);">R$ ${tempPatrimonio.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td style="color:#ffb703;">R$ ${rendaMesSimulada.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td style="color:var(--positive);">R$ ${rendaAnoSimulada.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 `;
                 corpo.appendChild(tr);
             });
         }
 
-        window.onload = function() {
+        /* --- SCRIPT DA ANIMAÇÃO DA NEVE NATALINA --- */
+        function iniciarNeve() {
+            const canvas = document.getElementById('snow-canvas');
+            const ctx = canvas.getContext('2d');
+
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const numFlakes = 50;
+            const flakes = [];
+
+            for (let i = 0; i < numFlakes; i++) {
+                flakes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 3 + 1,
+                    d: Math.random() * numFlakes,
+                    speed: Math.random() * 1 + 0.5
+                });
+            }
+
+            function desenharNeve() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                ctx.beginPath();
+
+                for (let i = 0; i < numFlakes; i++) {
+                    const f = flakes[i];
+                    ctx.moveTo(f.x, f.y);
+                    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                }
+
+                ctx.fill();
+                atualizarNeve();
+            }
+
+            let angle = 0;
+            function atualizarNeve() {
+                angle += 0.01;
+                for (let i = 0; i < numFlakes; i++) {
+                    const f = flakes[i];
+                    f.y += f.speed;
+                    f.x += Math.sin(angle) * 0.5;
+
+                    if (f.y > height) {
+                        flakes[i] = {
+                            x: Math.random() * width,
+                            y: 0,
+                            r: f.r,
+                            d: f.d,
+                            speed: f.speed
+                        };
+                    }
+                }
+            }
+
+            setInterval(desenharNeve, 33);
+        }
+
+        window.onload = () => {
             digitarFrase();
             carregarCarteira();
+            iniciarNeve();
         };
     </script>
 </body>
