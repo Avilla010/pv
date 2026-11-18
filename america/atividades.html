@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividades - CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f141d;
+            --card-bg: #1a2332;
+            --netflix-red: #E50914;
+            --gold: #f1c40f;
+            --success: #46d369;
+            --danger: #e50914;
+            --warning: #f5c518;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg-dark); color: #fff; padding: 35px 25px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .page-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i { color: var(--gold); }
+        .page-header p { color: #95a5a6; font-size: 0.95rem; margin-top: 5px; }
+
+        .student-tag {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #ecf0f1;
+        }
+        .student-tag strong { color: var(--gold); }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 25px;
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.3s;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--netflix-red);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.25);
+        }
+
+        .card-top {
+            padding: 22px;
+        }
+
+        .module-pill {
+            display: inline-block;
+            background: rgba(229, 9, 20, 0.18);
+            color: #ff6b6b;
+            border: 1px solid rgba(229, 9, 20, 0.4);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .card-top h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .card-top p {
+            color: #b0bec5;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        /* Caixa de Status / Último Resultado Salvo */
+        .status-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .result-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nota-valor {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .nota-detalhe {
+            font-size: 0.82rem;
+            color: #b0bec5;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .conceito-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .conceito-excelente { background: rgba(70, 211, 105, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .conceito-bom { background: rgba(245, 197, 24, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .conceito-ruim { background: rgba(229, 9, 20, 0.2); color: #ff6b6b; border: 1px solid var(--danger); }
+        .conceito-pendente { background: rgba(255, 255, 255, 0.08); color: #95a5a6; border: 1px solid #444; }
+
+        .date-info {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-footer {
+            padding: 16px 22px;
+            background: rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-start {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--netflix-red);
+            color: #fff;
+            text-decoration: none;
+            padding: 13px 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .btn-start:hover {
+            background: #b80710;
+        }
+
+        .btn-report {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            padding: 13px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .btn-report:hover {
+            background: rgba(255,255,255,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-tasks"></i> Atividades de Fixação</h1>
+            <p>Acompanhe seu desempenho e nota em cada módulo da aula teórica.</p>
+        </div>
+        <div class="student-tag">
+            <i class="fas fa-user-graduate"></i> Aluno: <strong id="student-name">Condutor</strong>
+        </div>
+    </div>
+
+    <div class="activities-grid" id="activities-container">
+        <!-- O card do Exercício 01 é injetado/gerenciado dinamicamente, permitindo fácil expansão futura (exercicio02, 03, etc.) -->
+    </div>
+</div>
+
+<script>
+    // Lista centralizada de atividades. Para adicionar exercicio02 no futuro, basta inserir aqui sem alterar a lógica!
+    const listaAtividades = [
+        {
+            id: "exercicio01",
+            titulo: "Exercício 01 - Processo de Habilitação",
+            modulo: "Módulo 01 • 32 Questões",
+            descricao: "Avaliação completa sobre todos os slides da aula de Processo de Habilitação, SNT, Categorias e Documentos com pegadinhas reais do DETRAN.",
+            linkArquivo: "exercicio01.html",
+            storageKey: "cnh_blindada_exercicio01"
+        }
+        /* EXEMPLO PARA O FUTURO:
+        {
+            id: "exercicio02",
+            titulo: "Exercício 02 - Direção Defensiva",
+            modulo: "Módulo 02 • 30 Questões",
+            descricao: "Questões avançadas sobre conduta segura, condições adversas e prevenção de acidentes.",
+            linkArquivo: "exercicio02.html",
+            storageKey: "cnh_blindada_exercicio02"
+        }
+        */
+    ];
+
+    window.onload = function() {
+        const usuarioString = localStorage.getItem('usuario_logado');
+        if (usuarioString) {
+            try {
+                const dados = JSON.parse(usuarioString);
+                const nome = dados.nome || dados.primeiroNome || 'Condutor';
+                document.getElementById('student-name').innerText = nome;
+            } catch (e) {}
+        }
+
+        renderizarAtividades();
+    };
+
+    function renderizarAtividades() {
+        const container = document.getElementById('activities-container');
+        container.innerHTML = "";
+
+        listaAtividades.forEach(ativ => {
+            const salvo = localStorage.getItem(ativ.storageKey);
+            let conteudoStatus = '';
+            let dataHtml = '';
+            let botaoPrincipalTexto = `<i class="fas fa-play"></i> Iniciar Exercício`;
+            let botaoRelatorioHtml = '';
+
+            if (salvo) {
+                try {
+                    const dados = JSON.parse(salvo);
+                    let badgeClass = 'conceito-ruim';
+                    let icon = 'fa-exclamation-triangle';
+
+                    if (dados.conceito === 'EXCELENTE') {
+                        badgeClass = 'conceito-excelente';
+                        icon = 'fa-trophy';
+                    } else if (dados.conceito === 'BOM') {
+                        badgeClass = 'conceito-bom';
+                        icon = 'fa-check-circle';
+                    }
+
+                    conteudoStatus = `
+                        <div>
+                            <span class="nota-valor">Nota: ${dados.nota} <span style="font-size:0.9rem; font-weight:normal; color:#ccc;">(${dados.percentual}%)</span></span>
+                            <span class="nota-detalhe">${dados.acertos} de ${dados.total} questões corretas</span>
+                        </div>
+                        <span class="conceito-badge ${badgeClass}">
+                            <i class="fas ${icon}"></i> ${dados.conceito}
+                        </span>
+                    `;
+                    dataHtml = `<div class="date-info"><i class="far fa-clock"></i> Última tentativa em: ${dados.data}</div>`;
+                    botaoPrincipalTexto = `<i class="fas fa-redo"></i> Refazer Exercício`;
+                    
+                    // Botão para rever o relatório da última tentativa concluída
+                    botaoRelatorioHtml = `<a href="${ativ.linkArquivo}?ver_relatorio=1" class="btn-report" title="Ver relatório da última tentativa"><i class="fas fa-chart-bar"></i> Relatório</a>`;
+                } catch (e) {}
+            } else {
+                conteudoStatus = `
+                    <div>
+                        <span class="nota-valor" style="font-size: 1.05rem; color: #95a5a6;">Ainda não realizado</span>
+                        <span class="nota-detalhe">Clique abaixo para iniciar</span>
+                    </div>
+                    <span class="conceito-badge conceito-pendente">Pendente</span>
+                `;
+            }
+
+            container.innerHTML += `
+                <div class="activity-card">
+                    <div class="card-top">
+                        <span class="module-pill"><i class="fas fa-book"></i> ${ativ.modulo}</span>
+                        <h2>${ativ.titulo}</h2>
+                        <p>${ativ.descricao}</p>
+                        
+                        <div class="status-box">
+                            <div class="status-header">
+                                <span>Status da Atividade</span>
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="result-display">
+                                ${conteudoStatus}
+                            </div>
+                            ${dataHtml}
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="${ativ.linkArquivo}" class="btn-start">
+                            ${botaoPrincipalTexto}
+                        </a>
+                        ${botaoRelatorioHtml}
+                    </div>
+                </div>
+            `;
+        });
+    }
+</script>
+</body>
+</html>

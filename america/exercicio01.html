@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício 01 - Processo de Habilitação | CNH Blindada</title>
+    <link rel="icon" href="favicon.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-card: #181818;
+            --success: #46d369; 
+            --danger: #e50914; 
+            --warning: #f5c518;
+            --text: #fff; 
+        }
+        
+        body { font-family: 'Roboto', sans-serif; background: var(--netflix-black); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 850px; background: transparent; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-voltar { text-decoration: none; color: #a3a3a3; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-voltar:hover { color: #fff; }
+        h1 { color: #fff; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        .stats-bar { display: none; justify-content: space-around; background: var(--netflix-card); padding: 20px; border-radius: 4px; margin-bottom: 25px; font-weight: bold; border-bottom: 2px solid #333; }
+        .quiz-section { background: var(--netflix-card); padding: 40px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .progress-container { height: 4px; background: #333; border-radius: 2px; margin-bottom: 30px; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background: var(--netflix-red); width: 0%; transition: 0.6s; }
+        
+        .topic-badge { display: inline-block; background: rgba(229, 9, 20, 0.15); color: #ff6b6b; border: 1px solid rgba(229, 9, 20, 0.4); padding: 4px 10px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .question-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 25px; color: #fff; display: block; line-height: 1.5; }
+        .trap-word { color: var(--warning); text-decoration: underline; font-weight: 700; }
+        .quiz-img { display: block; margin: 0 auto 25px; max-width: 100%; height: auto; border-radius: 8px; border: 2px solid #333; }
+
+        .option { display: block; padding: 16px 18px; margin: 12px 0; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); line-height: 1.4; }
+        .option:hover { background: rgba(255,255,255,0.08); }
+        .option input { margin-right: 15px; accent-color: var(--netflix-red); }
+
+        .option.correct { background: rgba(70, 211, 105, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option.wrong { background: rgba(229, 9, 20, 0.2) !important; border-color: var(--danger) !important; }
+        .option.disabled { pointer-events: none; }
+
+        .explanation-box { display: none; margin-top: 20px; padding: 16px; background: rgba(245, 197, 24, 0.08); border-left: 4px solid var(--warning); border-radius: 0 4px 4px 0; font-size: 0.95rem; color: #ddd; line-height: 1.5; }
+        .explanation-box strong { color: var(--warning); }
+
+        .btn-action { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-top: 20px; text-transform: uppercase; transition: 0.2s; display: inline-block; text-align: center; text-decoration: none; box-sizing: border-box; }
+        .btn-action:hover { background: var(--netflix-red); color: #fff; }
+        .btn-next-step { background: var(--netflix-red); color: #fff; }
+        .btn-back-list { background: #333; color: #fff; margin-top: 12px; }
+        .btn-back-list:hover { background: #555; }
+        
+        /* Estilos da Pausa */
+        .timer-paused { color: #555 !important; opacity: 0.6; }
+        .pause-notice { font-size: 0.7rem; display: block; color: var(--success); margin-top: 5px; font-weight: normal; }
+
+        #result-area { text-align: center; display: none; padding: 10px; }
+        .score-box { font-size: 3.5rem; font-weight: 700; margin: 15px 0 5px; color: var(--netflix-red); }
+        .concept-pill { display: inline-block; padding: 8px 22px; border-radius: 20px; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
+        
+        /* Diagnóstico por Módulo/Slide para o Instrutor */
+        .diagnostic-container { text-align: left; margin-top: 35px; background: rgba(255,255,255,0.03); border: 1px solid #333; padding: 25px; border-radius: 6px; }
+        .diagnostic-title { color: var(--warning); font-size: 1.15rem; margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .topic-stat-row { margin-bottom: 14px; }
+        .topic-stat-header { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; font-weight: 500; }
+        .topic-bar-bg { height: 8px; background: #2a2a2a; border-radius: 4px; overflow: hidden; }
+        .topic-bar-fill { height: 100%; transition: width 0.5s; }
+        .status-badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 3px; font-weight: bold; }
+        .status-critico { background: rgba(229, 9, 20, 0.2); color: #ff6b6b; border: 1px solid var(--danger); }
+        .status-atencao { background: rgba(245, 197, 24, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .status-ok { background: rgba(70, 211, 105, 0.2); color: var(--success); border: 1px solid var(--success); }
+
+        /* Área do Plano de Correção de Erros */
+        .error-report-container { text-align: left; margin-top: 35px; border-top: 1px solid #333; padding-top: 30px; display: none; }
+        .error-item { background: rgba(255,255,255,0.02); border-left: 4px solid var(--netflix-red); padding: 20px; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        .error-topic-tag { font-size: 0.75rem; color: var(--warning); font-weight: bold; text-transform: uppercase; margin-bottom: 6px; display: block; }
+        .error-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 12px; color: #eee; line-height: 1.4; }
+        .error-img { display: block; max-width: 220px; height: auto; margin-bottom: 15px; border-radius: 4px; border: 1px solid #444; }
+        .error-user-ans { color: #ff6b6b; font-size: 0.95rem; margin: 5px 0; }
+        .error-correct-ans { color: var(--success); font-weight: bold; font-size: 0.95rem; margin: 5px 0; }
+        .error-tip { color: #bbb; font-size: 0.88rem; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #333; }
+        
+        .btn-pdf { background: #25d366; color: #fff; margin-top: 15px; }
+        .btn-pdf:hover { background: #128c7e; color: #fff; }
+
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* REGRAS EXCLUSIVAS PARA IMPRESSÃO EM PAPEL (SALVAR PDF) */
+        @media print {
+            body { background: #fff !important; color: #000 !important; padding: 0; }
+            .header-nav, #live-stats, .progress-container, .btn-action, .btn-pdf, .score-box, #feedback-msg, .footer, audio { display: none !important; }
+            .quiz-section { background: #fff !important; box-shadow: none !important; padding: 0 !important; }
+            .diagnostic-container { background: #f9f9f9 !important; border: 1px solid #000 !important; color: #000 !important; page-break-inside: avoid; }
+            .diagnostic-title { color: #000 !important; border-bottom: 1px solid #000 !important; }
+            .topic-bar-bg { border: 1px solid #999; }
+            .error-report-container { display: block !important; border: none !important; padding: 0 !important; margin-top: 20px !important; }
+            .error-item { background: #f9f9f9 !important; border-left: 4px solid #000 !important; page-break-inside: avoid; border-bottom: 1px solid #ccc; margin-bottom: 15px; padding: 15px !important; }
+            .error-title, .error-topic-tag { color: #000 !important; }
+            .error-img { border: 1px solid #000 !important; max-width: 180px !important; }
+            .error-user-ans { color: #c00 !important; }
+            .error-correct-ans { color: #080 !important; }
+            .error-tip { color: #333 !important; border-top: 1px dashed #999 !important; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        }
+        .print-header { display: none; color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="print-header">
+        <h2>MÉTODO CNH BLINDADA - DIAGNÓSTICO E PLANO DE CORREÇÃO</h2>
+        <p>Instrutor: Rodolfo | Atividade 01: Processo de Habilitação (100% do Conteúdo + Pegadinhas DETRAN)</p>
+    </div>
+
+    <div class="header-nav">
+        <a href="atividades.html" class="btn-voltar"><i class="fas fa-chevron-left"></i> Voltar para Atividades</a>
+        <h1>Exercício 01</h1>
+        <div style="width: 120px;"></div>
+    </div>
+
+    <div id="live-stats" class="stats-bar">
+        <span id="timer-box" style="color:#fff; text-align: center;">
+            <i class="far fa-clock"></i> <span id="timer">35:00</span>
+            <span id="pause-text" class="pause-notice" style="display:none;">TEMPO PAUSADO</span>
+        </span>
+        <span style="color:var(--success)"><i class="fas fa-check"></i> <span id="count-correct">0</span></span>
+        <span style="color:var(--netflix-red)"><i class="fas fa-times"></i> <span id="count-wrong">0</span></span>
+    </div>
+
+    <div class="quiz-section">
+        <div class="progress-container" id="p-cont"><div class="progress-fill" id="progress"></div></div>
+        
+        <div id="start-screen" style="text-align:center">
+            <div style="background: rgba(255,255,255,0.05); border-left: 4px solid var(--netflix-red); padding: 25px; margin: 20px 0; text-align:left; color:#ccc; line-height: 1.6;">
+                <h3 style="color:#fff; margin-top: 0; margin-bottom:15px">Atividade 01: Processo de Habilitação (Padrão DETRAN)</h3>
+                • <strong>32 Questões Completas:</strong> Abrange todos os 29 slides da apresentação.<br>
+                • <strong>Estilo Real de Prova:</strong> Contém pegadinhas clássicas (<em>EXCETO, SEMPRE, NUNCA, APENAS, SOMENTE</em>).<br>
+                • <strong>Registro de Desempenho:</strong> Sua nota e conceito (<em>Ruim, Bom ou Excelente</em>) ficam salvos automaticamente no painel de Atividades.<br>
+                • <strong>Critério:</strong> Abaixo de 70% = <strong>Ruim</strong> | 70% a 89% = <strong>Bom</strong> | 90% ou mais = <strong>Excelente</strong>.
+            </div>
+            <button class="btn-action" onclick="startQuiz()">Iniciar Exercício 01</button>
+        </div>
+
+        <div id="quiz-area"></div>
+
+        <div id="result-area">
+            <h3>Desempenho Registrado</h3>
+            <div id="score-text" class="score-box">0/32</div>
+            <div id="concept-badge" class="concept-pill"></div>
+            <p id="feedback-msg" style="font-size: 1.15rem; margin-bottom: 20px;"></p>
+            
+            <div id="diagnostic-box" class="diagnostic-container">
+                <h4 class="diagnostic-title"><i class="fas fa-chart-pie"></i> Diagnóstico de Aprendizagem por Tópico da Aula</h4>
+                <p style="font-size: 0.85rem; color: #aaa; margin-top: -8px; margin-bottom: 18px;">Identifique exatamente quais slides da apresentação geraram mais dúvidas:</p>
+                <div id="diagnostic-list"></div>
+            </div>
+
+            <div id="pdf-trigger-zone"></div>
+
+            <button class="btn-action" style="margin-bottom: 10px" onclick="location.reload()">Refazer Exercício</button>
+            <a href="atividades.html" class="btn-action btn-back-list"><i class="fas fa-tasks"></i> Voltar para Aba Atividades</a>
+        </div>
+
+        <div id="error-report" class="error-report-container">
+            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; color: var(--netflix-red);"><i class="fas fa-graduation-cap"></i> Questões que você errou (Revisão Direcionada):</h3>
+            <div id="error-list"></div>
+        </div>
+    </div>
+    <div class="footer">CNH Blindada Originals &copy; 2026 - Instrutor Rodolfo</div>
+</div>
+
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+<script>
+const questions = [
+    // SLIDE 02: REQUISITOS PARA INICIAR
+    {
+        topic: "Slide 02 - Requisitos para 1ª Habilitação",
+        q: "Sobre os requisitos exigidos pelo CTB para iniciar o processo de primeira habilitação (CNH), assinale a alternativa <span class='trap-word'>INCORRETA</span>:",
+        options: [
+            "Ter 18 anos completos, sendo penalmente imputável.",
+            "Saber ler e escrever (ser alfabetizado).",
+            "Possuir comprovante de conclusão do ensino fundamental.",
+            "Possuir documento de identidade com foto e CPF ativo."
+        ],
+        correct: 2,
+        tip: "Pegadinha clássica do DETRAN: NÃO se exige escolaridade mínima (ensino fundamental ou médio), apenas saber ler e escrever."
+    },
+    // SLIDE 03: EXAMES INICIAIS OBRIGATÓRIOS
+    {
+        topic: "Slide 03 - Exames Iniciais Obrigatórios",
+        q: "No exame teórico-técnico para obtenção da CNH, o candidato é avaliado em diversas disciplinas, <span class='trap-word'>EXCETO</span>:",
+        options: [
+            "Legislação de trânsito e Direção defensiva.",
+            "Noções de mecânica básica e Primeiros socorros.",
+            "Cidadania e meio ambiente.",
+            "Noções de direção avançada em rodovias e pilotagem esportiva."
+        ],
+        correct: 3,
+        tip: "As 5 matérias do exame teórico são: Legislação, Direção Defensiva, Primeiros Socorros, Meio Ambiente/Cidadania e Mecânica Básica."
+    },
+    // SLIDE 04: LADV
+    {
+        topic: "Slide 04 - LADV (Licença de Aprendizagem)",
+        q: "Em relação à Licença de Aprendizagem de Direção Veicular (LADV), é correto afirmar que o candidato:",
+        options: [
+            "Pode dirigir sozinho até o local da prova prática, desde que porte a LADV e o RG.",
+            "Recebe a LADV logo após ser aprovado no exame médico e psicotécnico.",
+            "Terá a LADV suspensa por 6 meses se for flagrado dirigindo sem a presença do instrutor.",
+            "Está dispensado de portar documento de identidade quando estiver acompanhado do instrutor."
+        ],
+        correct: 2,
+        tip: "A LADV só é emitida após aprovação no exame teórico. Dirigir sem o instrutor gera suspensão da LADV por 6 meses."
+    },
+    // SLIDE 05: PPD
+    {
+        topic: "Slide 05 - PPD (Permissão para Dirigir)",
+        q: "Durante o período de 12 meses da Permissão para Dirigir (PPD), o condutor perderá o direito à CNH definitiva e terá que reiniciar todo o processo se cometer:",
+        options: [
+            "Apenas uma infração leve ou uma infração média.",
+            "Uma infração gravíssima, uma grave ou ser reincidente em infração média.",
+            "Somente infrações de natureza gravíssima com fator multiplicador.",
+            "Duas infrações leves ou uma infração média."
+        ],
+        correct: 1,
+        tip: "Regra de ouro da PPD: 1 gravíssima, OU 1 grave, OU 2 médias (reincidência em média) impedem a emissão da CNH definitiva."
+    },
+    // SLIDE 06: CNH DEFINITIVA E PONTUAÇÃO
+    {
+        topic: "Slide 06 - CNH Definitiva e Pontuação",
+        q: "Após completar 1 ano com a PPD sem cometer infrações eliminatórias, o condutor obtém a CNH definitiva. Sobre essa fase, assinale a alternativa correta:",
+        options: [
+            "O condutor entra no sistema de pontuação, podendo atingir até 40 pontos em 12 meses caso não cometa infração gravíssima.",
+            "A CNH definitiva tem validade fixa de 10 anos para todos os condutores, independentemente da idade.",
+            "Caso não solicite a CNH definitiva em 30 dias após vencer a PPD, o processo é cancelado.",
+            "Com a CNH definitiva, o condutor nunca mais poderá ter o direito de dirigir suspenso por pontos."
+        ],
+        correct: 0,
+        tip: "Na CNH definitiva, o limite pode chegar a 40 pontos (se não houver infração gravíssima). A validade varia conforme a idade do condutor."
+    },
+    // SLIDE 07: CATEGORIAS DE HABILITAÇÃO (A, B, ACC)
+    {
+        topic: "Slide 07 - Categorias de Habilitação (A, B e ACC)",
+        q: "Um condutor habilitado exclusivamente na Categoria 'B' pode conduzir todos os veículos abaixo, <span class='trap-word'>EXCETO</span>:",
+        options: [
+            "Automóvel de passeio com Peso Bruto Total (PBT) de 1.800 kg e 5 lugares.",
+            "Utilitário de carga com PBT de até 3.500 kg.",
+            "Veículo de transporte de passageiros com lotação de 8 lugares, excluído o motorista.",
+            "Ciclomotor de até 50 cm³ (50cc) ou motocicleta de 125 cm³."
+        ],
+        correct: 3,
+        tip: "Pegadinha frequente: Categoria B NÃO dá direito a conduzir motocicletas (Cat. A) nem ciclomotores de 50cc (Cat. A ou ACC)."
+    },
+    // SLIDE 07: CATEGORIAS C, D e E
+    {
+        topic: "Slide 07 - Categorias de Habilitação (C, D e E)",
+        q: "Sobre as categorias de habilitação C, D e E, analise as afirmativas e marque a única <span class='trap-word'>VERDADEIRA</span>:",
+        options: [
+            "A categoria C habilita o condutor a dirigir veículos de carga com PBT acima de 3.500 kg e tratores.",
+            "A categoria D exige idade mínima de 18 anos e habilita para veículos acima de 8 passageiros.",
+            "A categoria E é destinada exclusivamente para ônibus urbanos articulados.",
+            "A categoria C permite conduzir veículos articulados (cavalo mecânico + semirreboque) acima de 6.000 kg."
+        ],
+        correct: 0,
+        tip: "Categoria C: carga acima de 3.500 kg e tratores. Categoria D exige 21 anos. Veículo articulado acima de 6.000 kg exige Categoria E."
+    },
+    // SLIDE 08: MUDANÇAS DE CATEGORIA
+    {
+        topic: "Slide 08 - Mudanças de Categoria",
+        q: "Sobre as regras de mudança e adição de categorias de habilitação, o DETRAN costuma cobrar prazos mínimos. Assinale a alternativa <span class='trap-word'>INCORRETA</span>:",
+        options: [
+            "Para mudar da categoria B para a D, exige-se no mínimo 2 anos na B e 21 anos de idade.",
+            "Para mudar da categoria B para a C, exige-se no mínimo 1 ano na categoria B.",
+            "O condutor habilitado na categoria B pode mudar diretamente para a categoria E, desde que tenha 21 anos.",
+            "A adição da categoria A para quem já tem B (ou vice-versa) pode ser feita a qualquer tempo."
+        ],
+        correct: 2,
+        tip: "Pegadinha clássica: NUNCA se muda direto de B para E. Para chegar à Categoria E, é obrigatório vir da C ou da D (há pelo menos 1 ano)."
+    },
+    // SLIDE 09: EXAME TOXICOLÓGICO
+    {
+        topic: "Slide 09 - Exame Toxicológico",
+        q: "O exame toxicológico de larga janela de detecção é obrigatório para condutores das categorias C, D e E. Sobre esse exame, é <span class='trap-word'>FALSO</span> afirmar que:",
+        options: [
+            "Deve ser renovado a cada 2 anos e 6 meses para condutores com idade inferior a 70 anos.",
+            "É obrigatório apenas para os condutores que exercem atividade remunerada (EAR) registrada na CNH.",
+            "Detecta o consumo de substâncias psicoativas nos últimos 90 dias por meio de cabelo ou pelo corporal.",
+            "A não realização no prazo gera multa automática (gravíssima x5), 7 pontos e suspensão do direito de dirigir."
+        ],
+        correct: 1,
+        tip: "Pegadinha 'APENAS': O exame toxicológico vale para TODOS os condutores das categorias C, D e E, exercendo ou NÃO atividade remunerada!"
+    },
+    // SLIDE 10: OPERADOR DE MÁQUINAS
+    {
+        topic: "Slide 10 - Operador de Máquinas",
+        q: "Um trabalhador opera uma retroescavadeira e um trator agrícola. De acordo com a legislação de trânsito, em relação à exigência de CNH:",
+        options: [
+            "Ele sempre precisará de CNH categoria C, mesmo que a máquina nunca saia de dentro de uma fazenda privada.",
+            "Ele nunca precisa de CNH para operar máquinas agrícolas, bastando o curso de capacitação.",
+            "Se operar em via pública, precisa de CNH compatível (geralmente Cat. C); se operar apenas em área privada, não precisa de CNH, mas exige capacitação profissional.",
+            "Pode conduzir a retroescavadeira em rodovias federais portando apenas a CNH categoria B."
+        ],
+        correct: 2,
+        tip: "Atenção ao local: Em via pública exige CNH (Cat. C). Somente em área privada (fazenda, obra fechada) dispensa CNH, exigindo capacitação."
+    },
+    // SLIDE 11: TRANSPORTE ESCOLAR (CONDUTOR)
+    {
+        topic: "Slide 11 - Transporte Escolar (Condutor e Veículo)",
+        q: "Para que um condutor possa exercer a atividade de transporte escolar, a legislação exige todos os requisitos abaixo, <span class='trap-word'>EXCETO</span>:",
+        options: [
+            "Ter idade mínima de 21 anos.",
+            "Ser habilitado na categoria D ou E.",
+            "Possuir certificado de curso especializado de transporte escolar.",
+            "Possuir habilitação na categoria B há pelo menos 2 anos sem nenhuma multa."
+        ],
+        correct: 3,
+        tip: "Transporte escolar exige categoria D ou E (nunca B), idade mínima de 21 anos e curso especializado."
+    },
+    // SLIDE 11: TRANSPORTE ESCOLAR (VEÍCULO)
+    {
+        topic: "Slide 11 - Transporte Escolar (Condutor e Veículo)",
+        q: "Quanto às exigências obrigatórias para o VEÍCULO destinado ao transporte de escolares, assinale a alternativa correta:",
+        options: [
+            "Deve passar por inspeção semestral para verificação dos equipamentos obrigatórios e de segurança.",
+            "Deve possuir faixa horizontal preta com a inscrição ESCOLAR em letras amarelas.",
+            "É dispensado do uso de registrador instantâneo inalterável de velocidade e tempo (tacógrafo).",
+            "Os cintos de segurança são obrigatórios apenas para os bancos dianteiros."
+        ],
+        correct: 0,
+        tip: "Cuidado com a inversão de cores: A faixa do escolar é AMARELA com letras PRETAS. Inspeção é semestral e tacógrafo + cintos para todos são obrigatórios."
+    },
+    // SLIDE 12: HABILITAÇÃO PARA PNE (PCD)
+    {
+        topic: "Slide 12 - Habilitação para PNE (PcD)",
+        q: "Sobre o processo de habilitação para Pessoa com Necessidades Especiais (PNE / PcD), é correto afirmar que:",
+        options: [
+            "O candidato é dispensado da prova teórica de legislação, realizando apenas a prova prática.",
+            "O candidato passa pelas mesmas etapas dos demais candidatos, sendo avaliado por junta médica especializada e realizando prova prática em veículo adaptado.",
+            "A prova prática deve ser feita obrigatoriamente em veículo comum da autoescola sem adaptações.",
+            "A validade da CNH para PNE é sempre de 1 ano."
+        ],
+        correct: 1,
+        tip: "O candidato PNE cumpre todas as etapas (médico/junta médica, psicotécnico, teórico e prático em veículo adaptado à sua necessidade)."
+    },
+    // SLIDE 13: CONDUTOR ESTRANGEIRO
+    {
+        topic: "Slide 13 - Condutor Estrangeiro",
+        q: "Um turista estrangeiro, com habilitação válida de seu país de origem e documento de imigração regular, pode dirigir no Brasil:",
+        options: [
+            "Por prazo indeterminado, sem nunca precisar trocar a habilitação.",
+            "Por até 180 dias; após esse prazo, se o país tiver acordo (Tratado de Viena/reciprocidade), pode solicitar a troca sem refazer todo o processo.",
+            "Apenas se refizer imediatamente os exames teórico e prático no DETRAN.",
+            "Por no máximo 30 dias, independentemente de acordos internacionais."
+        ],
+        correct: 1,
+        tip: "Prazo de 180 dias. Havendo Tratado de Viena (1968) ou reciprocidade, faz-se a troca; sem acordo, inicia o processo completo no Brasil."
+    },
+    // SLIDE 14: RENOVAÇÃO DA CNH
+    {
+        topic: "Slide 14 - Prazo de Renovação da CNH",
+        q: "De acordo com as regras atuais do CTB para renovação do exame de aptidão física e mental (médico), assinale a relação <span class='trap-word'>INCORRETA</span>:",
+        options: [
+            "Condutores com idade inferior a 50 anos (até 49 anos e 11 meses): validade de 10 anos.",
+            "Condutores com idade igual ou superior a 50 anos e inferior a 70 anos: validade de 5 anos.",
+            "Condutores com idade igual ou superior a 70 anos: validade de 3 anos.",
+            "Condutores com idade entre 60 e 70 anos: validade de 2 anos."
+        ],
+        correct: 3,
+        tip: "Tabela exata da renovação: Até 49 anos e 11 meses = 10 anos | De 50 a 69 anos = 5 anos | A partir de 70 anos = 3 anos."
+    },
+    // SLIDE 15: EDUCAÇÃO PARA O TRÂNSITO (FUNSET / DPVAT)
+    {
+        topic: "Slide 15 - Educação para o Trânsito (FUNSET)",
+        q: "A educação para o trânsito é direito de todos e constitui dever prioritário para os componentes do Sistema Nacional de Trânsito. Sobre o financiamento dessas ações:",
+        options: [
+            "5% do valor arrecadado com as multas de trânsito é repassado mensalmente ao FUNSET.",
+            "50% do valor das multas é destinado exclusivamente à construção de autoescolas públicas.",
+            "10% do seguro DPVAT é repassado semanalmente às prefeituras.",
+            "Nenhum percentual das multas pode ser utilizado para educação no trânsito."
+        ],
+        correct: 0,
+        tip: "Grave o número: 5% das multas vão mensalmente para o FUNSET (Fundo Nacional de Segurança e Educação de Trânsito)."
+    },
+    // SLIDE 16: DOCUMENTOS DE PORTE OBRIGATÓRIO
+    {
+        topic: "Slide 16 - Documentos de Porte Obrigatório",
+        q: "Ao conduzir um veículo automotor em via pública, são documentos de porte obrigatório (em meio físico ou digital oficial), <span class='trap-word'>EXCETO</span>:",
+        options: [
+            "CNH, PPD ou ACC válida (documento de habilitação).",
+            "CRLV (Certificado de Registro e Licenciamento de Veículo / CLA).",
+            "CRV (Certificado de Registro de Veículo - antigo recibo de compra e venda).",
+            "Documento de habilitação e licenciamento anual do exercício vigente."
+        ],
+        correct: 2,
+        tip: "Pegadinha clássica: O CRV (documento de transferência/propriedade) NÃO é de porte obrigatório! O obrigatório é o CRLV (licenciamento anual)."
+    },
+    // SLIDE 17: CTB (CÓDIGO DE TRÂNSITO BRASILEIRO)
+    {
+        topic: "Slide 17 - CTB (Código de Trânsito Brasileiro)",
+        q: "Sobre o Código de Trânsito Brasileiro (CTB), assinale a alternativa que apresenta uma afirmação <span class='trap-word'>FALSA</span>:",
+        options: [
+            "É a lei principal que regula o trânsito de qualquer natureza nas vias terrestres do território nacional abertas à circulação.",
+            "Define regras, direitos, deveres e penalidades para condutores, pedestres, veículos e órgãos.",
+            "Aplica-se apenas às rodovias federais e estaduais, não tendo validade nas vias urbanas municipais.",
+            "Serve de base para todas as resoluções e normas complementares de trânsito no país."
+        ],
+        correct: 2,
+        tip: "Cuidado com a palavra 'APENAS': O CTB vale em TODAS as vias terrestres abertas à circulação no Brasil (urbanas e rurais)."
+    },
+    // SLIDE 18 & 19: SNT E ÓRGÃOS NORMATIVOS
+    {
+        topic: "Slides 18 e 19 - SNT e Órgãos Normativos",
+        q: "Dentro do Sistema Nacional de Trânsito (SNT), os órgãos responsáveis por criar normas, resoluções e diretrizes (Órgãos Normativos) são:",
+        options: [
+            "SENATRAN, DETRAN e CIRETRAN.",
+            "CONTRAN, CETRAN e CONTRANDIFE.",
+            "PRF, PM e Guarda Municipal.",
+            "JARI, DNIT e DER."
+        ],
+        correct: 1,
+        tip: "Macete: Órgãos que começam com 'CON' ou 'CE' são Normativos (CONTRAN = Nacional, CETRAN = Estadual, CONTRANDIFE = DF)."
+    },
+    // SLIDE 19: CONTRAN
+    {
+        topic: "Slide 19 - Competência do CONTRAN",
+        q: "Qual é o órgão máximo normativo e consultivo do Sistema Nacional de Trânsito no Brasil?",
+        options: [
+            "SENATRAN (Secretaria Nacional de Trânsito).",
+            "DETRAN (Departamento Estadual de Trânsito).",
+            "CONTRAN (Conselho Nacional de Trânsito).",
+            "DNIT (Departamento Nacional de Infraestrutura de Transportes)."
+        ],
+        correct: 2,
+        tip: "Não confunda: CONTRAN = Órgão NORMATIVO máximo. SENATRAN = Órgão EXECUTIVO máximo."
+    },
+    // SLIDE 20: ÓRGÃOS EXECUTIVOS NACIONAIS E SISTEMAS
+    {
+        topic: "Slide 20 - Órgãos Executivos e Sistemas (SENATRAN)",
+        q: "O órgão máximo executivo de trânsito da União, responsável por organizar e manter sistemas como RENACH, RENAVAM, RENAINF e RNPC, é o(a):",
+        options: [
+            "CONTRAN.",
+            "SENATRAN.",
+            "CETRAN.",
+            "PRF."
+        ],
+        correct: 1,
+        tip: "A SENATRAN (antigo DENATRAN) é o órgão executivo máximo e gerencia os cadastros nacionais (RENACH, RENAVAM, BINCO, etc.)."
+    },
+    // SLIDE 21: DETRAN, PREFEITURA, DNIT, DER
+    {
+        topic: "Slide 21 - Órgãos Executivos (DETRAN, DNIT, DER)",
+        q: "Sobre as competências dos órgãos executivos de trânsito e rodoviários, assinale a alternativa <span class='trap-word'>INCORRETA</span>:",
+        options: [
+            "O DETRAN é responsável por vistoriar, registrar, emplacar, licenciar veículos e expedir a PPD e a CNH.",
+            "A CIRETRAN é a unidade regional do DETRAN nos municípios do interior.",
+            "O DNIT gerencia a infraestrutura das rodovias federais, enquanto o DER administra as rodovias estaduais.",
+            "A Prefeitura é o órgão responsável por expedir a CNH e julgar processos de cassação de habilitação."
+        ],
+        correct: 3,
+        tip: "A Prefeitura gerencia o trânsito urbano local (sinalização, estacionamento, fiscalização municipal), mas quem emite CNH é o DETRAN."
+    },
+    // SLIDE 22: ÓRGÃOS FISCALIZADORES
+    {
+        topic: "Slide 22 - Órgãos Fiscalizadores (PRF, PMR, PM)",
+        q: "Sobre a atuação dos órgãos fiscalizadores de trânsito no Brasil, relacione corretamente e marque a opção <span class='trap-word'>VERDADEIRA</span>:",
+        options: [
+            "A Polícia Rodoviária Federal (PRF) atua exclusivamente nas vias urbanas dos municípios.",
+            "A Polícia Militar Rodoviária (PMR) realiza o policiamento e fiscalização nas rodovias estaduais.",
+            "A Polícia Militar (PM) não pode atuar na fiscalização de trânsito urbano, mesmo mediante convênio.",
+            "A PRF é o órgão responsável por emplacar veículos e emitir o CRLV."
+        ],
+        correct: 1,
+        tip: "PRF = Rodovias Federais | PMR = Rodovias Estaduais | PM = Áreas urbanas/locais (mediante convênio)."
+    },
+    // SLIDE 23: ÓRGÃO RECURSAL (JARI)
+    {
+        topic: "Slide 23 - Órgão Recursal (JARI)",
+        q: "Quando um condutor recebe uma notificação de penalidade de multa e deseja recorrer em primeira instância administrativa, seu recurso será julgado pelo(a):",
+        options: [
+            "JARI (Junta Administrativa de Recursos de Infrações).",
+            "CONTRAN (Conselho Nacional de Trânsito).",
+            "RENAINF (Registro Nacional de Infrações).",
+            "SENATRAN (Secretaria Nacional de Trânsito)."
+        ],
+        correct: 0,
+        tip: "JARI = Junta Administrativa de Recursos de Infrações (órgão colegiado responsável pelo julgamento de recursos contra penalidades)."
+    },
+    // SLIDE 24: CLASSIFICAÇÃO DE VEÍCULOS - TRAÇÃO E REBOQUE
+    {
+        topic: "Slide 24 - Classificação de Veículos (Tração e Reboque)",
+        q: "Quanto à classificação dos veículos e à diferença técnica entre reboque e semirreboque, assinale a alternativa correta:",
+        options: [
+            "Reboque é o veículo que se apoia diretamente sobre a unidade tratora e articula com ela.",
+            "Semirreboque é o veículo que se apoia na unidade tratora (como o cavalo mecânico) ou é a ela ligado por meio de articulação.",
+            "Bicicletas e carroças são classificadas quanto à tração como veículos automotores.",
+            "Veículos elétricos não fazem parte da classificação quanto à tração no CTB."
+        ],
+        correct: 1,
+        tip: "Diferença chave: SEMIRREBOQUE apoia-se no veículo trator (ex: carreta). REBOQUE é apenas engatado e não apoia seu peso no trator (ex: carretinha comum)."
+    },
+    // SLIDE 25: CLASSIFICAÇÃO DE VEÍCULOS - ESPÉCIE
+    {
+        topic: "Slide 25 - Classificação de Veículos (Espécie)",
+        q: "O Código de Trânsito Brasileiro classifica os veículos quanto à ESPÉCIE em sete tipos. Assinale a alternativa que apresenta uma classificação que <span class='trap-word'>NÃO</span> pertence à Espécie:",
+        options: [
+            "Passageiro e Carga.",
+            "Misto (carga e passageiro) e Competição.",
+            "Tração, Especial e Coleção.",
+            "Particular, Aluguel e Oficial."
+        ],
+        correct: 3,
+        tip: "Pegadinha clássica do DETRAN: Particular, Aluguel e Oficial são CATEGORIAS de veículos, e não Espécies!"
+    },
+    // SLIDE 26: CLASSIFICAÇÃO DE VEÍCULOS - CATEGORIA
+    {
+        topic: "Slide 26 - Classificação de Veículos (Categoria)",
+        q: "Um veículo pertencente a uma autoescola (CFC) utilizado nas aulas práticas de direção é classificado, quanto à sua CATEGORIA, como:",
+        options: [
+            "Oficial.",
+            "Particular.",
+            "Aprendizagem.",
+            "Representação."
+        ],
+        correct: 2,
+        tip: "As 5 categorias de veículos são: Particular, Aluguel, Aprendizagem (autoescolas), Oficial (órgãos públicos) e Representação."
+    },
+    // SLIDE 27: DOCUMENTOS DO VEÍCULO (CRV vs CRLV)
+    {
+        topic: "Slide 27 - Documentos do Veículo (CRV x CRLV)",
+        q: "Sobre a diferença entre o CRV e o CRLV, assinale a alternativa correta:",
+        options: [
+            "O CRV comprova o pagamento anual do IPVA e do licenciamento, devendo ser portado diariamente.",
+            "O CRLV comprova que o veículo está devidamente licenciado e com impostos/multas quitados para circular.",
+            "Ambos os documentos têm exatamente a mesma função e são emitidos todo mês.",
+            "O CRV só é emitido para veículos de transporte coletivo e de carga."
+        ],
+        correct: 1,
+        tip: "CRV = Propriedade (usado na transferência). CRLV (CLA) = Licenciamento Anual (autoriza a circulação)."
+    },
+    // SLIDE 28: DPVAT (SEGURO OBRIGATÓRIO)
+    {
+        topic: "Slide 28 - Seguro Obrigatório (DPVAT)",
+        q: "Em relação às coberturas e regras do Seguro Obrigatório (DPVAT) estudadas em aula, assinale a alternativa <span class='trap-word'>INCORRETA</span>:",
+        options: [
+            "Cobre indenizações por morte (R$ 13.500), invalidez permanente (até R$ 13.500) e despesas médicas (até R$ 2.700).",
+            "Cobre também os danos materiais causados aos veículos envolvidos na colisão.",
+            "Não cobre acidentes causados por veículos estrangeiros em circulação no país ou atos ilícitos.",
+            "Ampara vítimas de acidentes de trânsito independentemente da apuração de culpa."
+        ],
+        correct: 1,
+        tip: "Pegadinha clássica: O DPVAT NUNCA cobre danos materiais (conserto de carro, muro, poste). Cobre apenas danos pessoais (morte, invalidez e despesas médicas)."
+    },
+    // SLIDE 29: LIMITES DE PESO E DIMENSÃO (ALTURA E LARGURA)
+    {
+        topic: "Slide 29 - Limites de Peso e Dimensão",
+        q: "De acordo com as normas de pesos e dimensões máximas permitidas para veículos transitarem sem Autorização Especial de Trânsito (AET), a largura máxima e a altura máxima são, respectivamente:",
+        options: [
+            "Largura: 2,60 m | Altura: 4,40 m.",
+            "Largura: 3,00 m | Altura: 4,70 m.",
+            "Largura: 2,20 m | Altura: 4,00 m.",
+            "Largura: 2,80 m | Altura: 4,50 m."
+        ],
+        correct: 0,
+        tip: "Valores exatos: Largura máxima = 2,60 m | Altura máxima = 4,40 m (pode chegar a 4,70 m apenas com AET)."
+    },
+    // SLIDE 29: LIMITES DE PESO E DIMENSÃO (COMPRIMENTO E PESO)
+    {
+        topic: "Slide 29 - Limites de Peso e Dimensão",
+        q: "Sobre os limites máximos de comprimento e peso bruto total (PBT) previstos na legislação de trânsito, assinale a alternativa <span class='trap-word'>INCORRETA</span>:",
+        options: [
+            "Veículo simples (não articulado): comprimento máximo de 14,00 metros.",
+            "Veículo articulado (cavalo mecânico + semirreboque): comprimento máximo de 18,60 metros.",
+            "Veículo com reboque: comprimento máximo de 19,80 metros (e cegonha até 22,40 m).",
+            "Peso Bruto Total (PBT) máximo de 60 toneladas e peso por eixo isolado de 15 toneladas."
+        ],
+        correct: 3,
+        tip: "Atenção aos números: O Peso Bruto Total (PBT) padrão é de 45 toneladas e o peso máximo por eixo isolado é de 10 toneladas."
+    },
+    // QUESTÃO EXTRA DE PEGADINHA GERAL (SÍNTESE DO PROCESSO)
+    {
+        topic: "Slide 04 e 06 - Processo no DETRAN (Prazos)",
+        q: "Analise as afirmações sobre prazos do processo de habilitação e marque a única alternativa <span class='trap-word'>CORRETA</span>:",
+        options: [
+            "Se o candidato for reprovado no exame teórico ou prático, deverá aguardar obrigatoriamente 15 dias para remarcar.",
+            "O processo do candidato à primeira habilitação permanece ativo no DETRAN pelo prazo de 12 meses.",
+            "O condutor que tiver sua CNH definitiva cassada poderá requerer nova habilitação imediatamente após 6 meses.",
+            "O condutor habilitado na B que adiciona a categoria A passa a ter dois números de registro diferentes no RENACH."
+        ],
+        correct: 1,
+        tip: "Processo ativo = 12 meses | Reprovação = sem tempo de espera (pode remarcar a qualquer tempo) | Cassação da CNH = 2 anos para reabilitação | RENACH = registro único."
+    }
+];
+
+let currentQ = 0;
+let score = 0;
+let errors = 0;
+let answered = false;
+let timeLeft = 2100; // 35 minutos para 32 questões
+let timerInterval;
+let userErrorsLog = [];
+let topicStats = {};
+
+function startQuiz() {
+    document.getElementById('start-screen').style.display = "none";
+    document.getElementById('quiz-area').style.display = "block";
+    document.getElementById('live-stats').style.display = "flex";
+    document.getElementById('p-cont').style.display = "block";
+    
+    topicStats = {};
+    questions.forEach(q => {
+        if (!topicStats[q.topic]) {
+            topicStats[q.topic] = { total: 0, correct: 0, wrong: 0 };
+        }
+        topicStats[q.topic].total++;
+    });
+
+    renderQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    document.getElementById('timer-box').classList.remove('timer-paused');
+    document.getElementById('pause-text').style.display = 'none';
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showFinalResult();
+        }
+    }, 1000);
+}
+
+function renderQuestion() {
+    answered = false;
+    const area = document.getElementById('quiz-area');
+    const q = questions[currentQ];
+    const imgHtml = q.img ? `<img src="${q.img}" class="quiz-img">` : '';
+
+    area.innerHTML = `
+        <span class="topic-badge"><i class="fas fa-book-open"></i> ${q.topic}</span>
+        <span class="question-text">${currentQ + 1}. ${q.q}</span>
+        ${imgHtml}
+        <div id="options-container">
+            ${q.options.map((opt, i) => `
+                <label class="option" id="opt-${i}">
+                    <input type="radio" name="quiz_opt" value="${i}"> ${opt}
+                </label>
+            `).join('')}
+        </div>
+        <div id="explanation-box" class="explanation-box"></div>
+        <button id="btn-quiz" class="btn-action" onclick="handleButtonClick()">Verificar Resposta</button>
+    `;
+    document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + "%";
+}
+
+function handleButtonClick() {
+    if (!answered) checkAnswer();
+    else {
+        startTimer();
+        nextQuestion();
+    }
+}
+
+function checkAnswer() {
+    const selected = document.querySelector('input[name="quiz_opt"]:checked');
+    if (!selected) {
+        alert("Selecione uma alternativa antes de verificar!");
+        return;
+    }
+    
+    clearInterval(timerInterval);
+    document.getElementById('timer-box').classList.add('timer-paused');
+    document.getElementById('pause-text').style.display = 'block';
+
+    answered = true;
+    const userChoice = parseInt(selected.value);
+    const q = questions[currentQ];
+    const correctChoice = q.correct;
+    document.querySelectorAll('.option').forEach(opt => opt.classList.add('disabled'));
+    
+    const expBox = document.getElementById('explanation-box');
+    expBox.innerHTML = `<strong><i class="fas fa-lightbulb"></i> Bizu CNH Blindada:</strong> ${q.tip}`;
+    expBox.style.display = 'block';
+
+    if (userChoice === correctChoice) {
+        score++;
+        topicStats[q.topic].correct++;
+        document.getElementById('count-correct').innerHTML = score;
+        document.getElementById(`opt-${userChoice}`).classList.add('correct');
+        document.getElementById('snd-correct').play().catch(()=>{});
+    } else {
+        errors++;
+        topicStats[q.topic].wrong++;
+        document.getElementById('count-wrong').innerHTML = errors;
+        document.getElementById(`opt-${userChoice}`).classList.add('wrong');
+        document.getElementById(`opt-${correctChoice}`).classList.add('correct');
+        document.getElementById('snd-wrong').play().catch(()=>{});
+
+        let imagemDaQuestao = q.img ? q.img : null;
+
+        userErrorsLog.push({
+            questionNum: currentQ + 1,
+            topic: q.topic,
+            enunciado: q.q,
+            imagem: imagemDaQuestao,
+            respostaDoAluno: q.options[userChoice],
+            respostaCorreta: q.options[correctChoice],
+            dica: q.tip
+        });
+    }
+    
+    const btn = document.getElementById('btn-quiz');
+    btn.innerHTML = currentQ < questions.length - 1 
+        ? "Próxima Questão <i class='fas fa-chevron-right' style='font-size:0.8rem; margin-left:8px'></i>"
+        : "Finalizar e Salvar Nota <i class='fas fa-check-circle' style='font-size:0.8rem; margin-left:8px'></i>";
+    btn.classList.add('btn-next-step');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) renderQuestion();
+    else showFinalResult();
+}
+
+function showFinalResult() {
+    clearInterval(timerInterval);
+    document.getElementById('quiz-area').style.display = "none";
+    document.getElementById('live-stats').style.display = "none";
+    document.getElementById('p-cont').style.display = "none";
+    document.getElementById('result-area').style.display = "block";
+    
+    const percent = Math.round((score / questions.length) * 100);
+    const notaDecimal = ((score / questions.length) * 10).toFixed(1);
+    
+    // Classificação: Ruim (< 70%), Bom (70% a 89%), Excelente (>= 90%)
+    let conceito = "";
+    let badgeBg = "";
+    let badgeColor = "";
+    let msg = "";
+
+    if (percent >= 90) {
+        conceito = "EXCELENTE";
+        badgeBg = "rgba(70, 211, 105, 0.2)";
+        badgeColor = "#46d369";
+        msg = "🏆 Desempenho de aprovação garantida! Você dominou as pegadinhas do DETRAN.";
+    } else if (percent >= 70) {
+        conceito = "BOM";
+        badgeBg = "rgba(245, 197, 24, 0.2)";
+        badgeColor = "#f5c518";
+        msg = "✅ Bom resultado! Você atingiu a média mínima (70%), mas revise os pontos de atenção abaixo.";
+    } else {
+        conceito = "RUIM";
+        badgeBg = "rgba(229, 9, 20, 0.2)";
+        badgeColor = "#ff6b6b";
+        msg = "⚠️ Atenção! Desempenho abaixo da média de aprovação. Revise os slides indicados e refaça o exercício.";
+    }
+
+    // Salva o último resultado no navegador (localStorage) para a aba atividades.html ler
+    const agora = new Date();
+    const dataFormatada = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+    
+    const resultadoSalvo = {
+        acertos: score,
+        total: questions.length,
+        percentual: percent,
+        nota: notaDecimal,
+        conceito: conceito,
+        data: dataFormatada
+    };
+    localStorage.setItem('cnh_blindada_exercicio01', JSON.stringify(resultadoSalvo));
+
+    document.getElementById('score-text').innerHTML = `${score}/${questions.length} <span style="font-size:1.8rem; color:#ccc;">(Nota ${notaDecimal})</span>`;
+    const cBadge = document.getElementById('concept-badge');
+    cBadge.innerText = `CONCEITO: ${conceito} (${percent}%)`;
+    cBadge.style.background = badgeBg;
+    cBadge.style.color = badgeColor;
+    cBadge.style.border = `1px solid ${badgeColor}`;
+
+    document.getElementById('feedback-msg').innerHTML = msg;
+
+    // Renderiza o Diagnóstico por Tópico / Slide
+    const diagList = document.getElementById('diagnostic-list');
+    diagList.innerHTML = "";
+    
+    const sortedTopics = Object.keys(topicStats).sort((a, b) => {
+        const rateA = topicStats[a].correct / topicStats[a].total;
+        const rateB = topicStats[b].correct / topicStats[b].total;
+        return rateA - rateB;
+    });
+
+    sortedTopics.forEach(topic => {
+        const st = topicStats[topic];
+        const accRate = Math.round((st.correct / st.total) * 100);
+        let barColor = "var(--success)";
+        let statusHtml = `<span class="status-badge status-ok">DOMINADO (${st.correct}/${st.total})</span>`;
+        
+        if (accRate === 0) {
+            barColor = "var(--danger)";
+            statusHtml = `<span class="status-badge status-critico">REVISAR URGENTE (${st.correct}/${st.total})</span>`;
+        } else if (accRate < 100) {
+            barColor = "var(--warning)";
+            statusHtml = `<span class="status-badge status-atencao">ATENÇÃO (${st.correct}/${st.total})</span>`;
+        }
+
+        diagList.innerHTML += `
+            <div class="topic-stat-row">
+                <div class="topic-stat-header">
+                    <span>${topic}</span>
+                    ${statusHtml}
+                </div>
+                <div class="topic-bar-bg">
+                    <div class="topic-bar-fill" style="width: ${accRate}%; background: ${barColor};"></div>
+                </div>
+            </div>
+        `;
+    });
+
+    if(userErrorsLog.length > 0) {
+        const errorListDiv = document.getElementById('error-list');
+        errorListDiv.innerHTML = ""; 
+        
+        userErrorsLog.forEach(item => {
+            let renderImgHtml = item.imagem ? `<img src="${item.imagem}" class="error-img">` : '';
+
+            errorListDiv.innerHTML += `
+                <div class="error-item">
+                    <span class="error-topic-tag"><i class="fas fa-bookmark"></i> ${item.topic}</span>
+                    <div class="error-title">Questão ${item.questionNum}: ${item.enunciado}</div>
+                    ${renderImgHtml}
+                    <div class="error-user-ans"><i class="fas fa-times"></i> Você marcou: ${item.respostaDoAluno}</div>
+                    <div class="error-correct-ans"><i class="fas fa-check"></i> Resposta Correta: ${item.respostaCorreta}</div>
+                    <div class="error-tip"><strong>Explicação:</strong> ${item.dica}</div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('error-report').style.display = "block";
+
+        document.getElementById('pdf-trigger-zone').innerHTML = `
+            <button class="btn-action btn-pdf" onclick="window.print()">
+                <i class="fas fa-file-pdf"></i> Salvar / Imprimir Diagnóstico e Erros (PDF)
+            </button>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:25px;">O relatório inclui o diagnóstico por slide e as questões comentadas para enviar ao instrutor ou revisar.</p>
+        `;
+    }
+}
+
+    // Verifica se o aluno abriu para ver o relatório da última tentativa salva
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('ver_relatorio') === '1') {
+            const salvo = localStorage.getItem('cnh_blindada_exercicio01');
+            if (salvo) {
+                // Se já existe um resultado salvo, pula direto para a tela de resultado com os dados salvos
+                mostrarResultadoSalvoNaTela(JSON.parse(salvo));
+            }
+        }
+    });
+
+    function mostrarResultadoSalvoNaTela(dados) {
+        document.getElementById('start-screen').style.display = "none";
+        document.getElementById('quiz-area').style.display = "none";
+        document.getElementById('live-stats').style.display = "none";
+        document.getElementById('p-cont').style.display = "none";
+        document.getElementById('result-area').style.display = "block";
+        
+        document.getElementById('score-text').innerHTML = `${dados.acertos}/32 <span style="font-size:1.8rem; color:#ccc;">(Nota ${dados.nota})</span>`;
+        const cBadge = document.getElementById('concept-badge');
+        cBadge.innerText = `CONCEITO: ${dados.conceito} (${dados.percentual}%)`;
+        
+        let badgeBg = "rgba(70, 211, 105, 0.2)";
+        let badgeColor = "#46d369";
+        if (dados.conceito === 'BOM') { badgeBg = "rgba(245, 197, 24, 0.2)"; badgeColor = "#f5c518"; }
+        else if (dados.conceito === 'RUIM') { badgeBg = "rgba(229, 9, 20, 0.2)"; badgeColor = "#ff6b6b"; }
+
+        cBadge.style.background = badgeBg;
+        cBadge.style.color = badgeColor;
+        cBadge.style.border = `1px solid ${badgeColor}`;
+
+        document.getElementById('feedback-msg').innerHTML = `📋 Este é o relatório da sua última tentativa realizada em <strong>${dados.data}</strong>.`;
+        
+        // Esconde o diagnóstico detalhado e botão PDF se for apenas visualização de histórico salvo, ou mantém os botões de navegação
+    }
+
+</script>
+</body>
+</html>
